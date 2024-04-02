@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalproject/components/custom_colors.dart';
+import 'package:finalproject/reuseable/themes/app_theme.dart';
 import 'package:finalproject/pages/home_page.dart';
 import 'package:finalproject/pages/welcome_page.dart';
-import 'package:finalproject/services/auth.dart';
+import 'package:finalproject/data/repositories/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isSigning = false;
-  final AuthService _auth = AuthService();
+  final AuthRepo _auth = AuthRepo();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -63,12 +63,12 @@ class _LoginPageState extends State<LoginPage> {
                     fontWeight: FontWeight.w700,
                     fontFamily: 'Lato'),
                 controller: _emailController,
-                cursorColor: CustomColors.primaryColor,
+                cursorColor: AppTheme.primaryColor,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor)),
+                      borderSide: BorderSide(color: AppTheme.primaryColor)),
                   focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor)),
+                      borderSide: BorderSide(color: AppTheme.primaryColor)),
                 ),
               ),
               SizedBox(
@@ -88,12 +88,12 @@ class _LoginPageState extends State<LoginPage> {
                     fontFamily: 'Lato'),
                 controller: _passwordController,
                 obscureText: true,
-                cursorColor: CustomColors.primaryColor,
+                cursorColor: AppTheme.primaryColor,
                 decoration: const InputDecoration(
                   enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor)),
+                      borderSide: BorderSide(color: AppTheme.primaryColor)),
                   focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: CustomColors.primaryColor)),
+                      borderSide: BorderSide(color: AppTheme.primaryColor)),
                 ),
               ),
               SizedBox(
@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         fontFamily: 'Lato',
-                        color: CustomColors.primaryColor)),
+                        color: AppTheme.primaryColor)),
               ),
               Spacer(), // Add spacer to push the button to the bottom
               Align(
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: () => {_signIn(context)},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColors.primaryColor,
+                      backgroundColor: AppTheme.primaryColor,
                       elevation: 10,
                       shape: RoundedRectangleBorder(
                         borderRadius:

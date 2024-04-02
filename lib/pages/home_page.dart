@@ -1,7 +1,7 @@
-import 'package:finalproject/services/auth.dart';
+import 'package:finalproject/data/repositories/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/components/custom_colors.dart';
+import 'package:finalproject/reuseable/themes/app_theme.dart';
 import 'package:finalproject/pages/login_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final AuthService _auth = AuthService();
+  final AuthRepo _auth = AuthRepo();
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: CustomColors.primaryColor,
+                        color: AppTheme.primaryColor,
                       ),
                     ),
                     SizedBox(height: 20),
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: CustomColors.grayColor,
+                        color: AppTheme.grayColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: CustomColors.grayColor,
+                        color: AppTheme.grayColor,
                       ),
                       textAlign: TextAlign.center,
                     ),
