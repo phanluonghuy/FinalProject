@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/reuseable/themes/app_theme.dart';
-import 'package:finalproject/pages/home_page.dart';
-import 'package:finalproject/pages/welcome_page.dart';
+import 'package:finalproject/features/main_menu/home_page.dart';
+import 'package:finalproject/features/auth/welcome_page.dart';
 import 'package:finalproject/data/repositories/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -162,7 +162,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (user != null) {
       print("Logged in success!");
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, '/main', (route) => false);
     } else {
       print("Something is wrong!");
     }

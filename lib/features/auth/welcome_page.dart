@@ -1,7 +1,7 @@
 import 'package:finalproject/data/repositories/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/themes/app_theme.dart';
-import 'package:finalproject/pages/login_page.dart';
+import 'package:finalproject/features/auth/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -50,7 +50,7 @@ class _WelcomePageState extends State<WelcomePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: AppTheme.grayColor,
+                        color: AppTheme.grey1,
                       ),
                       textAlign: TextAlign.center,
                     ),

@@ -1,14 +1,17 @@
 import 'package:finalproject/firebase_options.dart';
-import 'package:finalproject/pages/home_page.dart';
-import 'package:finalproject/pages/welcome_page.dart';
-import 'package:finalproject/pages/wrapper.dart';
+import 'package:finalproject/features/main_menu/home_page.dart';
+import 'package:finalproject/features/main_menu/main_page.dart';
+import 'package:finalproject/features/auth/welcome_page.dart';
+import 'package:finalproject/features/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'pages/login_page.dart';
+import 'features/auth/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
+        '/main': (context) => const MainPage(),
       },
     );
   }

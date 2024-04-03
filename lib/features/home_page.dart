@@ -2,7 +2,7 @@ import 'package:finalproject/data/repositories/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/themes/app_theme.dart';
-import 'package:finalproject/pages/login_page.dart';
+import 'package:finalproject/features/auth/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,6 +14,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final AuthRepo _auth = AuthRepo();
   final currentUser = FirebaseAuth.instance.currentUser!;
+
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: AppTheme.grayColor,
+                        color: AppTheme.grey1,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: AppTheme.grayColor,
+                        color: AppTheme.grey1,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -84,5 +86,6 @@ class _HomePageState extends State<HomePage> {
 
   void logOut() async {
     _auth.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, '/welcome', ((route) => false));
   }
 }
