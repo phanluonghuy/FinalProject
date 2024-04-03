@@ -2,7 +2,7 @@ import 'dart:js_interop';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthRepo {
+class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future signUpWithEmailAndPassword(String email, String password) async {

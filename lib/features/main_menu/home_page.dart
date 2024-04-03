@@ -1,4 +1,6 @@
+import 'package:finalproject/data/models/topic.dart';
 import 'package:finalproject/data/repositories/auth.dart';
+import 'package:finalproject/data/repositories/topic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/themes/app_theme.dart';
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final AuthRepo _auth = AuthRepo();
+  final AuthRepository _auth = AuthRepository();
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   int _currentIndex = 0;

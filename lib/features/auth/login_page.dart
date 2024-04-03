@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isSigning = false;
-  final AuthRepo _auth = AuthRepo();
+  final AuthRepository _authRepo = AuthRepository();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    User? user = await _authRepo.signInWithEmailAndPassword(email, password);
 
     setState(() {
       _isSigning = false;

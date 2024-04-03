@@ -12,7 +12,7 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final AuthRepo _auth = AuthRepo();
+  final AuthRepository _auth = AuthRepository();
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   int _currentIndex = 0;

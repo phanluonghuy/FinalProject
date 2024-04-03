@@ -11,7 +11,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final AuthRepo _auth = AuthRepo();
+  final AuthRepository _auth = AuthRepository();
 
   @override
   Widget build(BuildContext context) {

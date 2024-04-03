@@ -40,12 +40,12 @@ class _MainPageState extends State<MainPage> {
       ],
       selectedLabelStyle: TextStyle(
           fontFamily: 'Lato',
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.bold,
           color: AppTheme.primaryColor,
           fontSize: 12),
       unselectedLabelStyle: TextStyle(
           fontFamily: 'Lato',
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.bold,
           color: AppTheme.grey2,
           fontSize: 12),
       iconSize: 24,
