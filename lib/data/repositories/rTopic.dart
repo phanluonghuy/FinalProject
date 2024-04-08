@@ -7,7 +7,7 @@ class TopicRepository {
 
   Future<void> createTopic(Topic topic) async {
     final CollectionReference topicRef = _db.collection('topics');
-    
+
     await topicRef.add(topic.toFirestore());
   }
 }

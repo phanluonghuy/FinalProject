@@ -1,8 +1,6 @@
-import 'package:finalproject/data/repositories/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/reuseable/themes/app_theme.dart';
-import 'package:finalproject/features/auth/login_page.dart';
+import 'package:finalproject/data/repositories/achievement_repo.dart';
+import 'package:finalproject/data/models/achievement.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({Key? key}) : super(key: key);
@@ -12,10 +10,24 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final AuthRepository _auth = AuthRepository();
-  final currentUser = FirebaseAuth.instance.currentUser!;
+  final AchievementRepository _achievementRepository = AchievementRepository();
+  List<Achievement> _achievements = [];
 
-  int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    // Call the getAllAchievements function when the widget is initialized
+    _loadAchievements();
+  }
+
+  Future<void> _loadAchievements() async {
+    List<Achievement> achievements =
+        await _achievementRepository.getAllAchievements();
+    setState(() {
+      // Update the state with the retrieved achievements
+      _achievements = achievements;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +56,7 @@ class _LibraryPageState extends State<LibraryPage> {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: AppTheme.primaryColor,
+                        color: Colors.blue, // Update color if needed
                       ),
                     ),
                     SizedBox(height: 20),
@@ -54,16 +66,25 @@ class _LibraryPageState extends State<LibraryPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Lato',
-                        color: AppTheme.grey1,
+                        color: Colors.grey, // Update color if needed
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    MaterialButton(
-                      onPressed: logOut,
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      child: Text('Log out'),
-                    )
+                    // Display list of achievements
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: _achievements.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          // Access each achievement object from the list
+                          Achievement achievement = _achievements[index];
+                          return ListTile(
+                            title: Text(achievement.title ?? ''),
+                            subtitle: Text(achievement.description ?? ''),
+                            // You can add more widgets or functionality here if needed
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -72,10 +93,5 @@ class _LibraryPageState extends State<LibraryPage> {
         ),
       ),
     );
-  }
-
-  void logOut() async {
-    _auth.signOut();
-    Navigator.pushNamedAndRemoveUntil(context, '/welcome', ((route) => false));
   }
 }

@@ -1,6 +1,8 @@
-import 'package:finalproject/data/repositories/auth.dart';
+import 'package:finalproject/data/repositories/auth_repo.dart';
+import 'package:finalproject/reuseable/constants/strings.dart';
+import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/reuseable/themes/app_theme.dart';
+import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -26,32 +28,15 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Welcome to",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lato',
-                      ),
-                    ),
-                    Text(
-                      "Triolingo",
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lato',
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
+                    Text(AppStrings.welcomeTo, style: AppTextStyles.bold16),
+                    Text(AppStrings.appName,
+                        style: AppTextStyles.bold42
+                            .copyWith(color: AppTheme.primaryColor)),
                     SizedBox(height: 20),
                     Text(
-                      "Learn vocabulary, quiz,... anywhere and anytime. Fast, free and forever.",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lato',
-                        color: AppTheme.grey1,
-                      ),
+                      AppStrings.welcomeDescription,
+                      style:
+                          AppTextStyles.bold20.copyWith(color: AppTheme.grey1),
                       textAlign: TextAlign.center,
                     ),
                   ],
@@ -64,7 +49,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     vertical: 10), // Reduce vertical margin here
                 child: ElevatedButton(
                   onPressed: () {
-                    // Add your button onPressed logic here
+                    _navigateToRegisterPage();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,
@@ -75,15 +60,9 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      "GET STARTED",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lato',
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: Text(AppStrings.getStarted,
+                        style:
+                            AppTextStyles.bold16.copyWith(color: Colors.white)),
                   ),
                 ),
               ),
@@ -106,15 +85,9 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Text(
-                      "I ALREADY HAVE AN ACCOUNT",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Lato',
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
+                    child: Text(AppStrings.iHaveAccount,
+                        style: AppTextStyles.bold16
+                            .copyWith(color: AppTheme.primaryColor)),
                   ),
                 ),
               ),
@@ -128,5 +101,9 @@ class _WelcomePageState extends State<WelcomePage> {
 
   void _navigateToLoginPage() {
     Navigator.pushNamed(context, '/login');
+  }
+
+  void _navigateToRegisterPage() {
+    Navigator.pushNamed(context, '/register');
   }
 }

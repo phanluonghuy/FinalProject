@@ -1,9 +1,9 @@
 import 'package:finalproject/data/models/topic.dart';
-import 'package:finalproject/data/repositories/auth.dart';
-import 'package:finalproject/data/repositories/topic.dart';
+import 'package:finalproject/data/repositories/auth_repo.dart';
+import 'package:finalproject/data/repositories/topic_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/reuseable/themes/app_theme.dart';
+import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
 
 class HomePage extends StatefulWidget {

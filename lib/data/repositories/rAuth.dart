@@ -1,13 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finalproject/data/models/user.dart';
+import 'package:finalproject/data/repositories/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserRepository _userRepo = UserRepository();
 
-  Future signUpWithEmailAndPassword(String email, String password) async {
+  Future signUpClassic(String email, String password, String name) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       final User? currentUser = credential.user;
+
+      _userRepo.createUser(
+          MUser(email: email, name: name, avtUrl: 'defaultava.png', bio: ''));
+      
+      return currentUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         print('The email address is already in use.');

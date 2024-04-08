@@ -3,11 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Topic {
   final String? title;
   final String? description;
-  
-  Topic({
-    this.title,
-    this.description
-  });
+
+  Topic({this.title, this.description});
 
   factory Topic.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,

@@ -1,8 +1,10 @@
+import 'package:finalproject/features/auth/register_page.dart';
 import 'package:finalproject/firebase_options.dart';
 import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/main_menu/main_page.dart';
 import 'package:finalproject/features/auth/welcome_page.dart';
 import 'package:finalproject/features/wrapper.dart';
+import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/auth/login_page.dart';
@@ -22,9 +24,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Triolingo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.primaryColor),
         useMaterial3: true,
       ),
       home: const Wrapper(),
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
         '/main': (context) => const MainPage(),
+        '/register': (context) => RegisterPage(),
       },
     );
   }
