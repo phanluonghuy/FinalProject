@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/data/models/topic.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-class TopicRepository {
+class TopicRepo {
   final _db = FirebaseFirestore.instance;
 
   Future<void> createTopic(Topic topic) async {

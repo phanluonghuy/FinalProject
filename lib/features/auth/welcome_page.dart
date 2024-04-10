@@ -1,9 +1,11 @@
 import 'package:finalproject/data/repositories/auth_repo.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
+import 'package:finalproject/reuseable/widgets/message_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
+import 'package:flutter/widgets.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -13,7 +15,7 @@ class WelcomePage extends StatefulWidget {
 }
 
 class _WelcomePageState extends State<WelcomePage> {
-  final AuthRepository _auth = AuthRepository();
+  final AuthRepo _auth = AuthRepo();
 
   @override
   Widget build(BuildContext context) {
@@ -28,17 +30,21 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(AppStrings.welcomeTo, style: AppTextStyles.bold16),
+                    MessageBubble(message: AppStrings.hiThere),
+                    SizedBox(height: 30),
+                    Container(child: Image.asset('images/cat_full.png'), height: 250,),
+                    SizedBox(height: 20),
                     Text(AppStrings.appName,
                         style: AppTextStyles.bold42
                             .copyWith(color: AppTheme.primaryColor)),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Text(
                       AppStrings.welcomeDescription,
                       style:
                           AppTextStyles.bold20.copyWith(color: AppTheme.grey1),
                       textAlign: TextAlign.center,
                     ),
+                    
                   ],
                 ),
               ),

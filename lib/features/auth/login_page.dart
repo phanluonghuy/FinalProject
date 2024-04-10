@@ -20,9 +20,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _hidePassword = true;
-  final AuthRepository _authRepo = AuthRepository();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final AuthRepo _authRepo = AuthRepo();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   // @override
   // void dispose() {

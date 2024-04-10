@@ -1,8 +1,8 @@
 class AppStrings {
-  static const String appName = 'Triolingo';
-  static const String welcomeTo = 'Welcome to';
+  static const String appName = 'CattyCards';
+  static const String hiThere = 'Hi there! I\'m Catty!';
   static const String welcomeDescription =
-      'Learn vocabulary, quiz,... anywhere and anytime. Fast, free and forever.';
+      'Learn vocabulary, quiz,... anywhere with flashcards. Fast, free and forever.';
   static const String getStarted = 'GET STARTED';
   static const String iHaveAccount = 'I ALREADY HAVE AN ACCOUNT';
   static const String forgotPassword = 'Forgot password';
@@ -19,4 +19,5 @@ class AppStrings {
   static const String profile = 'Profile';
   static const String letsCreateYourAccount = 'Let\'s create your account!';
   static const String chooseAnUsername = 'Choose an username';
+  static const String editProfile = 'Edit Profile';
 }

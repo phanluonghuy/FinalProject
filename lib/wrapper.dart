@@ -1,5 +1,5 @@
 import 'package:finalproject/features/main_menu/home_page.dart';
-import 'package:finalproject/features/main_menu/main_page.dart';
+import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/auth/welcome_page.dart';
 import 'package:finalproject/data/repositories/auth_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +15,7 @@ class Wrapper extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const MainPage();
+            return const ControlPage();
           } else {
             return const WelcomePage();
           }

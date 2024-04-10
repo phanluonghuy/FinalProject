@@ -10,7 +10,7 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final AchievementRepository _achievementRepository = AchievementRepository();
+  final AchievementRepo _achievementRepository = AchievementRepo();
   List<Achievement> _achievements = [];
 
   @override

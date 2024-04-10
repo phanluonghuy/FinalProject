@@ -1,9 +1,9 @@
 import 'package:finalproject/features/auth/register_page.dart';
 import 'package:finalproject/firebase_options.dart';
 import 'package:finalproject/features/main_menu/home_page.dart';
-import 'package:finalproject/features/main_menu/main_page.dart';
+import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/auth/welcome_page.dart';
-import 'package:finalproject/features/wrapper.dart';
+import 'package:finalproject/wrapper.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,40 +24,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Triolingo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.primaryColor),
+        scaffoldBackgroundColor: Colors.white, 
         useMaterial3: true,
       ),
       home: const Wrapper(),
       routes: {
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
-        '/main': (context) => const MainPage(),
-        '/register': (context) => RegisterPage(),
+        '/main': (context) => const ControlPage(),
+        '/register': (context) => const RegisterPage(),
       },
     );
   }
 }
-
-// class MyHomePage extends StatefulWidget {
-//   const MyHomePage({super.key, required this.title});
-//   final String title;
-//
-//   @override
-//   State<MyHomePage> createState() => ;
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//
-//         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-//         title: Text(widget.title),
-//       ),
-//       body: login
-//     );
-//   }
-// }

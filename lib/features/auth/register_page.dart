@@ -20,11 +20,11 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _isLoading = false;
   bool _hidePassword = true;
-  final AuthRepository _authRepo = AuthRepository();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _password2Controller = TextEditingController();
+  final AuthRepo _authRepo = AuthRepo();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _password2Controller = TextEditingController();
 
   // @override
   // void dispose() {
@@ -204,8 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
         context: pageContext,
         builder: (BuildContext context) {
           return const SingleChoiceDialog(
-              title: 'Unfilled form',
-              message: 'Please fill out the form!');
+              title: 'Unfilled form', message: 'Please fill out the form!');
         },
       );
     } else if (password != password2) {
@@ -220,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     }
 
-    if(!isVerified) {
+    if (!isVerified) {
       return;
     }
 

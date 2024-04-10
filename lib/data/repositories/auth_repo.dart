@@ -3,19 +3,20 @@ import 'package:finalproject/data/models/user.dart';
 import 'package:finalproject/data/repositories/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthRepository {
+class AuthRepo {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UserRepository _userRepo = UserRepository();
+  final UserRepo _userRepo = UserRepo();
 
-  Future signUpClassic(String email, String password, String name) async {
+  Future<User?> signUpClassic(String email, String password, String name) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       final User? currentUser = credential.user;
 
-      _userRepo.createUser(
-          MUser(email: email, name: name, avtUrl: 'defaultava.png', bio: ''));
-      
+      _userRepo.createUserWithUID(
+          MUser(email: email, name: name, avtUrl: 'defaultava.png', bio: ''),
+          currentUser?.uid);
+
       return currentUser;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -27,7 +28,7 @@ class AuthRepository {
     return null;
   }
 
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
