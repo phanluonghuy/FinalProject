@@ -5,7 +5,7 @@ import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/auth/welcome_page.dart';
 import 'package:finalproject/data/repositories/auth_repo.dart';
-import 'package:finalproject/reuseable/widgets/single_dialog.dart';
+import 'package:finalproject/reuseable/widgets/single_choice_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

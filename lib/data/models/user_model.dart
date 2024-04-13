@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MUser {
+class UserModel {
   final String? id;
   final String? email;
   final String? name;
@@ -8,7 +8,7 @@ class MUser {
   final String? avtUrl;
   final int? exp;
 
-  MUser({
+  UserModel({
     this.id,
     this.email,
     this.name,
@@ -17,12 +17,12 @@ class MUser {
     this.exp,
   });
 
-  factory MUser.fromFirestore(
+  factory UserModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
-    return MUser(
+    return UserModel(
       id: snapshot.id,
       email: data?['email'],
       name: data?['name'],

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalproject/data/models/user.dart';
+import 'package:finalproject/data/models/user_model.dart';
 import 'package:finalproject/data/repositories/user_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,14 +7,16 @@ class AuthRepo {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final UserRepo _userRepo = UserRepo();
 
-  Future<User?> signUpClassic(String email, String password, String name) async {
+  Future<User?> signUpClassic(
+      String email, String password, String name) async {
     try {
       UserCredential credential = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       final User? currentUser = credential.user;
 
       _userRepo.createUserWithUID(
-          MUser(email: email, name: name, avtUrl: 'defaultava.png', bio: ''),
+          UserModel(
+              email: email, name: name, avtUrl: 'defaultava.png', bio: ''),
           currentUser?.uid);
 
       return currentUser;
@@ -28,7 +30,8 @@ class AuthRepo {
     return null;
   }
 
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
       UserCredential credential = await _auth.signInWithEmailAndPassword(
           email: email, password: password);

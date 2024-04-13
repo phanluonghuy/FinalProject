@@ -1,20 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Achievement {
+class AchievementModel {
   final String? id;
   final String? title;
   final String? description;
   final int? exp;
   final String? imgUrl;
 
-  Achievement({this.id, this.title, this.description, this.exp, this.imgUrl});
+  AchievementModel(
+      {this.id, this.title, this.description, this.exp, this.imgUrl});
 
-  factory Achievement.fromFirestore(
+  factory AchievementModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
-    return Achievement(
+    return AchievementModel(
         id: snapshot.id,
         title: data?['title'],
         description: data?['description'],

@@ -1,4 +1,4 @@
-import 'package:finalproject/data/models/topic.dart';
+import 'package:finalproject/data/models/topic_model.dart';
 import 'package:finalproject/data/repositories/auth_repo.dart';
 import 'package:finalproject/data/repositories/topic_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';

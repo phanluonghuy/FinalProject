@@ -1,6 +1,8 @@
+import 'package:finalproject/features/topic/create_topic_page.dart';
+import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/data/repositories/achievement_repo.dart';
-import 'package:finalproject/data/models/achievement.dart';
+import 'package:finalproject/data/models/achievement_model.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class LibraryPage extends StatefulWidget {
 
 class _LibraryPageState extends State<LibraryPage> {
   final AchievementRepo _achievementRepository = AchievementRepo();
-  List<Achievement> _achievements = [];
+  List<AchievementModel> _achievements = [];
 
   @override
   void initState() {
@@ -21,7 +23,7 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   Future<void> _loadAchievements() async {
-    List<Achievement> achievements =
+    List<AchievementModel> achievements =
         await _achievementRepository.getAllAchievements();
     setState(() {
       // Update the state with the retrieved achievements
@@ -33,6 +35,17 @@ class _LibraryPageState extends State<LibraryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateTopicPage()),
+          );
+        },
+        backgroundColor: AppTheme.floatingButton,
+        child: Icon(Icons.add),
+        shape: CircleBorder(),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -76,7 +89,7 @@ class _LibraryPageState extends State<LibraryPage> {
                         itemCount: _achievements.length,
                         itemBuilder: (BuildContext context, int index) {
                           // Access each achievement object from the list
-                          Achievement achievement = _achievements[index];
+                          AchievementModel achievement = _achievements[index];
                           return ListTile(
                             title: Text(achievement.title ?? ''),
                             subtitle: Text(achievement.description ?? ''),

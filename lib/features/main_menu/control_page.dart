@@ -16,60 +16,38 @@ class ControlPage extends StatefulWidget {
 
 class _ControlPageState extends State<ControlPage> {
   int _currentIndex = 0;
-  late PageController _pageController;
 
-  List pages = [const HomePage(), const LibraryPage(), const HomePage(), const HomePage()];
+  List pages = [
+    const HomePage(),
+    const LibraryPage(),
+    const HomePage(),
+    const ProfilePage()
+  ];
   List<BottomNavigationBarItem> barItems = [
     BottomNavigationBarItem(
         icon: Icon(MdiIcons.fromString('home-variant-outline')),
         label: AppStrings.home),
     BottomNavigationBarItem(
-        icon: Icon(MdiIcons.fromString('book-open-page-variant-outline')), label: AppStrings.library),
+        icon: Icon(MdiIcons.fromString('book-open-page-variant-outline')),
+        label: AppStrings.library),
     BottomNavigationBarItem(
         icon: Icon(MdiIcons.fromString('earth')), label: AppStrings.discovery),
     BottomNavigationBarItem(
-        icon: Icon(MdiIcons.fromString('account-outline')), label: AppStrings.profile),
+        icon: Icon(MdiIcons.fromString('account-outline')),
+        label: AppStrings.profile),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        children: const [
-          HomePage(),
-          LibraryPage(),
-          HomePage(),
-          ProfilePage(),
-        ],
-      ),
+      body: pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (int newIndex) {
-          _pageController.animateToPage(
-            newIndex,
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.bounceInOut,
-          );
+          setState(() {
+            _currentIndex = newIndex;
+          });
         },
-
         items: barItems,
         selectedLabelStyle: AppTextStyles.bold12,
         unselectedLabelStyle: AppTextStyles.bold12,
