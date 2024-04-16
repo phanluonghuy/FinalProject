@@ -7,14 +7,17 @@ class TopicModel {
   final String? title;
   final String? description;
   final String? ownerID;
+  final bool? isPublic;
   final DateTime? date;
 
-  TopicModel(
-      {this.id,
-      this.title,
-      this.description,
-      this.ownerID,
-      this.date});
+  TopicModel({
+    this.id,
+    this.title,
+    this.description,
+    this.ownerID,
+    this.isPublic, // Added isPublic field
+    this.date,
+  });
 
   factory TopicModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -27,6 +30,7 @@ class TopicModel {
       title: data['title'],
       description: data['description'],
       ownerID: data['ownerID'],
+      isPublic: data['isPublic'], // Initialize isPublic field
       date: (data['date'] as Timestamp).toDate(),
     );
   }
@@ -36,6 +40,7 @@ class TopicModel {
       "title": title,
       "description": description,
       "ownerID": ownerID,
+      "isPublic": isPublic, // Add isPublic field to Firestore data
       "date": date,
     };
   }

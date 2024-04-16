@@ -123,23 +123,39 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
       return;
     }
 
-    final currentUser = FirebaseAuth.instance.currentUser!;
-    final newTopic = TopicModel(
-        title: _titleController.text,
-        description: _descriptionController.text,
-        date: DateTime.now(),
-        ownerID: currentUser.uid);
-
-    _topicRepo.createTopic(newTopic, _cards);
-
-    showDialog(
+    final isConfirmed = await showDialog(
         context: context,
         builder: (BuildContext context) {
-          return SingleChoiceDialog(
-            title: 'Congrats!',
-            message: 'Your topic has been created',
+          return DoubleChoiceDialog(
+            title: 'Creating a new topic',
+            message: 'Do you want to create this topic?',
+            onConfirm: () {
+              Navigator.pop(context, true); // Pass true as result
+            },
           );
         });
+    if (isConfirmed) {
+      final currentUser = FirebaseAuth.instance.currentUser!;
+      bool isPublic = true;
+      _privacyValue == 'public' ? isPublic = true : isPublic = false;
+      final newTopic = TopicModel(
+          title: _titleController.text,
+          description: _descriptionController.text,
+          isPublic: isPublic,
+          date: DateTime.now(),
+          ownerID: currentUser.uid);
+
+      _topicRepo.createTopic(newTopic, _cards);
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your topic has been created!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -233,7 +249,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                         borderSide: BorderSide(color: AppTheme.primaryColor)),
                   ),
                 ),
-                
+
                 SizedBox(
                   height: 30,
                 ),
@@ -243,7 +259,9 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                       'PRIVACY',
                       style: AppTextStyles.bold16,
                     ),
-                    SizedBox(width: 50,),
+                    SizedBox(
+                      width: 50,
+                    ),
                     Radio<String>(
                       value: 'public',
                       groupValue: _privacyValue,
@@ -253,7 +271,10 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                         });
                       },
                     ),
-                    Text('Public', style: AppTextStyles.bold16,),
+                    Text(
+                      'Public',
+                      style: AppTextStyles.bold16,
+                    ),
                     SizedBox(width: 20),
                     Radio<String>(
                       value: 'private',
@@ -264,7 +285,10 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                         });
                       },
                     ),
-                    Text('Private', style: AppTextStyles.bold16,),
+                    Text(
+                      'Private',
+                      style: AppTextStyles.bold16,
+                    ),
                   ],
                 ),
 
