@@ -5,6 +5,7 @@ import 'package:finalproject/data/repositories/topic_repo.dart';
 import 'package:finalproject/data/repositories/user_repo.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
+import 'package:finalproject/reuseable/widgets/image_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
@@ -42,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
         titleSpacing: 0,
         title: Row(
@@ -71,125 +73,133 @@ class _ProfilePageState extends State<ProfilePage> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      height: 150, // Specify the desired height
-                      width: 150,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          _userInfo?.avtUrl ?? '',
-                          fit: BoxFit
-                              .cover, // Ensure the image covers the container
-                        ),
+          : SingleChildScrollView(
+            child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      _userInfo?.name ?? '',
-                      style: AppTextStyles.bold26,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      _userInfo?.bio ?? '',
-                      style: AppTextStyles.normal16,
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Divider(
-                      color: AppTheme.grey4,
-                      thickness: 1,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            Text('12', style: AppTextStyles.bold20),
-                            Text('active streaks',
-                                style: AppTextStyles.normal16)
-                          ],
-                        ),
-                        Container(
-                          height: 40,
-                          width: 1,
-                          color: AppTheme.grey4,
-                        ),
-                        Column(
-                          children: [
-                            Text('23', style: AppTextStyles.bold20),
-                            Text('followers', style: AppTextStyles.normal16)
-                          ],
-                        ),
-                        Container(
-                          height: 40,
-                          width: 1,
-                          color: AppTheme.grey4,
-                        ),
-                        Column(
-                          children: [
-                            Text('25', style: AppTextStyles.bold20),
-                            Text('achievements', style: AppTextStyles.normal16)
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () => {},
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryColor,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(40), // Rounded corners
+                      Container(
+                        height: 150, // Specify the desired height
+                        width: 150,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.network(
+                            _userInfo?.avtUrl ?? '',
+                            fit: BoxFit
+                                .cover, // Ensure the image covers the container
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        _userInfo?.name ?? '',
+                        style: AppTextStyles.bold26,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        _userInfo?.bio ?? '',
+                        style: AppTextStyles.normal16,
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        color: AppTheme.grey4,
+                        thickness: 1,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
                             children: [
-                              Icon(
-                                Icons.edit,
-                                size: 20,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(AppStrings.editProfile,
-                                  style: AppTextStyles.bold16
-                                      .copyWith(color: Colors.white)),
-                              SizedBox(
-                                width: 30,
-                              ),
+                              Text('12', style: AppTextStyles.bold20),
+                              Text('active streaks',
+                                  style: AppTextStyles.normal16)
                             ],
                           ),
+                          Container(
+                            height: 40,
+                            width: 1,
+                            color: AppTheme.grey4,
+                          ),
+                          Column(
+                            children: [
+                              Text('23', style: AppTextStyles.bold20),
+                              Text('followers', style: AppTextStyles.normal16)
+                            ],
+                          ),
+                          Container(
+                            height: 40,
+                            width: 1,
+                            color: AppTheme.grey4,
+                          ),
+                          Column(
+                            children: [
+                              Text('25', style: AppTextStyles.bold20),
+                              Text('achievements', style: AppTextStyles.normal16)
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(40), // Rounded corners
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.edit,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text(AppStrings.editProfile,
+                                    style: AppTextStyles.bold16
+                                        .copyWith(color: Colors.white)),
+                                SizedBox(
+                                  width: 30,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 20,
+                      ),
+                      ImageItem(imageLocation: 'images/topics.png', title: 'View all topics'),
+                      SizedBox(height: 10,),
+                      ImageItem(imageLocation: 'images/achievement.png', title: 'View all achievements')
+                    ],
+                  ),
                 ),
               ),
-            ),
+          ),
     );
   }
 }

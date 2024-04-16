@@ -6,6 +6,7 @@ import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/reuseable/widgets/card_dialog.dart';
 import 'package:finalproject/reuseable/widgets/card_editing.dart';
+import 'package:finalproject/reuseable/widgets/double_choice_dialog.dart';
 import 'package:finalproject/reuseable/widgets/single_choice_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,12 @@ class CreateTopicPage extends StatefulWidget {
 
 class _CreateTopicPageState extends State<CreateTopicPage> {
   final _topicRepo = TopicRepo();
-  List<CardModel> cards = [];
+  final List<CardModel> _cards = [];
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _termController = TextEditingController();
   final _definitionController = TextEditingController();
+  String? _privacyValue = 'public';
 
   void addCards() {
     if (_termController.text == '' || _definitionController.text == '') {
@@ -37,11 +39,64 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
     }
 
     setState(() {
-      cards.add(CardModel(
+      _cards.add(CardModel(
           term: _termController.text, definition: _definitionController.text));
       _termController.text = '';
       _definitionController.text = '';
     });
+  }
+
+  void editCard(int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CardDialog(
+            termController: _termController,
+            definitionController: _definitionController,
+            onConfirm: () {
+              if (_termController.text == '' ||
+                  _definitionController.text == '') {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                        'Edit card failed: Term and definition are required!'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+                return;
+              }
+
+              setState(() {
+                _cards.insert(
+                    index + 1,
+                    CardModel(
+                        term: _termController.text,
+                        definition: _definitionController.text));
+                _cards.removeAt(index);
+                _termController.text = '';
+                _definitionController.text = '';
+              });
+            },
+          );
+        });
+  }
+
+  void deleteCard(int index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DoubleChoiceDialog(
+            title: 'Deleting a card',
+            message: 'Do you want to delete this card?',
+            onConfirm: () {
+              setState(() {
+                // Remove the card at the specified index
+                _cards.removeAt(index);
+              });
+              Navigator.pop(context); // Close the dialog
+            },
+          );
+        });
   }
 
   void finish() async {
@@ -56,7 +111,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
           });
       return;
     }
-    if (cards.length < 4) {
+    if (_cards.length < 4) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -75,7 +130,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
         date: DateTime.now(),
         ownerID: currentUser.uid);
 
-    _topicRepo.createTopic(newTopic, cards);
+    _topicRepo.createTopic(newTopic, _cards);
 
     showDialog(
         context: context,
@@ -178,6 +233,41 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                         borderSide: BorderSide(color: AppTheme.primaryColor)),
                   ),
                 ),
+                
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'PRIVACY',
+                      style: AppTextStyles.bold16,
+                    ),
+                    SizedBox(width: 50,),
+                    Radio<String>(
+                      value: 'public',
+                      groupValue: _privacyValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _privacyValue = value;
+                        });
+                      },
+                    ),
+                    Text('Public', style: AppTextStyles.bold16,),
+                    SizedBox(width: 20),
+                    Radio<String>(
+                      value: 'private',
+                      groupValue: _privacyValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _privacyValue = value;
+                        });
+                      },
+                    ),
+                    Text('Private', style: AppTextStyles.bold16,),
+                  ],
+                ),
+
                 SizedBox(
                   height: 30,
                 ),
@@ -189,10 +279,20 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                   height: 10,
                 ),
                 Column(
-                  children: cards
+                  children: _cards
                       .map((card) => Padding(
                             padding: const EdgeInsets.only(bottom: 15),
-                            child: CardEditing(card: card),
+                            child: CardEditing(
+                              card: card,
+                              onDelete: () {
+                                int index = _cards.indexOf(card);
+                                deleteCard(index);
+                              },
+                              onEdit: () {
+                                int index = _cards.indexOf(card);
+                                editCard(index);
+                              },
+                            ),
                           ))
                       .toList(),
                 ),

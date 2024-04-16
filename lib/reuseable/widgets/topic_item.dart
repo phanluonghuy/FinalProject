@@ -2,22 +2,12 @@ import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:flutter/material.dart';
 
-class CardDialog extends StatelessWidget {
-  final TextEditingController termController;
-  final TextEditingController definitionController;
-  final VoidCallback onConfirm;
-
-  const CardDialog({
-    Key? key,
-    required this.termController,
-    required this.definitionController,
-    required this.onConfirm
-  }) : super(key: key);
+class TopicItem extends StatelessWidget {
+  const TopicItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
+    return Container(
         color: Colors.white,
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -30,7 +20,6 @@ class CardDialog extends StatelessWidget {
                 children: [
                   SizedBox(height: 20),
                   TextFormField(
-                    controller: termController,
                     style: AppTextStyles.bold16,
                     decoration: const InputDecoration(
                       isCollapsed: true,
@@ -45,7 +34,6 @@ class CardDialog extends StatelessWidget {
                   Text('TERM', style: AppTextStyles.bold12),
                   SizedBox(height: 15),
                   TextFormField(
-                    controller: definitionController,
                     style: AppTextStyles.bold16,
                     decoration: const InputDecoration(
                       isCollapsed: true,
@@ -59,32 +47,12 @@ class CardDialog extends StatelessWidget {
                   SizedBox(height: 2),
                   Text('DEFINITION', style: AppTextStyles.bold12),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      onConfirm();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primaryColor,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(40), // Rounded corners
-                      ),
-                    ),
-                    child: Center(
-                      child: Text('Confirm',
-                          style: AppTextStyles.bold12
-                              .copyWith(color: Colors.white)),
-                    ),
-                  ),
                   SizedBox(height: 10),
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

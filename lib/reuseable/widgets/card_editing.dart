@@ -6,7 +6,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 class CardEditing extends StatelessWidget {
   final CardModel card;
-  const CardEditing({Key? key, required this.card}) : super(key: key);
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  const CardEditing({Key? key, required this.card, this.onEdit, this.onDelete})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +19,16 @@ class CardEditing extends StatelessWidget {
         motion: ScrollMotion(),
         children: [
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              onEdit!();
+            },
             icon: Icons.edit_outlined,
             foregroundColor: AppTheme.primaryColor,
           ),
           SlidableAction(
-            onPressed: (BuildContext context) {},
+            onPressed: (BuildContext context) {
+              onDelete!();
+            },
             icon: Icons.delete_outline,
             foregroundColor: Colors.red,
           ),
