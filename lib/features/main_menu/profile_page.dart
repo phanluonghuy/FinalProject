@@ -20,7 +20,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _currentUser = FirebaseAuth.instance.currentUser!;
-  UserRepo _userRepo = UserRepo();
   UserModel? _userInfo;
 
   @override
@@ -32,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadUserInfo() async {
     String uid = _currentUser.uid;
-    UserModel? userInfo = await _userRepo.getUserByID(uid);
+    UserModel? userInfo = await UserRepo().getUserByID(uid);
 
     setState(() {
       _userInfo = userInfo;

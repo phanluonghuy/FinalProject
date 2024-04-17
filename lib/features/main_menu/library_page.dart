@@ -1,10 +1,17 @@
+import 'package:finalproject/data/models/topic_model.dart';
+import 'package:finalproject/data/models/user_model.dart';
+import 'package:finalproject/data/repositories/topic_repo.dart';
+import 'package:finalproject/data/repositories/user_repo.dart';
 import 'package:finalproject/features/topic/create_topic_page.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/reuseable/widgets/topic_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/data/repositories/achievement_repo.dart';
 import 'package:finalproject/data/models/achievement_model.dart';
+import 'package:flutter/widgets.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({Key? key}) : super(key: key);
@@ -14,22 +21,22 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final AchievementRepo _achievementRepository = AchievementRepo();
-  List<AchievementModel> _achievements = [];
+  final _currentUser = FirebaseAuth.instance.currentUser!;
+  List<TopicModel> _topics = [];
+  bool _isLoadingTopics = true;
 
   @override
   void initState() {
     super.initState();
-    // Call the getAllAchievements function when the widget is initialized
-    _loadAchievements();
+    _loadTopics();
   }
 
-  Future<void> _loadAchievements() async {
-    List<AchievementModel> achievements =
-        await _achievementRepository.getAllAchievements();
+  Future<void> _loadTopics() async {
+    List<TopicModel> topics =
+        await TopicRepo().getAllTopicsByOwnerID(_currentUser.uid);
     setState(() {
-      // Update the state with the retrieved achievements
-      _achievements = achievements;
+      _topics = topics;
+      _isLoadingTopics = false;
     });
   }
 
@@ -45,7 +52,7 @@ class _LibraryPageState extends State<LibraryPage> {
               child: Image.asset('images/cat_face.png'),
               height: 60,
             ),
-            Text('Library', // Title
+            Text('Your Library', // Title
                 style: AppTextStyles.bold20),
           ],
         ),
@@ -101,7 +108,8 @@ class _LibraryPageState extends State<LibraryPage> {
                             ),
                             Text(
                               'Topics',
-                              style: AppTextStyles.bold16.copyWith(color: Colors.white),
+                              style: AppTextStyles.bold16
+                                  .copyWith(color: Colors.white),
                             ),
                           ],
                         ),
@@ -119,7 +127,9 @@ class _LibraryPageState extends State<LibraryPage> {
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
-                          side: BorderSide(color: AppTheme.primaryColor, width: 2), // Set border color
+                          side: BorderSide(
+                              color: AppTheme.primaryColor,
+                              width: 2), // Set border color
                         ),
                       ),
                       child: Padding(
@@ -137,7 +147,8 @@ class _LibraryPageState extends State<LibraryPage> {
                             ),
                             Text(
                               'Folders',
-                              style: AppTextStyles.bold16.copyWith(color: AppTheme.primaryColor),
+                              style: AppTextStyles.bold16
+                                  .copyWith(color: AppTheme.primaryColor),
                             ),
                           ],
                         ),
@@ -145,6 +156,27 @@ class _LibraryPageState extends State<LibraryPage> {
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                // Wrap the Column with Expanded
+                child: _isLoadingTopics
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView(
+                        // Wrap ListView with Expanded
+                        children: _topics
+                            .map((topic) => Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: TopicItem(
+                                    topic: topic,
+                                  ),
+                                ))
+                            .toList(),
+                      ),
               ),
             ],
           ),

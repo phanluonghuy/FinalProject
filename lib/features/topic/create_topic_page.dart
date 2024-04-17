@@ -47,6 +47,8 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
   }
 
   void editCard(int index) {
+    _termController.text = _cards.elementAt(index).term ?? '';
+    _definitionController.text = _cards.elementAt(index).definition ?? '';
     showDialog(
         context: context,
         builder: (BuildContext context) {

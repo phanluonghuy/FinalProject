@@ -9,19 +9,68 @@ class TopicRepo {
   Future<void> createTopic(TopicModel topic, List<CardModel> cards) async {
     final CollectionReference topicRef = _db.collection('topics');
 
-    // Add the topic to Firestore
     DocumentReference topicDocRef = await topicRef.add(topic.toFirestore());
-
-    // Create a batch operation for adding cards
     WriteBatch batch = _db.batch();
-
-    // Add each card to the "cards" subcollection under the topic
     for (var card in cards) {
       CollectionReference cardsRef = topicDocRef.collection('cards');
       batch.set(cardsRef.doc(), card.toFirestore());
     }
-
-    // Commit the batch operation
     await batch.commit();
   }
+
+  Future<List<TopicModel>> getAllTopics() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics')
+          .get(); // Change the type here to match the correct type
+
+      final List<TopicModel> topics = querySnapshot.docs
+          .map((doc) => TopicModel.fromFirestore(doc, null))
+          .toList();
+
+      return topics;
+    } catch (e) {
+      // Handle error if any
+      print('Error getting all topics: $e');
+      throw Exception('Failed to get all topics: $e');
+    }
+  }
+
+  Future<List<TopicModel>> getAllTopicsByOwnerID(String ownerID) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics')
+          .where('ownerID', isEqualTo: ownerID)
+          .get();
+
+      final List<TopicModel> topics = querySnapshot.docs
+          .map((doc) => TopicModel.fromFirestore(doc, null))
+          .toList();
+
+      return topics;
+    } catch (e) {
+      // Handle error if any
+      print('Error getting topics by ownerID: $e');
+      throw Exception('Failed to get topics by ownerID: $e');
+    }
+  }
+
+  Future<List<CardModel>> getAllCardsForTopic(String topicId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics/$topicId/cards')
+          .get(); // Change the type here to match the correct type
+
+      final List<CardModel> cards = querySnapshot.docs
+          .map((doc) => CardModel.fromFirestore(doc))
+          .toList();
+
+      return cards;
+    } catch (e) {
+      // Handle error if any
+      print('Error getting all cards for topic $topicId: $e');
+      throw Exception('Failed to get all cards for topic $topicId: $e');
+    }
+  }
+
 }
