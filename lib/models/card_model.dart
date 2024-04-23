@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CardModel {
-  final String? id;
-  final String? term;
-  final String? definition;
-  final String? imgUrl;
+  String? id;
+  String? term;
+  String? definition;
+  String? imgUrl;
 
   CardModel({this.id, this.term, this.definition, this.imgUrl});
 

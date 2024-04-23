@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalproject/data/models/card_model.dart';
-import 'package:finalproject/data/models/record_model.dart';
+import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/record_model.dart';
 
 class TopicModel {
   final String? id;

@@ -1,6 +1,6 @@
-import 'package:finalproject/data/models/topic_model.dart';
-import 'package:finalproject/data/repositories/auth_repo.dart';
-import 'package:finalproject/data/repositories/topic_repo.dart';
+import 'package:finalproject/models/topic_model.dart';
+import 'package:finalproject/repositories/auth_repo.dart';
+import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';

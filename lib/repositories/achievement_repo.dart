@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalproject/data/models/achievement_model.dart';
-import 'package:finalproject/data/models/topic_model.dart';
+import 'package:finalproject/models/achievement_model.dart';
+import 'package:finalproject/models/topic_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class AchievementRepo {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finalproject/data/models/card_model.dart';
-import 'package:finalproject/data/models/topic_model.dart';
+import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/topic_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class TopicRepo {
@@ -72,5 +72,4 @@ class TopicRepo {
       throw Exception('Failed to get all cards for topic $topicId: $e');
     }
   }
-
 }

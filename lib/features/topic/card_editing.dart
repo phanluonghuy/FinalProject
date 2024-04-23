@@ -1,4 +1,4 @@
-import 'package:finalproject/data/models/card_model.dart';
+import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:flutter/material.dart';

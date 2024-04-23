@@ -1,4 +1,4 @@
-import 'package:finalproject/data/repositories/auth_repo.dart';
+import 'package:finalproject/repositories/auth_repo.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/widgets/message_bubble.dart';
@@ -32,7 +32,10 @@ class _WelcomePageState extends State<WelcomePage> {
                   children: [
                     MessageBubble(message: AppStrings.hiThere),
                     SizedBox(height: 30),
-                    Container(child: Image.asset('images/cat_full.png'), height: 250,),
+                    Container(
+                      child: Image.asset('images/cat_full.png'),
+                      height: 250,
+                    ),
                     SizedBox(height: 20),
                     Text(AppStrings.appName,
                         style: AppTextStyles.bold42
@@ -44,7 +47,6 @@ class _WelcomePageState extends State<WelcomePage> {
                           AppTextStyles.bold20.copyWith(color: AppTheme.grey1),
                       textAlign: TextAlign.center,
                     ),
-                    
                   ],
                 ),
               ),

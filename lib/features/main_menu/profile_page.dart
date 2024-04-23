@@ -1,8 +1,8 @@
-import 'package:finalproject/data/models/topic_model.dart';
-import 'package:finalproject/data/models/user_model.dart';
-import 'package:finalproject/data/repositories/auth_repo.dart';
-import 'package:finalproject/data/repositories/topic_repo.dart';
-import 'package:finalproject/data/repositories/user_repo.dart';
+import 'package:finalproject/models/topic_model.dart';
+import 'package:finalproject/models/user_model.dart';
+import 'package:finalproject/repositories/auth_repo.dart';
+import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
 import 'package:finalproject/reuseable/widgets/image_item.dart';
@@ -73,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
-            child: Center(
+              child: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -144,7 +144,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           Column(
                             children: [
                               Text('25', style: AppTextStyles.bold20),
-                              Text('achievements', style: AppTextStyles.normal16)
+                              Text('achievements',
+                                  style: AppTextStyles.normal16)
                             ],
                           ),
                         ],
@@ -191,14 +192,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: 20,
                       ),
-                      ImageItem(imageLocation: 'images/topics.png', title: 'View all topics'),
-                      SizedBox(height: 10,),
-                      ImageItem(imageLocation: 'images/achievement.png', title: 'View all achievements')
+                      ImageItem(
+                          imageLocation: 'images/topics.png',
+                          title: 'View all topics'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ImageItem(
+                          imageLocation: 'images/achievement.png',
+                          title: 'View all achievements')
                     ],
                   ),
                 ),
               ),
-          ),
+            ),
     );
   }
 }

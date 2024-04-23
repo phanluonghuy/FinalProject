@@ -1,7 +1,7 @@
-import 'package:finalproject/data/models/topic_model.dart';
-import 'package:finalproject/data/models/user_model.dart';
-import 'package:finalproject/data/repositories/topic_repo.dart';
-import 'package:finalproject/data/repositories/user_repo.dart';
+import 'package:finalproject/models/topic_model.dart';
+import 'package:finalproject/models/user_model.dart';
+import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/features/topic/create_topic_page.dart';
 import 'package:finalproject/reuseable/constants/strings.dart';
 import 'package:finalproject/reuseable/constants/text_styles.dart';
@@ -9,8 +9,8 @@ import 'package:finalproject/reuseable/constants/theme.dart';
 import 'package:finalproject/reuseable/widgets/topic_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/data/repositories/achievement_repo.dart';
-import 'package:finalproject/data/models/achievement_model.dart';
+import 'package:finalproject/repositories/achievement_repo.dart';
+import 'package:finalproject/models/achievement_model.dart';
 import 'package:flutter/widgets.dart';
 
 class LibraryPage extends StatefulWidget {
@@ -21,6 +21,8 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
+  final _topicRepo = TopicRepo();
+
   final _currentUser = FirebaseAuth.instance.currentUser!;
   List<TopicModel> _topics = [];
   bool _isLoadingTopics = true;
@@ -33,7 +35,7 @@ class _LibraryPageState extends State<LibraryPage> {
 
   Future<void> _loadTopics() async {
     List<TopicModel> topics =
-        await TopicRepo().getAllTopicsByOwnerID(_currentUser.uid);
+        await _topicRepo.getAllTopicsByOwnerID(_currentUser.uid);
     setState(() {
       _topics = topics;
       _isLoadingTopics = false;
