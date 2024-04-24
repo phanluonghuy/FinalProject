@@ -3,9 +3,9 @@ import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:finalproject/repositories/user_repo.dart';
-import 'package:finalproject/reuseable/constants/text_styles.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
-import 'package:finalproject/reuseable/widgets/image_item.dart';
+import 'package:finalproject/common/constants/text_styles.dart';
+import 'package:finalproject/common/constants/theme.dart';
+import 'package:finalproject/common/widgets/image_item.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

@@ -1,6 +1,6 @@
 import 'package:finalproject/models/card_model.dart';
-import 'package:finalproject/reuseable/constants/text_styles.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/text_styles.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 

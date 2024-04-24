@@ -3,7 +3,7 @@ import 'package:finalproject/repositories/auth_repo.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
 
 class HomePage extends StatefulWidget {

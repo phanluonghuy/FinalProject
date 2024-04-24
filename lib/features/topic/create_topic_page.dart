@@ -1,13 +1,13 @@
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
-import 'package:finalproject/reuseable/constants/strings.dart';
-import 'package:finalproject/reuseable/constants/text_styles.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/strings.dart';
+import 'package:finalproject/common/constants/text_styles.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/features/topic/card_dialog.dart';
 import 'package:finalproject/features/topic/card_editing.dart';
-import 'package:finalproject/reuseable/widgets/double_choice_dialog.dart';
-import 'package:finalproject/reuseable/widgets/single_choice_dialog.dart';
+import 'package:finalproject/common/widgets/double_choice_dialog.dart';
+import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

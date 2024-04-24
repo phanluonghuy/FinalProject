@@ -1,4 +1,4 @@
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class AppTextStyles {

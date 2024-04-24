@@ -1,9 +1,9 @@
 import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/main_menu/library_page.dart';
 import 'package:finalproject/features/main_menu/profile_page.dart';
-import 'package:finalproject/reuseable/constants/strings.dart';
-import 'package:finalproject/reuseable/constants/text_styles.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/strings.dart';
+import 'package:finalproject/common/constants/text_styles.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

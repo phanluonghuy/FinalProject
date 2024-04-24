@@ -4,7 +4,7 @@ import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/auth/welcome_page.dart';
 import 'package:finalproject/wrapper.dart';
-import 'package:finalproject/reuseable/constants/theme.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/auth/login_page.dart';
