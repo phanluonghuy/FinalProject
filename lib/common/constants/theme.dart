@@ -9,4 +9,7 @@ class AppTheme {
   static const Color grey3 = Color.fromARGB(255, 202, 202, 202);
   static const Color grey4 = Color.fromARGB(255, 235, 235, 235);
   static const Color grey5 = Color.fromARGB(255, 247, 247, 247);
+
+
+  static const Color flashCardColor = Color.fromARGB(225, 56, 82, 136);
 }

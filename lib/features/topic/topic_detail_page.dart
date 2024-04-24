@@ -1,3 +1,5 @@
+import 'package:finalproject/common/widgets/topic/card_item.dart';
+import 'package:finalproject/features/topic/flash_card_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -150,12 +152,12 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Flashcard'),
+                  imgUrl: 'images/topics.png', modeName: 'Flashcard', topic: widget.topic),
               SizedBox(
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Type Words'),
+                  imgUrl: 'images/topics.png', modeName: 'Type Words', topic: widget.topic,),
               SizedBox(
                 height: 15,
               ),
@@ -167,7 +169,22 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/achievement.png', modeName: 'Speedrun Quiz'),
+                  imgUrl: 'images/achievement.png', modeName: 'Speedrun Quiz', topic: widget.topic,),
+              SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Word list', style: AppTextStyles.bold20),
+                  Text('${_cards.length} words', style: AppTextStyles.bold16)
+                ],
+              ),
+              SizedBox(height: 8,),
+              ListView.builder(
+                shrinkWrap: true,
+                  itemCount: _cards.length,
+                  itemBuilder: (ctx, idx) => CardItemPage(
+                    card: _cards[idx]
+                  ))
             ],
           ),
         ),
@@ -179,33 +196,52 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
 class LearningModeItem extends StatelessWidget {
   String imgUrl;
   String modeName;
-  LearningModeItem({super.key, required this.imgUrl, required this.modeName});
+  TopicModel topic;
+  LearningModeItem({super.key, required this.imgUrl, required this.modeName, required this.topic});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 70,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppTheme.grey4, width: 2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Row(
-          children: [
-            Image.asset(
-              imgUrl,
-              height: 30,
+    return GestureDetector(
+      onTap: () {
+        if(modeName == 'Flashcard'){
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context)  =>
+                  FlashCardPage(topic: topic),
+              // Replace TopicDetailPage() with your actual widget instance
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              // Use Expanded to occupy the remaining space
-              child: Text(modeName, style: AppTextStyles.bold16),
-            ),
-          ],
+          );
+        } else if(modeName == 'Type Words'){
+
+        } else if(modeName == 'Speedrun Quiz'){
+
+        }
+      }, //
+      child: Container(
+        width: double.infinity,
+        height: 70,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppTheme.grey4, width: 2),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            children: [
+              Image.asset(
+                imgUrl,
+                height: 30,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                // Use Expanded to occupy the remaining space
+                child: Text(modeName, style: AppTextStyles.bold16),
+              ),
+            ],
+          ),
         ),
       ),
     );
