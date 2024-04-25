@@ -41,13 +41,14 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
+        color: Colors.white,
         width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
               SizedBox(height: 16,),
-              Text('Options', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 30, fontWeight: FontWeight.bold),),
+              Text('Options', style: AppTextStyles.bold26),
               SizedBox(height: 16,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -56,20 +57,20 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,
-
+                      backgroundColor: Colors.white, 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                      side: BorderSide(color: AppTheme.primaryColor, width: 2),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.cached, color: AppTheme.flashCardColor),
+                          Icon(Icons.cached, color: AppTheme.primaryColor),
                           SizedBox(width: 8),
-                          Text('SHUFFLE', style: TextStyle(color: AppTheme.flashCardColor, fontWeight: FontWeight.bold)),
+                          Text('SHUFFLE', style: AppTextStyles.bold16.copyWith(color: AppTheme.primaryColor)),
                         ],
                       ),
                     ),
@@ -79,7 +80,7 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
               SizedBox(height: 24,),
               Container(
                 alignment: Alignment.centerLeft,
-                child: Text('CARD ORIENTATION', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 20, fontWeight: FontWeight.bold) ),
+                child: Text('CARD ORIENTATION', style: AppTextStyles.bold20 ),
               ),
               SizedBox(height: 8,),
               Container(
@@ -102,13 +103,13 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                        side: BorderSide(color: AppTheme.primaryColor, width: 2),
                       ).copyWith(
-                        backgroundColor: isTerm? MaterialStatePropertyAll(Colors.blue): null,
+                        backgroundColor: isTerm? MaterialStatePropertyAll(AppTheme.primaryColor): MaterialStatePropertyAll(Colors.white),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Text('TERM', style: TextStyle(color: isTerm? Colors.white: AppTheme.flashCardColor, fontWeight: FontWeight.bold)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                        child: Text('TERM', style: AppTextStyles.bold16.copyWith(color: isTerm? Colors.white: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
@@ -124,26 +125,26 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                        side: BorderSide(color: AppTheme.primaryColor, width: 2),
                       ).copyWith(
-                        backgroundColor: !isTerm? MaterialStatePropertyAll(Colors.blue): null
+                        backgroundColor: !isTerm? MaterialStatePropertyAll(AppTheme.primaryColor): MaterialStatePropertyAll(Colors.white)
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Text('DEFINITION', style: TextStyle(color: !isTerm? Colors.white: AppTheme.flashCardColor, fontWeight: FontWeight.bold)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                        child: Text('DEFINITION', style: AppTextStyles.bold16.copyWith(color: !isTerm? Colors.white: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 24,),
+              SizedBox(height: 10,),
               Container(
                   alignment: Alignment.centerLeft,
-                  child: Text('STUDY USING', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 18, fontWeight: FontWeight.bold),)),
+                  child: Text('Study using', style: AppTextStyles.bold20)),
               SizedBox(height: 8,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,17 +158,17 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                        side: BorderSide(color: AppTheme.primaryColor, width: 2),
                       ).copyWith(
-                        backgroundColor: isAll? MaterialStatePropertyAll(Colors.blue): null
+                        backgroundColor: isAll? MaterialStatePropertyAll(AppTheme.primaryColor): MaterialStatePropertyAll(Colors.white)
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Text('ALL', style: TextStyle(color: isAll? Colors.white: AppTheme.flashCardColor, fontWeight: FontWeight.bold)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                        child: Text('ALL', style: AppTextStyles.bold16.copyWith(color: isAll? Colors.white: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
@@ -183,17 +184,17 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                       },
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.zero,
-
+                        backgroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                        side: BorderSide(color: AppTheme.primaryColor, width: 2),
                       ).copyWith(
-                        backgroundColor: !isAll? MaterialStatePropertyAll(Colors.blue): null
+                        backgroundColor: !isAll? MaterialStatePropertyAll(AppTheme.primaryColor): MaterialStatePropertyAll(Colors.white)
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: Text('STARRED', style: TextStyle(color: !isAll? Colors.white: AppTheme.flashCardColor, fontWeight: FontWeight.bold)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                        child: Text('STARRED', style: AppTextStyles.bold16.copyWith(color: !isAll? Colors.white: AppTheme.primaryColor, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ),
@@ -206,17 +207,19 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     // padding: EdgeInsets.zero,
+                    backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    side: BorderSide(color: AppTheme.flashCardColor, width: 2),
+                    side: BorderSide(color: AppTheme.primaryColor, width: 2),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                    child: Text('Restart Flashcards', style: TextStyle(color: AppTheme.flashCardColor, fontWeight: FontWeight.bold, fontSize: 20)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                    child: Text('Restart Flashcards', style: AppTextStyles.bold20.copyWith(color: AppTheme.primaryColor)),
                   ),
                 ),
               ),
+              SizedBox(height: 16,)
             ],
           ),
         ),
