@@ -40,6 +40,10 @@ dependencies:
   firebase_auth: ^4.17.8
   cloud_firestore: ^4.15.8
   flip_card: ^0.7.0
+  country_flags: ^2.2.0
+  scrollable_positioned_list: ^0.3.8
+  step_progress_indicator: ^1.0.2
+  country_icons: ^3.0.0
 
 dev_dependencies:
   flutter_test:
