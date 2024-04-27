@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: Image.network(
-                            _userInfo?.avtUrl ?? '',
+                            _userInfo?.avatarUrl ?? '',
                             fit: BoxFit
                                 .cover, // Ensure the image covers the container
                           ),

@@ -5,30 +5,39 @@ class UserModel {
   final String? email;
   final String? name;
   final String? bio;
-  final String? avtUrl;
   final int? exp;
+  final String? avatarUrl;
+  final DateTime? birthday;
+  final String? country;
+  final String? phone;
 
   UserModel({
     this.id,
     this.email,
     this.name,
     this.bio,
-    this.avtUrl,
     this.exp,
+    this.avatarUrl,
+    this.birthday,
+    this.country,
+    this.phone,
   });
 
   factory UserModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options,
-  ) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot,
+      SnapshotOptions? options,
+      ) {
     final data = snapshot.data();
     return UserModel(
       id: snapshot.id,
       email: data?['email'],
       name: data?['name'],
       bio: data?['bio'],
-      avtUrl: data?['avtUrl'],
       exp: data?['exp'],
+      avatarUrl: data?['avatarUrl'],
+      birthday: data?['birthday'],
+      country: data?['country'],
+      phone: data?['phone'],
     );
   }
 
@@ -37,8 +46,11 @@ class UserModel {
       if (email != null) 'email': email,
       if (name != null) 'name': name,
       if (bio != null) 'bio': bio,
-      if (avtUrl != null) 'avtUrl': avtUrl,
       if (exp != null) 'exp': exp,
+      if (avatarUrl != null) 'avatarUrl': avatarUrl,
+      if (birthday != null) 'birthday': birthday,
+      if (country != null) 'country': country,
+      if (phone != null) 'phone': phone,
     };
   }
 }

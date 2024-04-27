@@ -105,7 +105,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                             borderRadius: BorderRadius.circular(100),
                             child: _user != null
                                 ? Image.network(
-                                    _user!.avtUrl ?? '',
+                                    _user!.avatarUrl ?? '',
                                     fit: BoxFit.cover,
                                   )
                                 : SizedBox.shrink(),
