@@ -44,6 +44,7 @@ dependencies:
   step_progress_indicator: ^1.0.2
   country_icons: ^3.0.0
   web: ^0.5.1
+  flip_card: ^0.7.0
 
 dev_dependencies:
   flutter_test:
