@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:finalproject/common/widgets/Toast_widget.dart';
+import 'package:finalproject/models/image_helper.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/repositories/auth_repo.dart';
@@ -10,6 +15,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,22 +28,25 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _currentUser = FirebaseAuth.instance.currentUser!;
+  final _userRepo = UserRepo();
+  final _imageHelper = ImageHelper();
   UserModel? _userInfo;
+  String _imgUrl = "";
 
   @override
   void initState() {
     super.initState();
-    // Call the getAllAchievements function when the widget is initialized
     _loadUserInfo();
   }
 
-  Future<void> _loadUserInfo() async {
+  Future<String> _loadUserInfo() async {
     String uid = _currentUser.uid;
     UserModel? userInfo = await UserRepo().getUserByID(uid);
-
     setState(() {
       _userInfo = userInfo;
     });
+
+    return _userInfo?.avatarUrl ?? "";
   }
 
   @override
@@ -82,26 +93,105 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 20,
                       ),
                       Container(
-                        height: 150, // Specify the desired height
-                        width: 150,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: Image.network(
-                            _userInfo?.avatarUrl ?? '',
-                            fit: BoxFit
-                                .cover, // Ensure the image covers the container
-                          ),
-                        ),
-                      ),
+                          height: 150, // Specify the desired height
+                          width: 150,
+                          child: Stack(
+                            children: [
+                              FutureBuilder<String>(
+                                future: _loadUserInfo(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasData) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: CachedNetworkImage(
+                                        // imageUrl: _userInfo!.avatarUrl.toString(),
+                                        imageUrl: snapshot.data ?? "",
+                                        imageBuilder:
+                                            (context, imageProvider) =>
+                                                Container(
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: imageProvider,
+                                                fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                        placeholder: (context, url) => Center(
+                                            child: LoadingAnimationWidget
+                                                .fourRotatingDots(
+                                                    color:
+                                                        AppTheme.primaryColor,
+                                                    size: 30)),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
+                                    );
+                                  } else {
+                                    return LoadingAnimationWidget
+                                        .fourRotatingDots(
+                                            color: AppTheme.primaryColor,
+                                            size: 30);
+                                  }
+                                },
+                              ),
+                              Positioned(
+                                bottom: 1,
+                                right: 1,
+                                child: InkWell(
+                                  onTap: () async {
+                                    XFile? _file =
+                                        await _imageHelper.pickImage();
+                                    if (_file == null ? false : true) {
+                                      CroppedFile? cropFile =
+                                          await _imageHelper.crop(file: _file);
+                                      if (cropFile != null) {
+                                        File croppedFile = File(cropFile.path);
+                                        _userRepo.uploadAvatar(
+                                            croppedFile, context);
+                                        _loadUserInfo();
+                                      } else {
+                                        Toast.uploadAvatarFailed(context);
+                                      }
+                                    } else {
+                                      Toast.uploadAvatarFailed(context);
+                                    }
+                                  },
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  child: Container(
+                                    child: Padding(
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Icon(Icons.mode_edit,
+                                              color: Colors.white, size: 25),
+                                        )),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                            60,
+                                          ),
+                                        ),
+                                        color: AppTheme.primaryColor,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            offset: Offset(2, 4),
+                                            color: Colors.black.withOpacity(
+                                              0.3,
+                                            ),
+                                            blurRadius: 3,
+                                          ),
+                                        ]),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
                         _userInfo?.name ?? '',
                         style: AppTextStyles.bold26,
-                      ),
-                      SizedBox(
-                        height: 10,
                       ),
                       Text(
                         _userInfo?.bio ?? '',

@@ -1,4 +1,5 @@
 import 'package:country_icons/country_icons.dart';
+import 'package:finalproject/common/constants/strings.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
@@ -561,7 +562,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
   void _register(BuildContext pageContext) async {
-    User? user = await _authRepo.signUpClassic(_emailController.text,_passwordController.text,_usernameController.text,"",0,"defaultava.png",DateTime.parse(_birthdayController.text),_countryController.text,"");
+    User? user = await _authRepo.signUpClassic(_emailController.text,_passwordController.text,_usernameController.text,"",0,AppStrings.defaultAvatarUrl,DateTime.parse(_birthdayController.text),_countryController.text,"");
     if (user != null) {
       Navigator.pushNamedAndRemoveUntil(pageContext, '/main', (route) => false);
     } else {
