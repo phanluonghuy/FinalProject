@@ -4,6 +4,7 @@ import 'package:finalproject/common/widgets/type_word/result_type_word_page.dart
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:finalproject/reuseable/constants/ToastMessage.dart';
 import 'package:flutter/material.dart';
 
@@ -159,10 +160,23 @@ class _TypeWordPageState extends State<TypeWordPage> {
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      Row(children: [
-                        Text('Question:', style: TextStyle(color: AppTheme.primaryColor, fontSize: 20, fontWeight: FontWeight.bold),),
-                        SizedBox(width: 16,),
-                        Text('${question}', style: AppTextStyles.bold16,)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            child: Row(
+                            children: [
+                              Text('Question:', style: TextStyle(color: AppTheme.primaryColor, fontSize: 20, fontWeight: FontWeight.bold),),
+                              SizedBox(width: 16,),
+                              Text('${question}', style: AppTextStyles.bold16,)
+                            ],
+                          ),
+                        ),
+                        Container(
+                          child: IconButton(onPressed: (){
+                              TextToSpeech().speakEng("${_cards[index].term}");
+                          }, icon: Icon(Icons.keyboard_voice_outlined)),
+                        ),
                       ],),
                       SizedBox(height: 24,),
                       Row(children: [
