@@ -7,13 +7,26 @@ import 'package:flutter/material.dart';
 
 class CardItemPage extends StatefulWidget {
   CardModel card;
-  CardItemPage({super.key, required this.card});
+  String topicId;
+  CardItemPage({super.key, required this.card, required this.topicId});
 
   @override
   State<CardItemPage> createState() => _CardItemPageState();
 }
 
 class _CardItemPageState extends State<CardItemPage> {
+  TopicRepo topicRepo = TopicRepo();
+  bool isStar = false;
+  String cardId = "";
+  String topicId = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    isStar = widget.card.star!;
+    cardId = widget.card.id!;
+    topicId = widget.topicId;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +55,12 @@ class _CardItemPageState extends State<CardItemPage> {
 
                 IconButton(
                     onPressed: (){
-
-                    }, icon: Icon(Icons.star_border))
+                      isStar = !isStar;
+                      topicRepo.updateCardStar(topicId, cardId, isStar);
+                      setState(() {
+                        // print("hi lo");
+                      });
+                    }, icon: isStar ? Icon(Icons.star, color: Colors.yellow[800],): Icon(Icons.star_border)),
               ],
             ),
           ),

@@ -183,7 +183,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 shrinkWrap: true,
                   itemCount: _cards.length,
                   itemBuilder: (ctx, idx) => CardItemPage(
-                    card: _cards[idx]
+                    card: _cards[idx],
+                    topicId: widget.topic.id!,
                   ))
             ],
           ),

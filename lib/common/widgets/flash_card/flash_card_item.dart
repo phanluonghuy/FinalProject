@@ -8,7 +8,10 @@ import 'package:flutter/material.dart';
 
 class FlashCardItemPage extends StatefulWidget {
   CardModel card;
-  FlashCardItemPage({super.key, required this.card});
+  bool isShuffle;
+  bool isTerm;
+  bool isAll;
+  FlashCardItemPage({super.key, required this.card, required this.isShuffle, required this.isTerm, required this.isAll});
 
   @override
   State<FlashCardItemPage> createState() => _FlashCardItemPageState();
@@ -16,7 +19,6 @@ class FlashCardItemPage extends StatefulWidget {
 
 class _FlashCardItemPageState extends State<FlashCardItemPage> with TickerProviderStateMixin {
 
-  bool isTerm = true;
   late FlipCardController _controller;
 
   @override
@@ -55,9 +57,9 @@ class _FlashCardItemPageState extends State<FlashCardItemPage> with TickerProvid
             padding: EdgeInsets.all(16),
                 child: FlipCard(
                   controller: _controller,
-                  front: _cardItem('${widget.card.term}'),
+                  front: widget.isTerm? _cardItem('${widget.card.term}'): _cardItem('${widget.card.definition}'),
 
-                  back: _cardItem('${widget.card.definition}')
+                  back: widget.isTerm? _cardItem('${widget.card.definition}'): _cardItem('${widget.card.term}'),
                 ),
         )
     );
