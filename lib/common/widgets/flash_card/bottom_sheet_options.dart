@@ -58,6 +58,12 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Shuffle flashcard successfully'),
+                            duration: Duration(seconds: 2),
+                          ));
                       Navigator.pop(context, {'isShuffle': true, 'isTerm': isTerm, 'isAll': isAll});
                     },
                     style: ElevatedButton.styleFrom(
@@ -210,6 +216,12 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Restart flashcard successfully'),
+                          duration: Duration(seconds: 2),
+                        ));
                     Navigator.pop(context, {'isTerm': isTerm, 'isAll': isAll});
                   },
                   style: ElevatedButton.styleFrom(

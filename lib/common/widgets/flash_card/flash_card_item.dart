@@ -35,6 +35,7 @@ class _FlashCardItemPageState extends State<FlashCardItemPage> with TickerProvid
         // });
       },
       child: Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           color: AppTheme.primaryColor,
           borderRadius: BorderRadius.circular(20),
