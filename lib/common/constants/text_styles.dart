@@ -2,12 +2,18 @@ import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
+  static const TextStyle title = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 42,
+    fontWeight: FontWeight.bold,
+    color: AppTheme.primaryColor
+  );
+
   static const TextStyle bold42 = TextStyle(
     fontFamily: 'Lato',
     fontSize: 42,
     fontWeight: FontWeight.bold,
   );
-
   static const TextStyle bold26 = TextStyle(
     fontFamily: 'Lato',
     fontSize: 26,

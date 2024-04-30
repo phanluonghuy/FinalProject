@@ -26,4 +26,34 @@ class Toast {
         height: 70,
       ).show(context);
   }
+  static void wrongOTP(BuildContext context) {
+    return
+      MotionToast(
+        icon: Icons.verified,
+        primaryColor: Colors.yellow,
+        description: const Text("Invalid OTP",style: TextStyle(color:Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+        width: 300,
+        height: 70,
+      ).show(context);
+  }
+  static void wrongFormatInt(BuildContext context) {
+    return
+      MotionToast(
+        icon: Icons.verified,
+        primaryColor: Colors.yellow,
+        description: const Text("Invalid number OTP",style: TextStyle(color:Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+        width: 300,
+        height: 70,
+      ).show(context);
+  }
+  static void emailExits(BuildContext context) {
+    return
+      MotionToast(
+        icon: Icons.email,
+        primaryColor: Colors.redAccent,
+        description: const Text("Your email exits",style: TextStyle(color:Colors.black,fontWeight: FontWeight.w400,fontSize: 18),),
+        width: 300,
+        height: 70,
+      ).show(context);
+  }
 }
