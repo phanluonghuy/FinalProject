@@ -24,22 +24,12 @@ class FlashCardPage extends StatefulWidget {
 
 class _FlashCardPageState extends State<FlashCardPage> {
   final _topicRepo = TopicRepo();
+  late PageController _pageController;
   int index = 0;
 
   bool isTerm = true;
   bool isAll = true;
-
-  void updateTerm(bool value) {
-    setState(() {
-      isTerm = value;
-    });
-  }
-
-  void updateAll(bool value) {
-    setState(() {
-      isAll = value;
-    });
-  }
+  bool isShuffle = false;
   
   List<CardModel> _cards = [];
   
@@ -47,18 +37,28 @@ class _FlashCardPageState extends State<FlashCardPage> {
     String topicID = widget.topic.id ?? '';
     List<CardModel> cards = await _topicRepo.getAllCardsForTopic(topicID);
 
+    if(isAll == false){
+      cards = await _topicRepo.getCardsByStar(topicID);
+    }
+    if(isShuffle == true){
+      cards.shuffle();
+    }
+
     setState(() {
       _cards = cards;
     });
   }
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     _getCards();
+    _pageController = PageController(initialPage: index);
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,11 +68,29 @@ class _FlashCardPageState extends State<FlashCardPage> {
           IconButton(
               onPressed: (){
                 showModalBottomSheet(context: context, isScrollControlled: true,
-                    builder: (ctx){
+                    builder: (ctx) {
                       return BottomSheetOptionsPage(
-                        topic: widget.topic
+                        topic: widget.topic,
+                        isTermMain: isTerm,
+                        isAllMain: isAll,
                       );
-                    });
+                    }).then((value){
+                      if(value['isShuffle'] != null){
+                        setState(() {
+                          isShuffle = value['isShuffle'];
+                          isTerm = value['isTerm'];
+                          isAll = value['isAll'];
+                          _getCards();
+                        });
+                      } else{
+                        setState(() {
+                          isShuffle = false;
+                          isTerm = value['isTerm'];
+                          isAll = value['isAll'];
+                          _getCards();
+                        });
+                      }
+                });
 
               },
               icon: Icon(Icons.more_vert)),
@@ -86,12 +104,15 @@ class _FlashCardPageState extends State<FlashCardPage> {
               Container(
                 height: 600,
                 child: PageView.builder(
-
+                  controller: _pageController,
                   onPageChanged: (value) => setState(() {
                     index = value;
                   }),
                     itemBuilder: (ctx, idx) => FlashCardItemPage(
                       card: _cards[index],
+                      isShuffle: isShuffle,
+                      isTerm: isTerm,
+                      isAll: isAll,
                     ),
                     itemCount: _cards.length,
                 ),
@@ -101,6 +122,10 @@ class _FlashCardPageState extends State<FlashCardPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(onPressed: (){
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
                     setState(() {
                       if(index - 1 < 0){
                         index = 0;
@@ -110,6 +135,10 @@ class _FlashCardPageState extends State<FlashCardPage> {
                     });
                   }, icon: Icon(Icons.keyboard_return, size: 40,)),
                   IconButton(onPressed: (){
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
                     setState(() {
                       if(index + 1 >= _cards.length){
                         index = _cards.length - 1;

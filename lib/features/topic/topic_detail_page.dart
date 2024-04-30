@@ -1,5 +1,6 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
+import 'package:finalproject/features/topic/type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -183,7 +184,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 shrinkWrap: true,
                   itemCount: _cards.length,
                   itemBuilder: (ctx, idx) => CardItemPage(
-                    card: _cards[idx]
+                    card: _cards[idx],
+                    topicId: widget.topic.id!,
                   ))
             ],
           ),
@@ -213,7 +215,13 @@ class LearningModeItem extends StatelessWidget {
             ),
           );
         } else if(modeName == 'Type Words'){
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context)  =>
+                  TypeWordPage(topic: topic),
+            ),
+          );
         } else if(modeName == 'Speedrun Quiz'){
 
         }

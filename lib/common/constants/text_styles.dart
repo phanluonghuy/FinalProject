@@ -14,6 +14,13 @@ class AppTextStyles {
     fontSize: 42,
     fontWeight: FontWeight.bold,
   );
+
+  static const TextStyle bold30 = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+  );
+
   static const TextStyle bold26 = TextStyle(
     fontFamily: 'Lato',
     fontSize: 26,
