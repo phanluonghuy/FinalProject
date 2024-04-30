@@ -61,7 +61,7 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                                'Shuffle flashcard successfully'),
+                                'Shuffle successfully'),
                             duration: Duration(seconds: 2),
                           ));
                       Navigator.pop(context, {'isShuffle': true, 'isTerm': isTerm, 'isAll': isAll});
@@ -219,7 +219,7 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
-                              'Restart flashcard successfully'),
+                              'Restart successfully'),
                           duration: Duration(seconds: 2),
                         ));
                     Navigator.pop(context, {'isTerm': isTerm, 'isAll': isAll});
@@ -234,7 +234,7 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                    child: Text('Restart Flashcards', style: AppTextStyles.bold20.copyWith(color: AppTheme.primaryColor)),
+                    child: Text('Restart Cards', style: AppTextStyles.bold20.copyWith(color: AppTheme.primaryColor)),
                   ),
                 ),
               ),

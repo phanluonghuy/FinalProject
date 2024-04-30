@@ -1,5 +1,6 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
+import 'package:finalproject/features/topic/speedrun_quiz_page.dart';
 import 'package:finalproject/features/topic/type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -223,7 +224,13 @@ class LearningModeItem extends StatelessWidget {
             ),
           );
         } else if(modeName == 'Speedrun Quiz'){
-
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context)  =>
+                  SpeedrunQuizPage(topic: topic),
+            ),
+          );
         }
       }, //
       child: Container(

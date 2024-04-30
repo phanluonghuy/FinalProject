@@ -44,14 +44,17 @@ class _CardItemPageState extends State<CardItemPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Term: ${widget.card.term}', style: AppTextStyles.bold16,),
-                    Text('Definition: ${widget.card.definition}', style: AppTextStyles.bold16),
-                    // Text('Description: ${widget.card.imgUrl}'),
-                    // Text('Term: ${widget.card.term}'),
-                  ],
+                Container(
+                  width: 200,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Term: ${widget.card.term}', style: AppTextStyles.bold16,),
+                      Text('Definition: ${widget.card.definition}', style: AppTextStyles.bold16),
+                      // Text('Description: ${widget.card.imgUrl}'),
+                      // Text('Term: ${widget.card.term}'),
+                    ],
+                  ),
                 ),
                 Container(
                   child: Row(
