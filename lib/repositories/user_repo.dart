@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/widgets/Toast_widget.dart';
@@ -73,5 +74,36 @@ class UserRepo {
       Toast.uploadAvatarFailed(context);
       print(e);
     }
+  }
+  Future<void> updateUser(UserModel userModel,BuildContext context) async {
+    var ref = _db.collection("users");
+    var userRef = ref.doc(userModel.id);
+    // id: snapshot.id,
+    // email: data?['email'],
+    // name: data?['name'],
+    // bio: data?['bio'],
+    // exp: data?['exp'],
+    // avatarUrl: data?['avatarUrl'],
+    // birthday: (data?['birthday'] as Timestamp).toDate(),
+    // country: data?['country'],
+    // phone: data?['phone'],
+   try {
+     await userRef.update({
+       "name" : userModel.name,
+       "bio" : userModel.bio,
+       "birthday" : userModel.birthday,
+       "country" : userModel.country,
+       "phone" : userModel.phone
+     });
+     AnimatedSnackBar.rectangle(
+       'Success',
+       'Your profile update was successful.',
+       type: AnimatedSnackBarType.success,
+       brightness: Brightness.light,
+     ).show(context);
+   } catch (e) {
+
+   }
+
   }
 }

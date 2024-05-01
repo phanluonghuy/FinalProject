@@ -1,5 +1,6 @@
 import 'package:finalproject/features/auth/forgotPasword_page.dart';
 import 'package:finalproject/features/auth/register_page.dart';
+import 'package:finalproject/features/profile/edit_profile_page.dart';
 import 'package:finalproject/firebase_options.dart';
 import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/main_menu/control_page.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/main': (context) => const ControlPage(),
         '/register': (context) => const RegisterPage(),
         '/forgot': (context) => const ForgotPage(),
+        '/editProfile': (context) => const EditProfile(),
       },
     );
   }

@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 final _storageRef = FirebaseStorage.instance.ref();
 
 class UserModel {
-  final String? id;
-  final String? email;
-  final String? name;
-  final String? bio;
-  final int? exp;
+  String? id;
+  String? email;
+  String? name;
+  String? bio;
+  int? exp;
   String? avatarUrl;
-  final DateTime? birthday;
-  final String? country;
-  final String? phone;
+  DateTime? birthday;
+  String? country;
+  String? phone;
 
   UserModel({
     this.id,
@@ -25,11 +26,10 @@ class UserModel {
     this.phone,
   });
 
-
   factory UserModel.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> snapshot,
-      SnapshotOptions? options,
-      )   {
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
     final data = snapshot.data();
     return UserModel(
       id: snapshot.id,

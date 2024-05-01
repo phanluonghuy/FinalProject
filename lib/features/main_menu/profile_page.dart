@@ -31,7 +31,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final _userRepo = UserRepo();
   final _imageHelper = ImageHelper();
   UserModel? _userInfo;
-  String _imgUrl = "";
 
   @override
   void initState() {
@@ -104,7 +103,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                     return ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: CachedNetworkImage(
-                                        // imageUrl: _userInfo!.avatarUrl.toString(),
                                         imageUrl: snapshot.data ?? "",
                                         imageBuilder:
                                             (context, imageProvider) =>
@@ -126,10 +124,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     );
                                   } else {
-                                    return LoadingAnimationWidget
-                                        .fourRotatingDots(
-                                            color: AppTheme.primaryColor,
-                                            size: 30);
+                                    return Center(
+                                      child: LoadingAnimationWidget
+                                          .twoRotatingArc(
+                                              color: AppTheme.primaryColor,
+                                              size: 30),
+                                    );
                                   }
                                 },
                               ),
@@ -152,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                         Toast.uploadAvatarFailed(context);
                                       }
                                     } else {
-                                      Toast.uploadAvatarFailed(context);
+                                      //Toast.uploadAvatarFailed(context);
                                     }
                                   },
                                   borderRadius:
@@ -246,7 +246,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       Container(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () => {},
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/editProfile');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryColor,
                             elevation: 0,

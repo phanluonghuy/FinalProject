@@ -55,6 +55,8 @@ dependencies:
   flutter_otp_text_field: ^1.1.3+2
   fluttertoast: ^8.2.5
   flutter_tts: ^4.0.2
+  shimmer: ^3.0.0
+  animated_snack_bar: ^0.4.0
 
 dev_dependencies:
   flutter_test:

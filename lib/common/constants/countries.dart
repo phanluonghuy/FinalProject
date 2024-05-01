@@ -18,6 +18,10 @@ class Country {
   );
 }
 
+int findCountryIndexByName(String name) {
+  return countryList.indexWhere((country) => country.name.toLowerCase() == name.toLowerCase());
+}
+
 final List<Country> countryList = [
   Country(
     isoCode: "AF",
