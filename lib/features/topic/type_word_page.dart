@@ -1,5 +1,6 @@
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
+import 'package:finalproject/common/widgets/flash_card/bottom_sheet_options.dart';
 import 'package:finalproject/common/widgets/type_word/result_type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -19,6 +20,9 @@ class TypeWordPage extends StatefulWidget {
 class _TypeWordPageState extends State<TypeWordPage> {
   TopicRepo _topicRepo = TopicRepo();
   int index = 0;
+  bool isTerm = true;
+  bool isAll = true;
+  bool isShuffle = false;
   List<CardModel> _cards = [];
   List<CardModel> _cardCorrect = [];
   List<CardModel> _cardInCorrect = [];
@@ -40,9 +44,23 @@ class _TypeWordPageState extends State<TypeWordPage> {
     String topicID = widget.topic.id ?? '';
     List<CardModel> cards = await _topicRepo.getAllCardsForTopic(topicID);
 
+    if(isAll == false){
+      cards = await _topicRepo.getCardsByStar(topicID);
+    }
+    if(isShuffle == true){
+      cards.shuffle();
+    }
+
     setState(() {
+      // print(cards[0].term);
+      // print(cards[1].term);
+      // print(cards[2].term);
+      // print(cards[3].term);
       _cards = cards;
       question = _cards[index].term ?? "";
+      if(isTerm == false){
+        question = _cards[index].definition ?? "";
+      }
     });
   }
 
@@ -50,7 +68,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
     if(_textEditingController.text.isEmpty){
       ToastMessage().showToastFailed("Please enter definition !!");
     }
-    else if(_textEditingController.text == _cards[index].definition){
+    else if(_textEditingController.text == _cards[index].definition && isTerm == true){
       if(index + 1 >= _cards.length){
         index = _cards.length - 1;
         _cardCorrect.add(_cards[index]);
@@ -79,19 +97,72 @@ class _TypeWordPageState extends State<TypeWordPage> {
             _correctAnswer.clear();
             _inCorrectAnswer.clear();
             _textEditingController.clear();
+          }else{
+            Navigator.pop(context);
           }
 
         });
 
       }else{
+        setState(() {
+          _cardCorrect.add(_cards[index]);
+          _correctAnswer.add(_textEditingController.text);
+          _textEditingController.clear();
+          ToastMessage().showToastSuccess("Correct answer !!");
+          index = index + 1;
+          question = _cards[index].term ?? "";
+          // _getCards();
+        });
+      }
+    }
+    else if(_textEditingController.text == _cards[index].term && isTerm == false){
+      if(index + 1 >= _cards.length){
+        index = _cards.length - 1;
         _cardCorrect.add(_cards[index]);
         _correctAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastSuccess("Correct answer !!");
-        index++;
-        _getCards();
+        var newIndex = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context)   =>
+                ResultTypeWordPage(
+                  topic: widget.topic,
+                  cardCorrect: _cardCorrect,
+                  cardInCorrect: _cardInCorrect,
+                  correctAnswer: _correctAnswer,
+                  inCorrectAnswer: _inCorrectAnswer,
+                ),
+          ),
+        );
+        setState(() {
+          if(newIndex['newIndex'] == 0){
+            index = newIndex['newIndex'];
+            print("index: $index" );
+            _cardCorrect.clear();
+            _cardInCorrect.clear();
+            _correctAnswer.clear();
+            _inCorrectAnswer.clear();
+            _textEditingController.clear();
+          }else{
+            Navigator.pop(context);
+          }
+
+        });
+
+      }else{
+        setState(() {
+          _cardCorrect.add(_cards[index]);
+          _correctAnswer.add(_textEditingController.text);
+          _textEditingController.clear();
+          ToastMessage().showToastSuccess("Correct answer !!");
+          index = index + 1;
+          question = _cards[index].definition ?? "";
+          // _getCards();
+        });
       }
-    }else{
+    }
+    else if(_textEditingController.text != _cards[index].definition && isTerm == true){
       if(index + 1 >= _cards.length){
         index = _cards.length - 1;
         _cardInCorrect.add(_cards[index]);
@@ -114,22 +185,70 @@ class _TypeWordPageState extends State<TypeWordPage> {
         setState(() {
           if(newIndex['newIndex'] == 0){
             index = newIndex['newIndex'];
-            print("index: $index" );
             _cardCorrect.clear();
             _cardInCorrect.clear();
             _correctAnswer.clear();
             _inCorrectAnswer.clear();
             _textEditingController.clear();
+          }else{
+            Navigator.pop(context);
           }
 
         });
       }else{
+        setState(() {
+          _cardInCorrect.add(_cards[index]);
+          _inCorrectAnswer.add(_textEditingController.text);
+          _textEditingController.clear();
+          ToastMessage().showToastFailed("Incorrect answer !!");
+          index = index + 1;
+          question = _cards[index].term ?? "";
+          // _getCards();
+        });
+      }
+    }
+    else{
+      if(index + 1 >= _cards.length){
+        index = _cards.length - 1;
         _cardInCorrect.add(_cards[index]);
         _inCorrectAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastFailed("Incorrect answer !!");
-        index++;
-        _getCards();
+        var newIndex = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context)  =>
+                ResultTypeWordPage(
+                  topic: widget.topic,
+                  cardCorrect: _cardCorrect,
+                  cardInCorrect: _cardInCorrect,
+                  correctAnswer: _correctAnswer,
+                  inCorrectAnswer: _inCorrectAnswer,
+                ),
+          ),
+        );
+        setState(() {
+          if(newIndex['newIndex'] == 0){
+            index = newIndex['newIndex'];
+            _cardCorrect.clear();
+            _cardInCorrect.clear();
+            _correctAnswer.clear();
+            _inCorrectAnswer.clear();
+            _textEditingController.clear();
+          }else{
+            Navigator.pop(context);
+          }
+
+        });
+      }else{
+        setState(() {
+          _cardInCorrect.add(_cards[index]);
+          _inCorrectAnswer.add(_textEditingController.text);
+          _textEditingController.clear();
+          ToastMessage().showToastFailed("Incorrect answer !!");
+          index = index + 1;
+          question = _cards[index].definition ?? "";
+        });
       }
     }
   }
@@ -141,8 +260,29 @@ class _TypeWordPageState extends State<TypeWordPage> {
         title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: TextStyle(fontWeight: FontWeight.bold),),
         actions: [
           IconButton(
-              onPressed: (){
-                
+              onPressed: () {
+                 showModalBottomSheet(context: context,
+                    builder: (ctx) => BottomSheetOptionsPage(
+                        topic: widget.topic,
+                        isTermMain: isTerm,
+                        isAllMain: isAll)
+                ).then((value){
+                   if(value['isShuffle'] != null){
+                     setState(() {
+                       isShuffle = value['isShuffle'];
+                       isTerm = value['isTerm'];
+                       isAll = value['isAll'];
+                       _getCards();
+                     });
+                   } else{
+                     setState(() {
+                       isShuffle = false;
+                       isTerm = value['isTerm'];
+                       isAll = value['isAll'];
+                       _getCards();
+                     });
+                   }
+                 });
               }, icon: Icon(Icons.more_vert))
         ],
       ),
@@ -168,6 +308,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
                             children: [
                               Text('Question:', style: TextStyle(color: AppTheme.primaryColor, fontSize: 20, fontWeight: FontWeight.bold),),
                               SizedBox(width: 16,),
+                              isTerm ? Text('${question}', style: AppTextStyles.bold16,):
                               Text('${question}', style: AppTextStyles.bold16,)
                             ],
                           ),

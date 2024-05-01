@@ -51,125 +51,128 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-            padding: EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text("Result", style: TextStyle(color: AppTheme.flashCardColor, fontWeight: FontWeight.bold, fontSize: 35),),
-            SizedBox(height: 18,),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: AppTheme.primaryColor
+        body: SingleChildScrollView(
+          child: Padding(
+              padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text("Result", style: TextStyle(color: AppTheme.flashCardColor, fontWeight: FontWeight.bold, fontSize: 35),),
+              SizedBox(height: 18,),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: AppTheme.primaryColor
+                ),
+                child: Padding(
+                    padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Score:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('Correct:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('Incorrect:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('Feedback:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${_cardCorrect.length * 10}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('${_cardCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('${_cardInCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('${_feedback}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                      ],
+                    ),
+                  ],
+                ),),
               ),
-              child: Padding(
-                  padding: EdgeInsets.all(16),
-              child: Row(
+              SizedBox(height: 16,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Correct', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
+                  Text('Incorrect', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
+                ],
+              ),
+              SizedBox(height: 12,),
+              Container(
+                alignment: Alignment.topCenter,
+                height: 390,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemBuilder: (ctx, idx) => CardTypeWordResultPage(
+                          cardModel: _cardCorrect[idx],
+                          answer: _correctAnswer[idx],
+                        ),
+                        itemCount: _cardCorrect.length,
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemBuilder: (ctx, idx) => CardTypeWordResultPage(
+                          cardModel: _cardInCorrect[idx],
+                          answer: _inCorrectAnswer[idx],
+                        ),
+                        itemCount: _cardInCorrect.length,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Score:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('Correct:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('Incorrect:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('Feedback:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${_cardCorrect.length * 10}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('${_cardCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('${_cardInCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                      Text('${_feedback}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                    ],
-                  ),
-                ],
-              ),),
-            ),
-            SizedBox(height: 16,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Correct', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
-                Text('Incorrect', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
-              ],
-            ),
-            SizedBox(height: 12,),
-            Container(
-              alignment: Alignment.topCenter,
-              height: 380,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, idx) => CardTypeWordResultPage(
-                        cardModel: _cardCorrect[idx],
-                        answer: _correctAnswer[idx],
-                      ),
-                      itemCount: _cardCorrect.length,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(color: AppTheme.primaryColor),
+                              borderRadius: BorderRadius.circular(20)
+                            )
+                          ).copyWith(
+                            backgroundColor: MaterialStatePropertyAll(Colors.white)
+                          ),
+                          onPressed: (){
+                            Navigator.pop(context, {'newIndex': 0});
+                      }, child: Text('Restart Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
                     ),
                   ),
+
                   Expanded(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemBuilder: (ctx, idx) => CardTypeWordResultPage(
-                        cardModel: _cardInCorrect[idx],
-                        answer: _inCorrectAnswer[idx],
-                      ),
-                      itemCount: _cardInCorrect.length,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(color: AppTheme.primaryColor),
+                                  borderRadius: BorderRadius.circular(20)
+                              )
+                          ).copyWith(
+                              backgroundColor: MaterialStatePropertyAll(Colors.white)
+                          ),
+                          onPressed: (){
+                            // Navigator.push(context,
+                            // MaterialPageRoute(builder: (ctx) => TopicDetailPage(topic: widget.topic)),);
+                            Navigator.pop(context, {'newIndex': -1});
+                          }, child: Text('New Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
                     ),
-                  )
+                  ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: AppTheme.primaryColor),
-                            borderRadius: BorderRadius.circular(20)
-                          )
-                        ).copyWith(
-                          backgroundColor: MaterialStatePropertyAll(Colors.white)
-                        ),
-                        onPressed: (){
-                          Navigator.pop(context, {'newIndex': 0});
-                    }, child: Text('Restart Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
-                  ),
-                ),
-
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(color: AppTheme.primaryColor),
-                                borderRadius: BorderRadius.circular(20)
-                            )
-                        ).copyWith(
-                            backgroundColor: MaterialStatePropertyAll(Colors.white)
-                        ),
-                        onPressed: (){
-                          Navigator.push(context,
-                          MaterialPageRoute(builder: (ctx) => TopicDetailPage(topic: widget.topic)),);
-                        }, child: Text('New Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),),
+            ],
+          ),),
+        ),
       ),
     );
   }
