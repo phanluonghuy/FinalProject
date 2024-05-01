@@ -14,7 +14,8 @@ import 'package:flutter/material.dart';
 
 class FlashCardPage extends StatefulWidget {
   TopicModel topic;
-  FlashCardPage({super.key, required this.topic});
+  List<CardModel> cardsStar;
+  FlashCardPage({super.key, required this.topic, required this.cardsStar});
 
   @override
   State<FlashCardPage> createState() => _FlashCardPageState();
@@ -38,7 +39,8 @@ class _FlashCardPageState extends State<FlashCardPage> {
     List<CardModel> cards = await _topicRepo.getAllCardsForTopic(topicID);
 
     if(isAll == false){
-      cards = await _topicRepo.getCardsByStar(topicID);
+      // cards = await _topicRepo.getCardsByStar(topicID);
+      cards = widget.cardsStar;
     }
     if(isShuffle == true){
       cards.shuffle();
@@ -102,7 +104,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
           child: Column(
             children: [
               Container(
-                height: 600,
+                height: 650,
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: (value) => setState(() {

@@ -56,7 +56,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
               padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              Text("Result", style: TextStyle(color: AppTheme.flashCardColor, fontWeight: FontWeight.bold, fontSize: 35),),
+              Text("Result", style: AppTextStyles.title,),
               SizedBox(height: 18,),
               Container(
                 decoration: BoxDecoration(
@@ -71,19 +71,19 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Score:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('Correct:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('Incorrect:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('Feedback:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('Score:', style: AppTextStyles.boldWhite20,),
+                        Text('Correct:', style: AppTextStyles.boldWhite20,),
+                        Text('Incorrect:', style: AppTextStyles.boldWhite20,),
+                        Text('Feedback:', style: AppTextStyles.boldWhite20,),
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${_cardCorrect.length * 10}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('${_cardCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('${_cardInCorrect.length}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
-                        Text('${_feedback}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('${_cardCorrect.length * 10}', style: AppTextStyles.boldWhite20,),
+                        Text('${_cardCorrect.length}', style: AppTextStyles.boldWhite20,),
+                        Text('${_cardInCorrect.length}', style: AppTextStyles.boldWhite20,),
+                        Text('${_feedback}', style: AppTextStyles.boldWhite20,),
                       ],
                     ),
                   ],
@@ -93,8 +93,8 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text('Correct', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
-                  Text('Incorrect', style: TextStyle(color: AppTheme.flashCardColor, fontSize: 22, fontWeight: FontWeight.bold),),
+                  Text('Correct', style: AppTextStyles.boldPrimary20,),
+                  Text('Incorrect', style: AppTextStyles.boldPrimary20,),
                 ],
               ),
               SizedBox(height: 12,),
@@ -124,7 +124,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                         ),
                         itemCount: _cardInCorrect.length,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -137,7 +137,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(color: AppTheme.primaryColor),
+                              side: BorderSide(color: AppTheme.primaryColor, width: 2),
                               borderRadius: BorderRadius.circular(20)
                             )
                           ).copyWith(
@@ -145,7 +145,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                           ),
                           onPressed: (){
                             Navigator.pop(context, {'newIndex': 0});
-                      }, child: Text('Restart Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
+                      }, child: Text('Restart Test', style: AppTextStyles.bold16,)),
                     ),
                   ),
 
@@ -155,7 +155,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: AppTheme.primaryColor),
+                                  side: BorderSide(color: AppTheme.primaryColor, width: 2),
                                   borderRadius: BorderRadius.circular(20)
                               )
                           ).copyWith(
@@ -165,7 +165,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                             // Navigator.push(context,
                             // MaterialPageRoute(builder: (ctx) => TopicDetailPage(topic: widget.topic)),);
                             Navigator.pop(context, {'newIndex': -1});
-                          }, child: Text('New Test', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),)),
+                          }, child: Text('New Test', style: AppTextStyles.bold16,)),
                     ),
                   ),
                 ],

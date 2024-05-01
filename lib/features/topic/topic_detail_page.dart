@@ -27,6 +27,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
 
   UserModel? _user;
   List<CardModel> _cards = [];
+  List<CardModel> cardsStar = [];
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     setState(() {
       _cards = cards;
     });
+
   }
 
   @override
@@ -154,12 +156,12 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Flashcard', topic: widget.topic),
+                  imgUrl: 'images/topics.png', modeName: 'Flashcard', topic: widget.topic, cardStar: cardsStar,),
               SizedBox(
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Type Words', topic: widget.topic,),
+                  imgUrl: 'images/topics.png', modeName: 'Type Words', topic: widget.topic, cardStar: cardsStar,),
               SizedBox(
                 height: 15,
               ),
@@ -171,7 +173,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/achievement.png', modeName: 'Speedrun Quiz', topic: widget.topic,),
+                  imgUrl: 'images/achievement.png', modeName: 'Speedrun Quiz', topic: widget.topic, cardStar: cardsStar,),
               SizedBox(height: 16,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -185,8 +187,20 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 shrinkWrap: true,
                   itemCount: _cards.length,
                   itemBuilder: (ctx, idx) => CardItemPage(
+                    onReturnData: (value){
+                      setState(() {
+                        if(value['state'] == 0){
+                          cardsStar.add(value['card']);
+                        } else if(value['state'] == -1){
+                          cardsStar.remove(value['card']);
+                        }
+                        // print(_cardsStar.length);
+                        // print(_cardsStar);
+                      });
+                    },
                     card: _cards[idx],
                     topicId: widget.topic.id!,
+                    cardStar: cardsStar
                   ))
             ],
           ),
@@ -200,7 +214,8 @@ class LearningModeItem extends StatelessWidget {
   String imgUrl;
   String modeName;
   TopicModel topic;
-  LearningModeItem({super.key, required this.imgUrl, required this.modeName, required this.topic});
+  List<CardModel> cardStar;
+  LearningModeItem({super.key, required this.imgUrl, required this.modeName, required this.topic, required this.cardStar});
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +226,7 @@ class LearningModeItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context)  =>
-                  FlashCardPage(topic: topic),
+                  FlashCardPage(topic: topic, cardsStar: cardStar),
               // Replace TopicDetailPage() with your actual widget instance
             ),
           );
@@ -220,7 +235,7 @@ class LearningModeItem extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context)  =>
-                  TypeWordPage(topic: topic),
+                  TypeWordPage(topic: topic, cardsStar: cardStar),
             ),
           );
         } else if(modeName == 'Speedrun Quiz'){

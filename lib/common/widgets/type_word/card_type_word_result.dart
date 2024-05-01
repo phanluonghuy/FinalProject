@@ -1,3 +1,4 @@
+import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +39,12 @@ class _CardTypeWordResultPageState extends State<CardTypeWordResultPage> {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  Text('${card?.term}', style: TextStyle(color: Colors.white, fontSize: 23, fontWeight: FontWeight.bold),),
+                  Text('${card?.term}', style: AppTextStyles.boldWhite20,),
                   SizedBox(height: 2,),
-                  Text('${card?.definition}', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+                  Text('${card?.definition}', style: AppTextStyles.boldWhite18,),
                   SizedBox(height: 12,),
-                  Text('Your answer', style: TextStyle(color: Color.fromARGB(255, 240, 244, 147), fontWeight: FontWeight.bold),),
-                  Text('${answer}', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
+                  Text('Your answer', style: TextStyle(color: Color.fromARGB(255, 240, 244, 147), fontSize: 16, fontWeight: FontWeight.bold),),
+                  Text('${answer}', style: AppTextStyles.boldWhite18,),
                 ],
               ),
             ),

@@ -7,9 +7,11 @@ import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:flutter/material.dart';
 
 class CardItemPage extends StatefulWidget {
+  Function(dynamic) onReturnData;
   CardModel card;
   String topicId;
-  CardItemPage({super.key, required this.card, required this.topicId});
+  List<CardModel> cardStar;
+  CardItemPage({super.key, required this.onReturnData, required this.card, required this.topicId, required this.cardStar});
 
   @override
   State<CardItemPage> createState() => _CardItemPageState();
@@ -20,12 +22,29 @@ class _CardItemPageState extends State<CardItemPage> {
   bool isStar = false;
   String cardId = "";
   String topicId = "";
+  CardModel? _card;
+  bool? isTerm;
+
+  bool _checkStarIsContain(){
+    if(widget.cardStar.contains(widget.card)){
+      return true;
+    }
+    return false;
+  }
+
+  void dataReturn(dynamic data){
+    widget.onReturnData(data);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     isStar = widget.card.star!;
     cardId = widget.card.id!;
     topicId = widget.topicId;
+    _card = widget.card;
+    isTerm = _checkStarIsContain();
+
     super.initState();
   }
 
@@ -68,16 +87,26 @@ class _CardItemPageState extends State<CardItemPage> {
 
                       IconButton(
                           onPressed: (){
-                            isStar = !isStar;
-                            topicRepo.updateCardStar(topicId, cardId, isStar);
+                            // isStar = !isStar;
+                            // topicRepo.updateCardStar(topicId, cardId, isStar);
                             setState(() {
                               // print("hi lo");
+                              // _getCardStar();
+
+                              if(!_checkStarIsContain()){
+                                // add
+                                dataReturn({'card': widget.card, 'state': 0});
+                              } else{
+                                // remove
+                                dataReturn({'card': widget.card, 'state': -1});
+                              }
+                              isTerm = _checkStarIsContain();
+
                             });
-                          }, icon: isStar ? Icon(Icons.star, color: Colors.yellow[800],): Icon(Icons.star_border)),
+                          }, icon: isTerm == true ? Icon(Icons.star, color: Colors.yellow[800],): Icon(Icons.star_border)),
                     ],
                   ),
                 ),
-
               ],
             ),
           ),

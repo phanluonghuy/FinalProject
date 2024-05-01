@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 
 class TypeWordPage extends StatefulWidget {
   TopicModel topic;
-  TypeWordPage({super.key, required this.topic});
+  List<CardModel> cardsStar;
+  TypeWordPage({super.key, required this.topic, required this.cardsStar});
 
   @override
   State<TypeWordPage> createState() => _TypeWordPageState();
@@ -45,7 +46,8 @@ class _TypeWordPageState extends State<TypeWordPage> {
     List<CardModel> cards = await _topicRepo.getAllCardsForTopic(topicID);
 
     if(isAll == false){
-      cards = await _topicRepo.getCardsByStar(topicID);
+      // cards = await _topicRepo.getCardsByStar(topicID);
+      cards = widget.cardsStar;
     }
     if(isShuffle == true){
       cards.shuffle();
@@ -67,6 +69,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
   void handleSubmit() async {
     if(_textEditingController.text.isEmpty){
       ToastMessage().showToastFailed("Please enter definition !!");
+      TextToSpeech().speakEng("Please enter definition");
     }
     else if(_textEditingController.text == _cards[index].definition && isTerm == true){
       if(index + 1 >= _cards.length){
@@ -75,6 +78,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _correctAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastSuccess("Correct answer !!");
+        TextToSpeech().speakEng("Excellent job");
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -109,6 +113,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _correctAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastSuccess("Correct answer !!");
+          TextToSpeech().speakEng("Excellent job");
           index = index + 1;
           question = _cards[index].term ?? "";
           // _getCards();
@@ -122,6 +127,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _correctAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastSuccess("Correct answer !!");
+        TextToSpeech().speakEng("Excellent job");
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -156,6 +162,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _correctAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastSuccess("Correct answer !!");
+          TextToSpeech().speakEng("Excellent job");
           index = index + 1;
           question = _cards[index].definition ?? "";
           // _getCards();
@@ -169,6 +176,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _inCorrectAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastFailed("Incorrect answer !!");
+        TextToSpeech().speakEng("Don't worry, try again");
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -201,6 +209,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _inCorrectAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastFailed("Incorrect answer !!");
+          TextToSpeech().speakEng("Don't worry, try again");
           index = index + 1;
           question = _cards[index].term ?? "";
           // _getCards();
@@ -214,6 +223,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _inCorrectAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastFailed("Incorrect answer !!");
+        TextToSpeech().speakEng("Don't worry, try again");
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -246,6 +256,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _inCorrectAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastFailed("Incorrect answer !!");
+          TextToSpeech().speakEng("Don't worry, try again");
           index = index + 1;
           question = _cards[index].definition ?? "";
         });
@@ -293,7 +304,8 @@ class _TypeWordPageState extends State<TypeWordPage> {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: AppTheme.bgTypeWordMode,
+                  // color: AppTheme.primaryColor,
+                  border: Border.all(color: AppTheme.grey2, width: 2),
                   borderRadius: BorderRadius.circular(10)
                 ),
                 child: Padding(
@@ -306,43 +318,45 @@ class _TypeWordPageState extends State<TypeWordPage> {
                           Container(
                             child: Row(
                             children: [
-                              Text('Question:', style: TextStyle(color: AppTheme.primaryColor, fontSize: 20, fontWeight: FontWeight.bold),),
-                              SizedBox(width: 16,),
-                              isTerm ? Text('${question}', style: AppTextStyles.bold16,):
-                              Text('${question}', style: AppTextStyles.bold16,)
+                              Text('Question:', style: AppTextStyles.boldPrimary20,),
+
                             ],
                           ),
                         ),
+
+                      ],),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                        Text('${index + 1}. What is "${question}" mean:', style: AppTextStyles.boldPrimary16,),
                         Container(
                           child: IconButton(onPressed: (){
-                              TextToSpeech().speakEng("${_cards[index].term}");
-                          }, icon: Icon(Icons.keyboard_voice_outlined)),
+                            TextToSpeech().speakEng("What is ${question} mean");
+                          }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.black,)),
                         ),
-                      ],),
-                      SizedBox(height: 24,),
-                      Row(children: [
-                        Text('Answer:', style: TextStyle(color: AppTheme.primaryColor, fontSize: 20, fontWeight: FontWeight.bold),),
-                        SizedBox(width: 16,),
+
+                          // SizedBox(width: 16,),
                         // Text('Data', style: AppTextStyles.bold16,)
                       ],),
-                      SizedBox(height: 16,),
+                      SizedBox(height: 8,),
                       Form(
                         key: _key,
                         child: TextFormField(
                           controller: _textEditingController,
-
                           decoration: InputDecoration(
                             // label: Text('Answer'),
+
+                            suffixIcon: Icon(Icons.question_answer_outlined),
                             hintText: ("Typing your answer"),
                             hintStyle: TextStyle(
-                              color: AppTheme.primaryColor
-                            )
+                              // color: AppTheme.primaryColor
+                            ),
                           ),
                         ),
                       ),
                       SizedBox(height: 24),
                       Text("Note: You need to enter the correct number of words and order of the definitions you have learned!!",
-                      style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold),),
+                      style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontFamily: 'Lato'),),
                     ],
                   ),
                 ),
@@ -354,8 +368,8 @@ class _TypeWordPageState extends State<TypeWordPage> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: AppTheme.primaryColor, width: 1, style: BorderStyle.solid)
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(color: AppTheme.grey2, width: 2, style: BorderStyle.solid)
                       ),
 
                     ).copyWith(
@@ -365,7 +379,12 @@ class _TypeWordPageState extends State<TypeWordPage> {
                       setState(() {
                         handleSubmit();
                       });
-                  }, child: Text("Next", style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryColor, fontSize: 20),)),
+                  }, child: Text("Next", style: TextStyle(
+                      fontFamily: 'Lato',
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black
+                    ),)),
               )
             ],
           ),

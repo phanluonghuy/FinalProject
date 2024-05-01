@@ -27,10 +27,51 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
   );
 
+  static const TextStyle boldWhite20 = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white
+  );
+
+  static const TextStyle boldPrimary20 = TextStyle(
+      fontFamily: 'Lato',
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      color: AppTheme.primaryColor
+  );
+
   static const TextStyle bold20 = TextStyle(
     fontFamily: 'Lato',
     fontSize: 20,
     fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle boldWhite18 = TextStyle(
+      fontFamily: 'Lato',
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+      color: Colors.white
+  );
+
+  static const TextStyle bold18 = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
+
+  static const TextStyle boldWhite16 = TextStyle(
+      fontFamily: 'Lato',
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: Colors.white
+  );
+
+  static const TextStyle boldPrimary16 = TextStyle(
+      fontFamily: 'Lato',
+      fontSize: 16,
+      fontWeight: FontWeight.bold,
+      color: AppTheme.primaryColor
   );
 
   static const TextStyle bold16 = TextStyle(

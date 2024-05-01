@@ -1,3 +1,4 @@
+import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
@@ -28,6 +29,7 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
   List<CardModel> cardInCorrect = [];
   List<String> correctAnswer = [];
   List<String> inCorrectAnswer = [];
+  bool isChoice = false;
 
   @override
   void initState() {
@@ -48,39 +50,46 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: (){
+          setState(() {
+            isChoice = true;
+          });
+
           int count = 0;
-          if(widget.answers == widget.definition){
-            TextToSpeech().speakEng("Excellent job");
-            ToastMessage().showToastSuccess("Correct answer !!");
-            count = 1;
-            cardCorrect.add(widget.card);
-            correctAnswer.add(widget.definition);
-          }else{
-            TextToSpeech().speakEng("Don't worry, try again");
-            ToastMessage().showToastFailed("Incorrect answer !!");
-            count = 2;
-            cardInCorrect.add(widget.card);
-            inCorrectAnswer.add(widget.answers);
-          }
+
+          // Future.delayed(Duration(seconds: 1), (){
+            if(widget.answers == widget.definition){
+              TextToSpeech().speakEng("Excellent job");
+              ToastMessage().showToastSuccess("Correct answer !!");
+              count = 1;
+              cardCorrect.add(widget.card);
+              correctAnswer.add(widget.definition);
+            }else{
+              TextToSpeech().speakEng("Don't worry, try again");
+              ToastMessage().showToastFailed("Incorrect answer !!");
+              count = 2;
+              cardInCorrect.add(widget.card);
+              inCorrectAnswer.add(widget.answers);
+            }
+          // });
+
           onDataReturned(count);
+
         },
-        child: Container(
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 1000),
+          alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isChoice? AppTheme.grey3: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: AppTheme.primaryColor,
-              style: BorderStyle.solid,
-              width: 2
-            )
+            // border: Border.all(
+            //   color: Colors.white,
+            //   style: BorderStyle.solid,
+            //   width: 2
+            // )
           ),
           child: Padding(
             padding: EdgeInsets.all(8),
-            child: Column(
-              children: [
-                Text('${widget.answers}', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryColor, fontSize: 16),),
-              ],
-            ),
+            child: Text('${widget.answers}', style: AppTextStyles.boldPrimary16,),
           ),
         ),
       ),

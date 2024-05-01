@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/flash_card/bottom_sheet_options.dart';
@@ -35,6 +37,11 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   String _term = '';
   String _definition = '';
 
+  int _initialSeconds = 60;
+  int _timeRemaining = 0;
+  Timer? _timer;
+
+
   Future<void> _getCards(index) async {
     _answers.clear();
     String topicID = widget.topic.id ?? '';
@@ -59,6 +66,10 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
       } else{
         _answers.add(_cards[index].definition!);
       }
+    });
+    Future.delayed(Duration(milliseconds: 1500), (){
+      TextToSpeech().speakEng("What is ${_term} mean");
+
     });
 
     int count = 0;
@@ -100,48 +111,70 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
 
   }
 
-
   @override
   void initState() {
     // TODO: implement initState
     index = 0;
     _getCards(index);
-    // term = _cards[index].term!;
-
-    // _getWrongAnswers(index);
+    _timeRemaining = _initialSeconds;
     super.initState();
+    startTimer();
+  }
+
+  void startTimer() {
+    // Tạo một Timer với khoảng thời gian là 1 giây
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      // Kiểm tra nếu thời gian còn lại bằng 0, dừng bộ đếm thời gian
+      if (_timeRemaining! <= 0) {
+        t.cancel();
+        // Thực hiện các hành động khi bộ đếm kết thúc ở đây
+        print('Countdown complete!');
+      } else {
+        // Giảm thời gian còn lại mỗi giây
+        setState(() {
+          _timeRemaining--;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    int minutes = _timeRemaining ~/ 60;
+    int seconds = _timeRemaining % 60;
+
     return Scaffold(
         appBar: AppBar(
+
           title: Text('${index + 1} / ${_cards.length}', style: AppTextStyles.bold20,),
           actions: [
-            IconButton(onPressed: (){
-                showModalBottomSheet(context: context,
-                    builder: (ctx) => BottomSheetOptionsPage(
-                        topic: widget.topic,
-                        isTermMain: isTerm,
-                        isAllMain: isAll)
-                ).then((value){
-                  if(value['isShuffle'] != null){
-                    setState(() {
-                      isShuffle = value['isShuffle'];
-                      isTerm = value['isTerm'];
-                      isAll = value['isAll'];
-                      _getCards(index);
-                    });
-                  } else{
-                    setState(() {
-                      isShuffle = false;
-                      isTerm = value['isTerm'];
-                      isAll = value['isAll'];
-                      _getCards(index);
-                    });
-                  }
-                });
-            }, icon: Icon(Icons.more_vert)),
+            Container(
+                margin: EdgeInsets.only(right: 24),
+                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}'))
+            // IconButton(onPressed: (){
+            //     showModalBottomSheet(context: context,
+            //         builder: (ctx) => BottomSheetOptionsPage(
+            //             topic: widget.topic,
+            //             isTermMain: isTerm,
+            //             isAllMain: isAll)
+            //     ).then((value){
+            //       if(value['isShuffle'] != null){
+            //         setState(() {
+            //           isShuffle = value['isShuffle'];
+            //           isTerm = value['isTerm'];
+            //           isAll = value['isAll'];
+            //           _getCards(index);
+            //         });
+            //       } else{
+            //         setState(() {
+            //           isShuffle = false;
+            //           isTerm = value['isTerm'];
+            //           isAll = value['isAll'];
+            //           _getCards(index);
+            //         });
+            //       }
+            //     });
+            // }, icon: Icon(Icons.more_vert)),
           ],
         ),
       body: IntrinsicHeight(
@@ -149,7 +182,8 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
             padding: EdgeInsets.all(16),
             child: Container(
               decoration: BoxDecoration(
-                color: AppTheme.bgTypeWordMode,
+                color: AppTheme.primaryColor,
+                // border: Border.all(color: Colors.black, width: 2),
                 borderRadius: BorderRadius.circular(20)
               ),
             child: Padding(
@@ -158,24 +192,25 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                   children: [
                     Row(
                       children: [
-                        Text('Question:', style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
-                        SizedBox(width: 16,),
-                        Text('${_term}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                        Text('Question:', style:AppTextStyles.boldWhite20),
+                        // SizedBox(width: 16,),
+
+                        // Text('${_term}', style: AppTextStyles.boldWhite18,),
                       ],
                     ),
-                    SizedBox(height: 16,),
+                    SizedBox(height: 10,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Answers', style: TextStyle(color: AppTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 20),),
+                        Text('${index + 1}. What is "${_term}" mean ?', style: AppTextStyles.boldWhite16,),
                         IconButton(onPressed: (){
-                          TextToSpeech().speakEng('${_term}');
-                        }, icon: Icon(Icons.keyboard_voice_outlined))
+                          TextToSpeech().speakEng('What is "${_term}" mean');
+                        }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.white,))
                       ],
                     ),
                     SizedBox(height: 16,),
                     Container(
-                      height: 250,
+                      height: 230,
                       child: ListView.builder(
                           itemBuilder: (ctx, idx)  => SpeedrunItemPage(
                             returnData: (data) async {
