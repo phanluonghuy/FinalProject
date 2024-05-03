@@ -104,7 +104,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
           child: Column(
             children: [
               Container(
-                height: 650,
+                height: 600,
                 child: PageView.builder(
                   controller: _pageController,
                   onPageChanged: (value) => setState(() {

@@ -266,7 +266,11 @@ class _TypeWordPageState extends State<TypeWordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _cards.length == 0 ?
+      CircularProgressIndicator()
+
+        :
+      Scaffold(
       appBar: AppBar(
         title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: TextStyle(fontWeight: FontWeight.bold),),
         actions: [

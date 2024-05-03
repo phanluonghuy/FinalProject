@@ -15,9 +15,11 @@ class SpeedrunItemPage extends StatefulWidget {
   List<CardModel> cardInCorrect;
   List<String> correctAnswer;
   List<String> inCorrectAnswer;
+  int timeRemainning;
   SpeedrunItemPage({super.key, required this.returnData, required this.answers,
     required this.index, required this.definition, required this.card,
-    required this.cardCorrect, required this.cardInCorrect, required this.correctAnswer, required this.inCorrectAnswer,
+    required this.cardCorrect, required this.cardInCorrect, required this.correctAnswer,
+    required this.inCorrectAnswer, required this.timeRemainning
   });
 
   @override

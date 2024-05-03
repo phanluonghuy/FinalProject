@@ -1,5 +1,6 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
+import 'package:finalproject/features/topic/ranking_page.dart';
 import 'package:finalproject/features/topic/speedrun_quiz_page.dart';
 import 'package:finalproject/features/topic/type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
@@ -11,6 +12,7 @@ import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/image_item.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class TopicDetailPage extends StatefulWidget {
@@ -67,16 +69,25 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         //   style: AppTextStyles.bold20,
         // ),
         actions: [
-          IconButton(
-            icon: Icon(
-              MdiIcons.fromString('dots-horizontal-circle-outline'),
-              size: 30,
-            ), // Action icon
-            onPressed: () {
-              // Action when search icon is tapped
-            },
-            color: Colors.black,
-          ),
+          // IconButton(
+          //   icon: Icon(
+          //     MdiIcons.fromString('dots-horizontal-circle-outline'),
+          //     size: 30,
+          //   ), // Action icon
+          //   onPressed: () {
+          //     // Action when search icon is tapped
+          //   },
+          //   color: Colors.black,
+          // ),
+          Container(
+            margin: EdgeInsets.only(right: 16),
+            child: IconButton(onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (ctx) => RankingPage(
+                topic: widget.topic
+              )));
+            }, icon: Icon(FontAwesomeIcons.trophy, color: Colors.amber, size: 23,)),
+          )
+
         ],
       ),
       body: SingleChildScrollView(

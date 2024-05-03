@@ -6,6 +6,7 @@ import 'package:finalproject/common/widgets/flash_card/bottom_sheet_options.dart
 import 'package:finalproject/common/widgets/speedrun_quiz/speedrun_item.dart';
 import 'package:finalproject/common/widgets/type_word/result_type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
@@ -37,7 +38,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   String _term = '';
   String _definition = '';
 
-  int _initialSeconds = 60;
+  int _initialSeconds = 0;
   int _timeRemaining = 0;
   Timer? _timer;
 
@@ -111,6 +112,15 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
 
   }
 
+  void addRecord(){
+    String ownerId = widget.topic.ownerID!;
+    String topicId = widget.topic.id!;
+    int score = _cardCorrect.length * 10;
+    double _percentageCorrect = (_cardCorrect.length * 100 / (_cardCorrect.length + _cardInCorrect.length));
+
+    _topicRepo.addRecord(new RecordModel(userID: ownerId, score: score, time: _timeRemaining, percent: _percentageCorrect.toInt()), topicId);
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -122,19 +132,21 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   }
 
   void startTimer() {
-    // Tạo một Timer với khoảng thời gian là 1 giây
+    // _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    //   if (_timeRemaining! <= 0) {
+    //     t.cancel();
+    //     print('Countdown complete!');
+    //   } else {
+    //     setState(() {
+    //       _timeRemaining--;
+    //     });
+    //   }
+    // });
+
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      // Kiểm tra nếu thời gian còn lại bằng 0, dừng bộ đếm thời gian
-      if (_timeRemaining! <= 0) {
-        t.cancel();
-        // Thực hiện các hành động khi bộ đếm kết thúc ở đây
-        print('Countdown complete!');
-      } else {
-        // Giảm thời gian còn lại mỗi giây
-        setState(() {
-          _timeRemaining--;
-        });
-      }
+      setState(() {
+        _timeRemaining++;
+      });
     });
   }
 
@@ -150,7 +162,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
           actions: [
             Container(
                 margin: EdgeInsets.only(right: 24),
-                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}'))
+                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}', style: AppTextStyles.bold16,))
             // IconButton(onPressed: (){
             //     showModalBottomSheet(context: context,
             //         builder: (ctx) => BottomSheetOptionsPage(
@@ -215,13 +227,14 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                           itemBuilder: (ctx, idx)  => SpeedrunItemPage(
                             returnData: (data) async {
                               if(data['index'] > _cards.length - 1){
+                                addRecord();
                                 var newIndex = await Navigator.push(context,
                                   MaterialPageRoute(builder: (ctx) => ResultTypeWordPage(
                                       topic: widget.topic,
                                       cardCorrect: _cardCorrect,
                                       cardInCorrect: _cardInCorrect,
                                       correctAnswer: _correctAnswer,
-                                      inCorrectAnswer: _inCorrectAnswer))
+                                      inCorrectAnswer: _inCorrectAnswer,))
                                 );
                                 if(newIndex['newIndex'] == 0){
                                   setState(() {
@@ -252,7 +265,8 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                               cardCorrect: _cardCorrect,
                               cardInCorrect: _cardInCorrect,
                               correctAnswer: _correctAnswer,
-                              inCorrectAnswer: _inCorrectAnswer
+                              inCorrectAnswer: _inCorrectAnswer,
+                              timeRemainning: _timeRemaining,
                           ),
                           itemCount: _answers.length,
                       ),
