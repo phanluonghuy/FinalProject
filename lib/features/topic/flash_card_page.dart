@@ -65,7 +65,11 @@ class _FlashCardPageState extends State<FlashCardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${index+1}/${_cards.length}", style: AppTextStyles.bold20,),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Đặt màu của mũi tên thành màu trắng
+        ),
+        backgroundColor: AppTheme.primaryColor,
+        title: Text("${index+1}/${_cards.length}", style: AppTextStyles.boldWhite20,),
         actions: [
           IconButton(
               onPressed: (){

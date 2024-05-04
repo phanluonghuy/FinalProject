@@ -272,7 +272,11 @@ class _TypeWordPageState extends State<TypeWordPage> {
         :
       Scaffold(
       appBar: AppBar(
-        title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: TextStyle(fontWeight: FontWeight.bold),),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Đặt màu của mũi tên thành màu trắng
+        ),
+        backgroundColor: AppTheme.primaryColor,
+        title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: AppTextStyles.boldWhite20,),
         actions: [
           IconButton(
               onPressed: () {
@@ -307,6 +311,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           child: Column(
             children: [
               Container(
+                margin: EdgeInsets.only(top: 20),
                 decoration: BoxDecoration(
                   // color: AppTheme.primaryColor,
                   border: Border.all(color: AppTheme.grey2, width: 2),
@@ -322,7 +327,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
                           Container(
                             child: Row(
                             children: [
-                              Text('Question:', style: AppTextStyles.boldPrimary20,),
+                              Text('Question:', style: AppTextStyles.bold20,),
 
                             ],
                           ),
@@ -332,7 +337,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Text('${index + 1}. What is "${question}" mean:', style: AppTextStyles.boldPrimary16,),
+                        Text('${index + 1}. What is "${question}" mean:', style: AppTextStyles.bold16,),
                         Container(
                           child: IconButton(onPressed: (){
                             TextToSpeech().speakEng("What is ${question} mean");

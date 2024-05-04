@@ -111,11 +111,8 @@ class _RankingItemPageState extends State<RankingItemPage> {
                       borderRadius: BorderRadius.circular(100),
                       child: Image.network(
                         '${_user?.avatarUrl!}',
-                        // height: 30,
-                        // width: 20,
                         fit: BoxFit.cover,
                       ),
-
                     ),
                   ),
                   SizedBox(width: 10,),
@@ -126,12 +123,14 @@ class _RankingItemPageState extends State<RankingItemPage> {
               Row(
                 children: [
                   Text('Score: ', style: AppTextStyles.boldPrimary16,),
+                  SizedBox(width: 12,),
                   Text('${widget.record.score}', style: AppTextStyles.bold16,)
                 ],
               ),
               Row(
                 children: [
                   Text('Time: ', style: AppTextStyles.boldPrimary16,),
+                  SizedBox(width: 16,),
                   Text('$minutes:${seconds.toString().padLeft(2, '0')}s', style: AppTextStyles.bold16,)
                 ],
               )

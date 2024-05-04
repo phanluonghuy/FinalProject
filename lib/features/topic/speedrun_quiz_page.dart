@@ -157,12 +157,16 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
 
     return Scaffold(
         appBar: AppBar(
-
-          title: Text('${index + 1} / ${_cards.length}', style: AppTextStyles.bold20,),
+          iconTheme: IconThemeData(
+            color: Colors.white,
+          ),
+          backgroundColor: AppTheme.primaryColor,
+          title: Text('${index + 1} / ${_cards.length}', style: AppTextStyles.boldWhite20,),
           actions: [
             Container(
+
                 margin: EdgeInsets.only(right: 24),
-                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}', style: AppTextStyles.bold16,))
+                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}', style: AppTextStyles.boldWhite16,))
             // IconButton(onPressed: (){
             //     showModalBottomSheet(context: context,
             //         builder: (ctx) => BottomSheetOptionsPage(
@@ -193,9 +197,9 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
         child: Padding(
             padding: EdgeInsets.all(16),
             child: Container(
+              margin: EdgeInsets.only(top: 20),
               decoration: BoxDecoration(
                 color: AppTheme.primaryColor,
-                // border: Border.all(color: Colors.black, width: 2),
                 borderRadius: BorderRadius.circular(20)
               ),
             child: Padding(

@@ -1,4 +1,5 @@
 import 'package:finalproject/common/constants/text_styles.dart';
+import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -44,7 +45,11 @@ class _RankingPageState extends State<RankingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Leaderboard", style: AppTextStyles.bold26,),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+        backgroundColor: AppTheme.primaryColor,
+        title: Text("Leaderboard", style: AppTextStyles.boldWhite26,),
       ),
       body: SingleChildScrollView(
         child: Padding(padding: EdgeInsets.all(16),
