@@ -51,7 +51,7 @@ class _RankingPageState extends State<RankingPage> {
         backgroundColor: AppTheme.primaryColor,
         title: Text("Leaderboard", style: AppTextStyles.boldWhite26,),
       ),
-      body: SingleChildScrollView(
+      body: _records.length == 0 ? Center(child: CircularProgressIndicator()): SingleChildScrollView(
         child: Padding(padding: EdgeInsets.all(16),
         child: ListView.builder(
           shrinkWrap: true,

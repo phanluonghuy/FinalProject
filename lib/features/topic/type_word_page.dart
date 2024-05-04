@@ -266,10 +266,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _cards.length == 0 ?
-      CircularProgressIndicator()
-
-        :
+    return
       Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -305,7 +302,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
               }, icon: Icon(Icons.more_vert))
         ],
       ),
-      body: Padding(
+      body: _cards.length == 0? CircularProgressIndicator(): Padding(
         padding: EdgeInsets.all(16),
         child: IntrinsicHeight(
           child: Column(
