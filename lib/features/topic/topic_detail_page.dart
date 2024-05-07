@@ -1,13 +1,16 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
 import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/folder_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
+import 'package:finalproject/repositories/folder_repo.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/image_item.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -22,15 +25,27 @@ class TopicDetailPage extends StatefulWidget {
 class _TopicDetailPageState extends State<TopicDetailPage> {
   final _topicRepo = TopicRepo();
   final _userRepo = UserRepo();
+  final _folderRepo = FolderRepo();
+  final _currentUser = FirebaseAuth.instance.currentUser!;
 
   UserModel? _user;
   List<CardModel> _cards = [];
+  List<FolderModel> _foldersOfCurrentUser = [];
 
   @override
   void initState() {
     super.initState();
     _loadUser();
     _getCards();
+    _getFoldersOfCurrentUser();
+  }
+
+  Future<void> _getFoldersOfCurrentUser() async {
+    List<FolderModel> folders =
+        await _folderRepo.getAllFoldersOfOwnerID(_currentUser.uid);
+    setState(() {
+      _foldersOfCurrentUser = folders; // If user is null, assign null to _user
+    });
   }
 
   Future<void> _loadUser() async {
@@ -58,10 +73,6 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         backgroundColor: Colors.white,
         elevation: 0,
         titleSpacing: 0,
-        // title: Text(
-        //   widget.topic.title ?? '',
-        //   style: AppTextStyles.bold20,
-        // ),
         actions: [
           IconButton(
             icon: Icon(
@@ -69,7 +80,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               size: 30,
             ), // Action icon
             onPressed: () {
-              // Action when search icon is tapped
+              _showBottomDialog(context);
             },
             color: Colors.black,
           ),
@@ -152,12 +163,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Flashcard', topic: widget.topic),
+                  imgUrl: 'images/topics.png',
+                  modeName: 'Flashcard',
+                  topic: widget.topic),
               SizedBox(
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png', modeName: 'Type Words', topic: widget.topic,),
+                imgUrl: 'images/topics.png',
+                modeName: 'Type Words',
+                topic: widget.topic,
+              ),
               SizedBox(
                 height: 15,
               ),
@@ -169,8 +185,13 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/achievement.png', modeName: 'Speedrun Quiz', topic: widget.topic,),
-              SizedBox(height: 16,),
+                imgUrl: 'images/achievement.png',
+                modeName: 'Speedrun Quiz',
+                topic: widget.topic,
+              ),
+              SizedBox(
+                height: 16,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -178,17 +199,103 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   Text('${_cards.length} words', style: AppTextStyles.bold16)
                 ],
               ),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
               ListView.builder(
-                shrinkWrap: true,
+                  shrinkWrap: true,
                   itemCount: _cards.length,
-                  itemBuilder: (ctx, idx) => CardItemPage(
-                    card: _cards[idx]
-                  ))
+                  itemBuilder: (ctx, idx) => CardItemPage(card: _cards[idx]))
             ],
           ),
         ),
       ),
+    );
+  }
+
+  void _showBottomDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          child: Container(
+            color: Colors.white,
+            // Your bottom dialog content goes here
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.folder_copy_outlined),
+                  title: Text(
+                    'Add to your folder',
+                    style: AppTextStyles.bold16,
+                  ),
+                  onTap: () {
+                    _showFolderPickerDialog(context, _foldersOfCurrentUser);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.edit),
+                  title: Text(
+                    'Edit this topic',
+                    style: AppTextStyles.bold16,
+                  ),
+                  onTap: () {
+                    // Handle onTap action
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showFolderPickerDialog(
+      BuildContext context, List<FolderModel> folders) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Choose a folder',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(height: 20),
+                SingleChildScrollView(
+                  child: ListBody(
+                    children: folders.map((folder) {
+                      return ListTile(
+                        title: Text(folder.title ?? ''),
+                        onTap: () {
+                          _folderRepo.updateTopicInFolder(
+                              folder.id ?? '', widget.topic.id ?? '', true);
+                          Navigator.pop(context);
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -197,26 +304,26 @@ class LearningModeItem extends StatelessWidget {
   String imgUrl;
   String modeName;
   TopicModel topic;
-  LearningModeItem({super.key, required this.imgUrl, required this.modeName, required this.topic});
+  LearningModeItem(
+      {super.key,
+      required this.imgUrl,
+      required this.modeName,
+      required this.topic});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(modeName == 'Flashcard'){
+        if (modeName == 'Flashcard') {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context)  =>
-                  FlashCardPage(topic: topic),
+              builder: (context) => FlashCardPage(topic: topic),
               // Replace TopicDetailPage() with your actual widget instance
             ),
           );
-        } else if(modeName == 'Type Words'){
-
-        } else if(modeName == 'Speedrun Quiz'){
-
-        }
+        } else if (modeName == 'Type Words') {
+        } else if (modeName == 'Speedrun Quiz') {}
       }, //
       child: Container(
         width: double.infinity,

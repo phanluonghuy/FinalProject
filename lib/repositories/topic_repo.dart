@@ -18,11 +18,37 @@ class TopicRepo {
     await batch.commit();
   }
 
+  Future<TopicModel?> getTopicByID(String topicID) async {
+  try {
+    final DocumentSnapshot<Map<String, dynamic>> docSnapshot = await _db
+        .collection('topics')
+        .doc(topicID)
+        .get(); // Change the type here to match the correct type
+
+    if (!docSnapshot.exists) {
+      // Return null if the document doesn't exist
+      return null;
+    }
+
+    return TopicModel.fromFirestore(docSnapshot, null);
+  } catch (e) {
+    // Handle error if any
+    print('Error getting topic by ID $topicID: $e');
+    throw Exception('Failed to get topic by ID $topicID: $e');
+  }
+}
+
+
   Future<List<TopicModel>> getAllTopics() async {
     try {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
           .collection('topics')
-          .get(); // Change the type here to match the correct type
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        // Return an empty list if there are no documents
+        return [];
+      }
 
       final List<TopicModel> topics = querySnapshot.docs
           .map((doc) => TopicModel.fromFirestore(doc, null))

@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
-  final String? id;
-  final String? email;
-  final String? name;
-  final String? bio;
-  final int? exp;
-  final String? avatarUrl;
-  final DateTime? birthday;
-  final String? country;
-  final String? phone;
+  String? id;
+  String? email;
+  String? name;
+  String? bio;
+  int? exp;
+  String? avatarUrl;
+  DateTime? birthday;
+  String? country;
+  String? phone;
 
   UserModel({
     this.id,
@@ -35,7 +35,7 @@ class UserModel {
       bio: data?['bio'],
       exp: data?['exp'],
       avatarUrl: data?['avatarUrl'],
-      birthday: data?['birthday'],
+      birthday: (data?['birthday'] as Timestamp?)?.toDate(),
       country: data?['country'],
       phone: data?['phone'],
     );
