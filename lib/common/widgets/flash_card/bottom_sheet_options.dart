@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 
 class BottomSheetOptionsPage extends StatefulWidget {
   TopicModel topic;
-  BottomSheetOptionsPage({super.key, required this.topic});
+  bool isTermMain;
+  bool isAllMain;
+  BottomSheetOptionsPage({super.key, required this.topic, required this.isTermMain, required this.isAllMain});
 
   @override
   State<BottomSheetOptionsPage> createState() => _BottomSheetOptionsPageState();
@@ -15,7 +17,6 @@ class BottomSheetOptionsPage extends StatefulWidget {
 
 class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
   final _topicRepo = TopicRepo();
-
   bool isTerm = true;
   bool isAll = true;
 
@@ -34,6 +35,8 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
   void initState() {
     // TODO: implement initState
     _getCards();
+    isTerm = widget.isTermMain;
+    isAll = widget.isAllMain;
     super.initState();
   }
 
@@ -54,7 +57,15 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                'Shuffle successfully'),
+                            duration: Duration(seconds: 2),
+                          ));
+                      Navigator.pop(context, {'isShuffle': true, 'isTerm': isTerm, 'isAll': isAll});
+                    },
                     style: ElevatedButton.styleFrom(
                       padding: EdgeInsets.zero,
                       backgroundColor: Colors.white, 
@@ -204,7 +215,15 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
               Container(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              'Restart successfully'),
+                          duration: Duration(seconds: 2),
+                        ));
+                    Navigator.pop(context, {'isTerm': isTerm, 'isAll': isAll});
+                  },
                   style: ElevatedButton.styleFrom(
                     // padding: EdgeInsets.zero,
                     backgroundColor: Colors.white,
@@ -215,7 +234,7 @@ class _BottomSheetOptionsPageState extends State<BottomSheetOptionsPage> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-                    child: Text('Restart Flashcards', style: AppTextStyles.bold20.copyWith(color: AppTheme.primaryColor)),
+                    child: Text('Restart Cards', style: AppTextStyles.bold20.copyWith(color: AppTheme.primaryColor)),
                   ),
                 ),
               ),

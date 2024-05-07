@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class RecordModel {
   final String? id;
   final String? userID;
-  final int? score;
-  final int? time;
+  final num? score;
+  final num? time;
+  final num? percent;
 
-  RecordModel({this.id, this.userID, this.score, this.time});
+  RecordModel({this.id, this.userID, this.score, this.time, this.percent});
 
   factory RecordModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -17,6 +18,7 @@ class RecordModel {
       userID: data['userID'],
       score: data['score'],
       time: data['time'],
+      percent: data['percent'],
     );
   }
 
@@ -25,6 +27,7 @@ class RecordModel {
       "userID": userID,
       "score": score,
       "time": time,
+      "percent": percent,
     };
   }
 }

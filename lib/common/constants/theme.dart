@@ -12,4 +12,5 @@ class AppTheme {
 
 
   static const Color flashCardColor = Color.fromARGB(225, 56, 82, 136);
+  static const Color bgTypeWordMode = Color.fromARGB(255,154, 249, 220);
 }

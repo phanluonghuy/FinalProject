@@ -40,7 +40,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
 
     setState(() {
       _cards.add(CardModel(
-          term: _termController.text, definition: _definitionController.text));
+          term: _termController.text, definition: _definitionController.text, star: false));
       _termController.text = '';
       _definitionController.text = '';
     });

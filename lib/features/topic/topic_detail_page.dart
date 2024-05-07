@@ -1,5 +1,8 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
+import 'package:finalproject/features/topic/ranking_page.dart';
+import 'package:finalproject/features/topic/speedrun_quiz_page.dart';
+import 'package:finalproject/features/topic/type_word_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/folder_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -12,6 +15,7 @@ import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/image_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class TopicDetailPage extends StatefulWidget {
@@ -31,6 +35,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   UserModel? _user;
   List<CardModel> _cards = [];
   List<FolderModel> _foldersOfCurrentUser = [];
+  List<CardModel> cardsStar = [];
 
   @override
   void initState() {
@@ -74,16 +79,31 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         elevation: 0,
         titleSpacing: 0,
         actions: [
-          IconButton(
-            icon: Icon(
-              MdiIcons.fromString('dots-horizontal-circle-outline'),
-              size: 30,
-            ), // Action icon
-            onPressed: () {
-              _showBottomDialog(context);
-            },
-            color: Colors.black,
-          ),
+          // IconButton(
+          //   icon: Icon(
+          //     MdiIcons.fromString('dots-horizontal-circle-outline'),
+          //     size: 30,
+          //   ), // Action icon
+          //   onPressed: () {
+          //     _showBottomDialog(context);
+          //   },
+          //   color: Colors.black,
+          // ),
+          Container(
+            margin: EdgeInsets.only(right: 16),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => RankingPage(topic: widget.topic)));
+                },
+                icon: Icon(
+                  FontAwesomeIcons.trophy,
+                  color: Colors.amber,
+                  size: 23,
+                )),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -163,9 +183,11 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 height: 10,
               ),
               LearningModeItem(
-                  imgUrl: 'images/topics.png',
-                  modeName: 'Flashcard',
-                  topic: widget.topic),
+                imgUrl: 'images/topics.png',
+                modeName: 'Flashcard',
+                topic: widget.topic,
+                cardStar: cardsStar,
+              ),
               SizedBox(
                 height: 10,
               ),
@@ -173,6 +195,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 imgUrl: 'images/topics.png',
                 modeName: 'Type Words',
                 topic: widget.topic,
+                cardStar: cardsStar,
               ),
               SizedBox(
                 height: 15,
@@ -188,6 +211,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 imgUrl: 'images/achievement.png',
                 modeName: 'Speedrun Quiz',
                 topic: widget.topic,
+                cardStar: cardsStar,
               ),
               SizedBox(
                 height: 16,
@@ -205,7 +229,21 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: _cards.length,
-                  itemBuilder: (ctx, idx) => CardItemPage(card: _cards[idx]))
+                  itemBuilder: (ctx, idx) => CardItemPage(
+                      onReturnData: (value) {
+                        setState(() {
+                          if (value['state'] == 0) {
+                            cardsStar.add(value['card']);
+                          } else if (value['state'] == -1) {
+                            cardsStar.remove(value['card']);
+                          }
+                          // print(_cardsStar.length);
+                          // print(_cardsStar);
+                        });
+                      },
+                      card: _cards[idx],
+                      topicId: widget.topic.id!,
+                      cardStar: cardsStar))
             ],
           ),
         ),
@@ -304,11 +342,13 @@ class LearningModeItem extends StatelessWidget {
   String imgUrl;
   String modeName;
   TopicModel topic;
+  List<CardModel> cardStar;
   LearningModeItem(
       {super.key,
       required this.imgUrl,
       required this.modeName,
-      required this.topic});
+      required this.topic,
+      required this.cardStar});
 
   @override
   Widget build(BuildContext context) {
@@ -318,12 +358,27 @@ class LearningModeItem extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => FlashCardPage(topic: topic),
+              builder: (context) =>
+                  FlashCardPage(topic: topic, cardsStar: cardStar),
               // Replace TopicDetailPage() with your actual widget instance
             ),
           );
         } else if (modeName == 'Type Words') {
-        } else if (modeName == 'Speedrun Quiz') {}
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  TypeWordPage(topic: topic, cardsStar: cardStar),
+            ),
+          );
+        } else if (modeName == 'Speedrun Quiz') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SpeedrunQuizPage(topic: topic),
+            ),
+          );
+        }
       }, //
       child: Container(
         width: double.infinity,

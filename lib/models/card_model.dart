@@ -5,8 +5,9 @@ class CardModel {
   String? term;
   String? definition;
   String? imgUrl;
+  bool? star;
 
-  CardModel({this.id, this.term, this.definition, this.imgUrl});
+  CardModel({this.id, this.term, this.definition, this.imgUrl, this.star});
 
   factory CardModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -17,6 +18,7 @@ class CardModel {
       term: data['front'],
       definition: data['back'],
       imgUrl: data['imgUrl'],
+      star: data['star']
     );
   }
 
@@ -25,6 +27,7 @@ class CardModel {
       "front": term,
       "back": definition,
       "imgUrl": imgUrl,
+      "star": star,
     };
   }
 }

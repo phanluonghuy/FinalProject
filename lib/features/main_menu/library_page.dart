@@ -66,6 +66,7 @@ class _LibraryPageState extends State<LibraryPage> {
         await _topicRepo.getAllTopicsByOwnerID(_currentUser.uid);
     setState(() {
       _topics = topics;
+      // print(_topics[1].title);
       _isLoadingTopics = false;
     });
   }

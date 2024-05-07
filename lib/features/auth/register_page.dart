@@ -1,12 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_icons/country_icons.dart';
+import 'package:email_otp/email_otp.dart';
+import 'package:finalproject/common/constants/strings.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
+import 'package:finalproject/common/widgets/Toast_widget.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:finalproject/repositories/auth_repo.dart';
 import 'package:finalproject/reuseable/constants/WidgetStyle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 
@@ -27,6 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _birthdayController = TextEditingController();
   final _countryController = TextEditingController();
 
+  EmailOTP myAuth = EmailOTP();
   bool password = true;
   bool confirmPassword = true;
   int _indexCountry = -1;
@@ -39,6 +45,12 @@ class _RegisterPageState extends State<RegisterPage> {
       ItemPositionsListener.create();
   final ScrollOffsetListener scrollOffsetListener =
       ScrollOffsetListener.create();
+  Future<bool> checkEmailExits() async {
+    var query = FirebaseFirestore.instance.collection('users')
+        .where('email', isEqualTo: _emailController.text).limit(1);
+    var querySnapshot = await query.get();
+    return querySnapshot.docs.isNotEmpty;
+  }
 
   void validateAndContinue() {
     if (_formKey.currentState!.validate()) {
@@ -46,6 +58,41 @@ class _RegisterPageState extends State<RegisterPage> {
         _currentStep++;
       });
     }
+  }
+
+  void sendOTP() async {
+    if (_formKey.currentState!.validate()) {
+      myAuth.setConfig(
+          appEmail: "contact@triolingo.com",
+          appName: "Triolingo OTP",
+          userEmail: _emailController.text,
+          otpLength: 4,
+          otpType: OTPType.digitsOnly);
+      if (await myAuth.sendOTP() == true) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("OTP has been sent"),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("Oops, OTP send failed"),
+        ));
+      }
+    }
+  }
+
+  void verifyOTP(String otp) async {
+    if (await myAuth.verifyOTP(otp: otp) == true ) {
+      setState(() {
+        _currentStep++;
+      });
+
+    } else {
+      Toast.wrongOTP(context);
+    }
+  }
+
+  bool isNumeric(String str) {
+    return RegExp(r'^-?[0-9]+$').hasMatch(str);
   }
 
   void _selectCountry() {
@@ -109,8 +156,13 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("What is your email address ?",
+                Text("What is your email address ? 📩",
                     style: AppTextStyles.bold20),
+                SizedBox(height: 10),
+                Text(
+                    "Enter your email address to get an OTP code to verify your email.",
+                    style: AppTextStyles.normal16),
+                SizedBox(height: 20),
                 TextFormField(
                   style: AppTextStyles.bold16,
                   controller: _emailController,
@@ -142,7 +194,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   style: ElevatedButton.styleFrom(
                       minimumSize: Size.fromHeight(50),
                       backgroundColor: AppTheme.primaryColor),
-                  onPressed: validateAndContinue,
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        // _isLoading = true; // Activate loading indicator
+                      });
+
+                      // Check if the email exists
+                      var check = await checkEmailExits();
+
+                      setState(() {
+                        // _isLoading = false; // Deactivate loading indicator
+
+                        if (check) { // If the email exists
+                          // Show error message: Email already in use
+                          Toast.emailExits(context);
+                        } else {
+                          sendOTP();
+                          _currentStep++; // Proceed to the next step
+                        }
+                      });
+                    }
+
+                  },
                   child: Text("Countinue",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)),
@@ -151,6 +225,53 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
           ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("You've got mail 📩", style: AppTextStyles.bold20),
+            SizedBox(height: 10),
+            Text(
+                "We have sent OTP verification code to your email address. Check your email and enter the code below",
+                style: AppTextStyles.normal16),
+            SizedBox(height: 20),
+            OtpTextField(
+              numberOfFields: 4,
+              borderColor: AppTheme.primaryColor,
+              fillColor: AppTheme.primaryColor2,
+              fieldWidth: 70,
+              textStyle: AppTextStyles.bold20,
+              showFieldAsBox: true,
+              onCodeChanged: (String code) {},
+              keyboardType: TextInputType.number,
+              onSubmit: (String verificationCode)  {
+                if (!isNumeric(verificationCode)) {
+                  Toast.wrongFormatInt(context);
+                  return;
+                }
+                verifyOTP(verificationCode);
+              }, // end onSubmit
+            ),
+            Spacer(),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  minimumSize: Size.fromHeight(50),
+                  backgroundColor: Colors.white),
+              onPressed: () {
+                setState(() {
+                  _currentStep--;
+                });
+              },
+              child: Text("Back",
+                  style: TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(height: 20)
+          ],
         ),
       ),
       Form(
@@ -499,7 +620,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _stepProgress() {
     return StepProgressIndicator(
-      totalSteps: 4,
+      totalSteps: 5,
       currentStep: _currentStep,
       size: 25,
       padding: 0,
@@ -561,7 +682,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
   void _register(BuildContext pageContext) async {
-    User? user = await _authRepo.signUpClassic(_emailController.text,_passwordController.text,_usernameController.text,"",0,"defaultava.png",DateTime.parse(_birthdayController.text),_countryController.text,"");
+    User? user = await _authRepo.signUpClassic(_emailController.text,_passwordController.text,_usernameController.text,"",0,AppStrings.defaultAvatarUrl,DateTime.parse(_birthdayController.text),_countryController.text,"");
     if (user != null) {
       Navigator.pushNamedAndRemoveUntil(pageContext, '/main', (route) => false);
     } else {

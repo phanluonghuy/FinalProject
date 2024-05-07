@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -53,7 +54,6 @@ class TopicRepo {
       final List<TopicModel> topics = querySnapshot.docs
           .map((doc) => TopicModel.fromFirestore(doc, null))
           .toList();
-
       return topics;
     } catch (e) {
       // Handle error if any
@@ -78,6 +78,68 @@ class TopicRepo {
       // Handle error if any
       print('Error getting topics by ownerID: $e');
       throw Exception('Failed to get topics by ownerID: $e');
+    }
+  }
+
+  Future<void> updateCardStar(String topicId, String cardId, bool star) async {
+    try {
+      await _db.collection('topics/$topicId/cards')
+          .doc(cardId).update({
+        'star': star,
+      });
+    } catch (e) {
+      print('Error updating card star $cardId: $e');
+      throw Exception('Fail to update card star for $cardId: $e');
+    }
+  }
+
+  Future<void> addRecord(RecordModel record, String topicId) async {
+      final CollectionReference recordRef = _db.collection('topics/$topicId/record');
+      await recordRef.add(record.toFirestore());
+  }
+
+  Future<List<RecordModel>> getAllRecord(String topicId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics/$topicId/record')
+          .get();
+
+      final List<RecordModel> records = querySnapshot.docs
+          .map((doc) => RecordModel.fromFirestore(doc))
+          .toList();
+
+      records.sort((a, b) {
+        int scoreComparison = b.score != null && a.score != null ? b.score!.compareTo(a.score!) : 0;
+        if (scoreComparison != 0) {
+          return scoreComparison;
+        }
+        return b.time?.compareTo != null?(a.time!.toInt()): 0;
+      });
+
+
+
+      return records;
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
+
+  Future<List<CardModel>> getCardsByStar(String topicId) async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics/$topicId/cards')
+          .where('star', isEqualTo: true)
+          .get();
+
+      final List<CardModel> cards = querySnapshot.docs
+          .map((doc) => CardModel.fromFirestore(doc))
+          .toList();
+
+      return cards;
+    } catch (e) {
+      print('Error getting cards by star for topic $topicId: $e');
+      throw Exception('Failed to get cards by star for topic $topicId: $e');
     }
   }
 
