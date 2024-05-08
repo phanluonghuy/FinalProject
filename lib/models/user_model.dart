@@ -13,15 +13,15 @@ class UserModel {
   DateTime? birthday;
   String? country;
   String? phone;
-  String? id;
-  String? email;
-  String? name;
-  String? bio;
-  int? exp;
-  String? avatarUrl;
-  DateTime? birthday;
-  String? country;
-  String? phone;
+  // String? id;
+  // String? email;
+  // String? name;
+  // String? bio;
+  // int? exp;
+  // String? avatarUrl;
+  // DateTime? birthday;
+  // String? country;
+  // String? phone;
 
   UserModel({
     this.id,
