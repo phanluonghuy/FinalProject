@@ -9,6 +9,7 @@ import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:flutter/material.dart';
 
@@ -193,92 +194,96 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
             // }, icon: Icon(Icons.more_vert)),
           ],
         ),
-      body: IntrinsicHeight(
-        child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Container(
-              margin: EdgeInsets.only(top: 20),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryColor,
-                borderRadius: BorderRadius.circular(20)
-              ),
-            child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('Question:', style:AppTextStyles.boldWhite20),
-                        // SizedBox(width: 16,),
+      body: Container(
+        alignment: Alignment.center,
+        child: IntrinsicHeight(
+          child: Padding(
+              padding: EdgeInsets.all(16),
+              child: Container(
+                width: Responsive().isPC(context)? 500: null,
+                margin: EdgeInsets.only(top: 20),
+                decoration: BoxDecoration(
+                  color: AppTheme.primaryColor,
+                  borderRadius: BorderRadius.circular(20)
+                ),
+              child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Text('Question:', style:AppTextStyles.boldWhite20),
+                          // SizedBox(width: 16,),
 
-                        // Text('${_term}', style: AppTextStyles.boldWhite18,),
-                      ],
-                    ),
-                    SizedBox(height: 10,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('${index + 1}. What is "${_term}" mean ?', style: AppTextStyles.boldWhite16,),
-                        IconButton(onPressed: (){
-                          TextToSpeech().speakEng('What is "${_term}" mean');
-                        }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.white,))
-                      ],
-                    ),
-                    SizedBox(height: 16,),
-                    Container(
-                      height: 230,
-                      child: ListView.builder(
-                          itemBuilder: (ctx, idx)  => SpeedrunItemPage(
-                            returnData: (data) async {
-                              if(data['index'] > _cards.length - 1){
-                                addRecord();
-                                var newIndex = await Navigator.push(context,
-                                  MaterialPageRoute(builder: (ctx) => ResultTypeWordPage(
-                                      topic: widget.topic,
-                                      cardCorrect: _cardCorrect,
-                                      cardInCorrect: _cardInCorrect,
-                                      correctAnswer: _correctAnswer,
-                                      inCorrectAnswer: _inCorrectAnswer,))
-                                );
-                                if(newIndex['newIndex'] == 0){
+                          // Text('${_term}', style: AppTextStyles.boldWhite18,),
+                        ],
+                      ),
+                      SizedBox(height: 10,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('${index + 1}. What is "${_term}" mean ?', style: AppTextStyles.boldWhite16,),
+                          IconButton(onPressed: (){
+                            TextToSpeech().speakEng('What is "${_term}" mean');
+                          }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.white,))
+                        ],
+                      ),
+                      SizedBox(height: 16,),
+                      Container(
+                        height: 230,
+                        child: ListView.builder(
+                            itemBuilder: (ctx, idx)  => SpeedrunItemPage(
+                              returnData: (data) async {
+                                if(data['index'] > _cards.length - 1){
+                                  addRecord();
+                                  var newIndex = await Navigator.push(context,
+                                    MaterialPageRoute(builder: (ctx) => ResultTypeWordPage(
+                                        topic: widget.topic,
+                                        cardCorrect: _cardCorrect,
+                                        cardInCorrect: _cardInCorrect,
+                                        correctAnswer: _correctAnswer,
+                                        inCorrectAnswer: _inCorrectAnswer,))
+                                  );
+                                  if(newIndex['newIndex'] == 0){
+                                    setState(() {
+                                      index = newIndex['newIndex'];
+                                      _cardCorrect.clear();
+                                      _cardInCorrect.clear();
+                                      _correctAnswer.clear();
+                                      _inCorrectAnswer.clear();
+                                      _answers.clear();
+                                      _getCards(index);
+                                    });
+                                  }else{
+                                    Navigator.pop(context);
+                                  }
+
+                                }else{
                                   setState(() {
-                                    index = newIndex['newIndex'];
-                                    _cardCorrect.clear();
-                                    _cardInCorrect.clear();
-                                    _correctAnswer.clear();
-                                    _inCorrectAnswer.clear();
+                                    index = data['index'];
                                     _answers.clear();
                                     _getCards(index);
                                   });
-                                }else{
-                                  Navigator.pop(context);
                                 }
-
-                              }else{
-                                setState(() {
-                                  index = data['index'];
-                                  _answers.clear();
-                                  _getCards(index);
-                                });
-                              }
-                            },
-                            answers: _answers[idx],
-                            index: index,
-                            definition: _definition,
-                            card: _cards[index],
-                              cardCorrect: _cardCorrect,
-                              cardInCorrect: _cardInCorrect,
-                              correctAnswer: _correctAnswer,
-                              inCorrectAnswer: _inCorrectAnswer,
-                              timeRemainning: _timeRemaining,
-                          ),
-                          itemCount: _answers.length,
+                              },
+                              answers: _answers[idx],
+                              index: index,
+                              definition: _definition,
+                              card: _cards[index],
+                                cardCorrect: _cardCorrect,
+                                cardInCorrect: _cardInCorrect,
+                                correctAnswer: _correctAnswer,
+                                inCorrectAnswer: _inCorrectAnswer,
+                                timeRemainning: _timeRemaining,
+                            ),
+                            itemCount: _answers.length,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-            ),
-        ),
+                    ],
+                  ),
+              ),
+          ),
+          ),
         ),
       ),
     );

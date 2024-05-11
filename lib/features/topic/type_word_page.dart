@@ -5,9 +5,11 @@ import 'package:finalproject/common/widgets/type_word/result_type_word_page.dart
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:finalproject/reuseable/constants/ToastMessage.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class TypeWordPage extends StatefulWidget {
   TopicModel topic;
@@ -270,7 +272,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
       Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white, // Đặt màu của mũi tên thành màu trắng
+          color: Colors.white,
         ),
         backgroundColor: AppTheme.primaryColor,
         title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: AppTextStyles.boldWhite20,),
@@ -302,97 +304,108 @@ class _TypeWordPageState extends State<TypeWordPage> {
               }, icon: Icon(Icons.more_vert))
         ],
       ),
-      body: _cards.length == 0? CircularProgressIndicator(): Padding(
-        padding: EdgeInsets.all(16),
-        child: IntrinsicHeight(
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  // color: AppTheme.primaryColor,
-                  border: Border.all(color: AppTheme.grey2, width: 2),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: _cards.length == 0?
+
+      CircularProgressIndicator():
+
+      Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Container(
+            width: Responsive().isPC(context) ? 500: null,
+            child: IntrinsicHeight(
+              child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    decoration: BoxDecoration(
+                      // color: AppTheme.primaryColor,
+                      border: Border.all(color: AppTheme.grey2, width: 2),
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
                         children: [
-                          Container(
-                            child: Row(
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Question:', style: AppTextStyles.bold20,),
+                              Container(
+                                child: Row(
+                                children: [
+                                  Text('Question:', style: AppTextStyles.bold20,),
 
-                            ],
-                          ),
-                        ),
+                                ],
+                              ),
+                            ),
 
-                      ],),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text('${index + 1}. What is "${question}" mean:', style: AppTextStyles.bold16,),
-                        Container(
-                          child: IconButton(onPressed: (){
-                            TextToSpeech().speakEng("What is ${question} mean");
-                          }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.black,)),
-                        ),
+                          ],),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                            Text('${index + 1}. What is "${question}" mean:', style: AppTextStyles.bold16,),
+                            Container(
+                              child: IconButton(onPressed: (){
+                                TextToSpeech().speakEng("What is ${question} mean");
+                              }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.black,)),
+                            ),
 
-                          // SizedBox(width: 16,),
-                        // Text('Data', style: AppTextStyles.bold16,)
-                      ],),
-                      SizedBox(height: 8,),
-                      Form(
-                        key: _key,
-                        child: TextFormField(
-                          controller: _textEditingController,
-                          decoration: InputDecoration(
-                            // label: Text('Answer'),
+                              // SizedBox(width: 16,),
+                            // Text('Data', style: AppTextStyles.bold16,)
+                          ],),
+                          SizedBox(height: 8,),
+                          Form(
+                            key: _key,
+                            child: TextFormField(
+                              controller: _textEditingController,
+                              decoration: InputDecoration(
+                                // label: Text('Answer'),
 
-                            suffixIcon: Icon(Icons.question_answer_outlined),
-                            hintText: ("Typing your answer"),
-                            hintStyle: TextStyle(
-                              // color: AppTheme.primaryColor
+                                suffixIcon: Icon(Icons.question_answer_outlined),
+                                hintText: ("Typing your answer"),
+                                hintStyle: TextStyle(
+                                  // color: AppTheme.primaryColor
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          SizedBox(height: 24),
+                          Text("Note: You need to enter the correct number of words and order of the definitions you have learned!!",
+                          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontFamily: 'Lato'),),
+                        ],
                       ),
-                      SizedBox(height: 24),
-                      Text("Note: You need to enter the correct number of words and order of the definitions you have learned!!",
-                      style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontFamily: 'Lato'),),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 24,),
-              Container(
-                width: double.infinity,
-                color: Colors.white,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: BorderSide(color: AppTheme.grey2, width: 2, style: BorderStyle.solid)
-                      ),
-
-                    ).copyWith(
-                      backgroundColor: MaterialStatePropertyAll(Colors.white),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        handleSubmit();
-                      });
-                  }, child: Text("Next", style: TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black
-                    ),)),
-              )
-            ],
+                  ),
+                  SizedBox(height: 24,),
+                  Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(color: AppTheme.grey2, width: 2, style: BorderStyle.solid)
+                          ),
+
+                        ).copyWith(
+                          backgroundColor: MaterialStatePropertyAll(Colors.white),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            handleSubmit();
+                          });
+                      }, child: Text("Next", style: TextStyle(
+                          fontFamily: 'Lato',
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black
+                        ),)),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
