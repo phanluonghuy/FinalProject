@@ -31,6 +31,11 @@ class _UserTopicsPageState extends State<UserTopicsPage> {
     });
     List<TopicModel> topics =
         await _topicRepo.getAllTopicsByOwnerID(widget.userID);
+    for (var topic in topics) {
+      if(!topic.isPublic!) {
+        topics.remove(topic);
+      }
+    }
     setState(() {
       _topics = topics;
       _isLoadingTopics = false;
