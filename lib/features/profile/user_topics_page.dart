@@ -31,16 +31,16 @@ class _UserTopicsPageState extends State<UserTopicsPage> {
     });
     List<TopicModel> topics =
         await _topicRepo.getAllTopicsByOwnerID(widget.userID);
-    for (var topic in topics) {
-      if(!topic.isPublic!) {
-        topics.remove(topic);
-      }
-    }
+
+    // Filter out private topics
+    List<TopicModel> publicTopics = topics.where((topic) => topic.isPublic == true).toList();
+
     setState(() {
-      _topics = topics;
+      _topics = publicTopics;
       _isLoadingTopics = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

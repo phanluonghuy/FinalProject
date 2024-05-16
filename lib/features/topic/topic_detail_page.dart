@@ -1,4 +1,5 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
+import 'package:finalproject/features/profile/view_profile_page.dart';
 import 'package:finalproject/features/topic/create_topic_page.dart';
 import 'package:finalproject/features/topic/edit_topic_page.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
@@ -134,24 +135,43 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                     SizedBox(height: 10),
                     Row(
                       children: [
-                        Container(
-                          height: 25,
-                          width: 25,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: _user != null
-                                ? Image.network(
-                                    _user!.avatarUrl ?? '',
-                                    fit: BoxFit.cover,
-                                  )
-                                : SizedBox.shrink(),
+                        GestureDetector(
+                          onTap: () {
+                            // Navigate to ViewProfilePage when the text is tapped
+                            if (_user != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewProfilePage(
+                                      userID: _user?.id ??
+                                          ''), // Pass the user object to ViewProfilePage
+                                ),
+                              );
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 25,
+                                width: 25,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: _user != null
+                                      ? Image.network(
+                                          _user!.avatarUrl ?? '',
+                                          fit: BoxFit.cover,
+                                        )
+                                      : SizedBox.shrink(),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                _user?.name ?? '',
+                                style: AppTextStyles.bold16
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ],
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          _user?.name ?? '',
-                          style: AppTextStyles.bold16
-                              .copyWith(color: Colors.white),
                         ),
                         SizedBox(width: 10),
                         Container(
@@ -229,24 +249,24 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               SizedBox(
                 height: 8,
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: _cards.length,
-                  itemBuilder: (ctx, idx) => CardItemPage(
-                      onReturnData: (value) {
-                        setState(() {
-                          if (value['state'] == 0) {
-                            cardsStar.add(value['card']);
-                          } else if (value['state'] == -1) {
-                            cardsStar.remove(value['card']);
-                          }
-                          // print(_cardsStar.length);
-                          // print(_cardsStar);
-                        });
-                      },
-                      card: _cards[idx],
-                      topicId: widget.topic.id!,
-                      cardStar: cardsStar))
+              Column(
+                children: _cards.map((card) {
+                  return CardItemPage(
+                    onReturnData: (value) {
+                      setState(() {
+                        if (value['state'] == 0) {
+                          cardsStar.add(value['card']);
+                        } else if (value['state'] == -1) {
+                          cardsStar.remove(value['card']);
+                        }
+                      });
+                    },
+                    card: card,
+                    topicId: widget.topic.id!,
+                    cardStar: cardsStar,
+                  );
+                }).toList(),
+              )
             ],
           ),
         ),
