@@ -64,7 +64,7 @@ class _EditProfileState extends State<EditProfile> {
       context: context,
       initialDate: _user?.birthday ?? DateTime.now(),
       firstDate: DateTime(1980),
-      lastDate: DateTime(2025),
+      lastDate: DateTime.now(),
     ).whenComplete(() => {});
     if (pickedDate != null) {
       _pickedDate = pickedDate;

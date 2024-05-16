@@ -72,7 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
               size: 30,
             ), // Action icon
             onPressed: () {
-              // Action when search icon is tapped
+              Navigator.pushNamed(context, '/settings');
             },
             color: Colors.black,
           )

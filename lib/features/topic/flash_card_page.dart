@@ -7,6 +7,7 @@ import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:finalproject/repositories/user_repo.dart';
+import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -102,62 +103,68 @@ class _FlashCardPageState extends State<FlashCardPage> {
               icon: Icon(Icons.more_vert)),
         ],
       ),
-      body: Center(
-        child: Padding(
-            padding: EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Container(
-                height: 600,
-                child: PageView.builder(
-                  controller: _pageController,
-                  onPageChanged: (value) => setState(() {
-                    index = value;
-                  }),
-                    itemBuilder: (ctx, idx) => FlashCardItemPage(
-                      card: _cards[index],
-                      isShuffle: isShuffle,
-                      isTerm: isTerm,
-                      isAll: isAll,
-                    ),
-                    itemCount: _cards.length,
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+              padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Container(
+                  width: 700,
+                  height: Responsive().isPC(context)? 600: 600,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: (value) => setState(() {
+                      index = value;
+                    }),
+                      itemBuilder: (ctx, idx) => FlashCardItemPage(
+                        card: _cards[index],
+                        isShuffle: isShuffle,
+                        isTerm: isTerm,
+                        isAll: isAll,
+                      ),
+                      itemCount: _cards.length,
+                  ),
                 ),
-              ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(onPressed: (){
-                    _pageController.previousPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                    setState(() {
-                      if(index - 1 < 0){
-                        index = 0;
-                      }else{
-                        index--;
-                      }
-                    });
-                  }, icon: Icon(Icons.keyboard_return, size: 40,)),
-                  IconButton(onPressed: (){
-                    _pageController.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeInOut,
-                    );
-                    setState(() {
-                      if(index + 1 >= _cards.length){
-                        index = _cards.length - 1;
-                      }else{
-                        index++;
-                      }
-                    });
-                  }, icon: Icon(Icons.arrow_right_alt, size: 50,))
+                Container(
+                  width: 700,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(onPressed: (){
+                        _pageController.previousPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                        setState(() {
+                          if(index - 1 < 0){
+                            index = 0;
+                          }else{
+                            index--;
+                          }
+                        });
+                      }, icon: Icon(Icons.keyboard_return, size: 40,)),
+                      IconButton(onPressed: (){
+                        _pageController.nextPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                        setState(() {
+                          if(index + 1 >= _cards.length){
+                            index = _cards.length - 1;
+                          }else{
+                            index++;
+                          }
+                        });
+                      }, icon: Icon(Icons.arrow_right_alt, size: 50,))
 
-                ],
-              )
+                    ],
+                  ),
+                )
 
-            ],
+              ],
+            ),
           ),
         ),
       ),
