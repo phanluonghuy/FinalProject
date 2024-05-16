@@ -20,31 +20,29 @@ class TopicRepo {
   }
 
   Future<TopicModel?> getTopicByID(String topicID) async {
-  try {
-    final DocumentSnapshot<Map<String, dynamic>> docSnapshot = await _db
-        .collection('topics')
-        .doc(topicID)
-        .get(); // Change the type here to match the correct type
+    try {
+      final DocumentSnapshot<Map<String, dynamic>> docSnapshot = await _db
+          .collection('topics')
+          .doc(topicID)
+          .get(); // Change the type here to match the correct type
 
-    if (!docSnapshot.exists) {
-      // Return null if the document doesn't exist
-      return null;
+      if (!docSnapshot.exists) {
+        // Return null if the document doesn't exist
+        return null;
+      }
+
+      return TopicModel.fromFirestore(docSnapshot, null);
+    } catch (e) {
+      // Handle error if any
+      print('Error getting topic by ID $topicID: $e');
+      throw Exception('Failed to get topic by ID $topicID: $e');
     }
-
-    return TopicModel.fromFirestore(docSnapshot, null);
-  } catch (e) {
-    // Handle error if any
-    print('Error getting topic by ID $topicID: $e');
-    throw Exception('Failed to get topic by ID $topicID: $e');
   }
-}
-
 
   Future<List<TopicModel>> getAllTopics() async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
-          .collection('topics')
-          .get();
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _db.collection('topics').get();
 
       if (querySnapshot.docs.isEmpty) {
         // Return an empty list if there are no documents
@@ -83,8 +81,7 @@ class TopicRepo {
 
   Future<void> updateCardStar(String topicId, String cardId, bool star) async {
     try {
-      await _db.collection('topics/$topicId/cards')
-          .doc(cardId).update({
+      await _db.collection('topics/$topicId/cards').doc(cardId).update({
         'star': star,
       });
     } catch (e) {
@@ -94,36 +91,35 @@ class TopicRepo {
   }
 
   Future<void> addRecord(RecordModel record, String topicId) async {
-      final CollectionReference recordRef = _db.collection('topics/$topicId/record');
-      await recordRef.add(record.toFirestore());
+    final CollectionReference recordRef =
+        _db.collection('topics/$topicId/record');
+    await recordRef.add(record.toFirestore());
   }
 
   Future<List<RecordModel>> getAllRecord(String topicId) async {
     try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
-          .collection('topics/$topicId/record')
-          .get();
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await _db.collection('topics/$topicId/record').get();
 
       final List<RecordModel> records = querySnapshot.docs
           .map((doc) => RecordModel.fromFirestore(doc))
           .toList();
 
       records.sort((a, b) {
-        int scoreComparison = b.score != null && a.score != null ? b.score!.compareTo(a.score!) : 0;
+        int scoreComparison = b.score != null && a.score != null
+            ? b.score!.compareTo(a.score!)
+            : 0;
         if (scoreComparison != 0) {
           return scoreComparison;
         }
-        return b.time?.compareTo != null?(a.time!.toInt()): 0;
+        return b.time?.compareTo != null ? (a.time!.toInt()) : 0;
       });
-
-
 
       return records;
     } catch (e) {
       throw Exception('Error: $e');
     }
   }
-
 
   Future<List<CardModel>> getCardsByStar(String topicId) async {
     try {
@@ -160,4 +156,67 @@ class TopicRepo {
       throw Exception('Failed to get all cards for topic $topicId: $e');
     }
   }
+
+  Future<void> editTopic(String id, String title, String description,
+      bool isPublic, List<CardModel> cards) async {
+    try {
+      final DocumentReference topicRef = _db.collection('topics').doc(id);
+
+      // Create a new map containing the updated topic data
+      Map<String, dynamic> topicData = {
+        'title': title,
+        'description': description,
+        'isPublic': isPublic,
+      };
+
+      // Update the topic document
+      await topicRef.update(topicData);
+
+      // Clear existing cards and add the updated cards
+      final CollectionReference cardsRef = topicRef.collection('cards');
+      final QuerySnapshot<Object?> existingCardsSnapshot = await cardsRef.get();
+      final List<QueryDocumentSnapshot<Object?>> existingCards =
+          existingCardsSnapshot.docs;
+
+      WriteBatch batch = _db.batch();
+
+      // Delete existing cards
+      for (var cardDoc in existingCards) {
+        batch.delete(cardDoc.reference);
+      }
+
+      // Add updated cards
+      for (var card in cards) {
+        batch.set(cardsRef.doc(), card.toFirestore());
+      }
+
+      // Commit the batch operation
+      await batch.commit();
+    } catch (e) {
+      print('Error editing topic $id: $e');
+      throw Exception('Failed to edit topic $id: $e');
+    }
+  }
+
+  Future<List<TopicModel>> getAllPublicTopics() async {
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics')
+          .where('isPublic', isEqualTo: true)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+
+      final List<TopicModel> topics = querySnapshot.docs
+          .map((doc) => TopicModel.fromFirestore(doc, null))
+          .toList();
+      return topics;
+    } catch (e) {
+      print('Error getting public topics: $e');
+      throw Exception('Failed to get public topics: $e');
+    }
+  }
+
 }

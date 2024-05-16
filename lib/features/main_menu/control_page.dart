@@ -1,3 +1,4 @@
+import 'package:finalproject/features/main_menu/discovery_page.dart';
 import 'package:finalproject/features/main_menu/home_page.dart';
 import 'package:finalproject/features/main_menu/library_page.dart';
 import 'package:finalproject/features/main_menu/profile_page.dart';
@@ -20,7 +21,7 @@ class _ControlPageState extends State<ControlPage> {
   List pages = [
     const HomePage(),
     const LibraryPage(),
-    const HomePage(),
+    const DiscoverPage(),
     const ProfilePage()
   ];
   List<BottomNavigationBarItem> barItems = [

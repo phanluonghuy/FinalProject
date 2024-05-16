@@ -75,9 +75,16 @@ class _TopicItemState extends State<TopicItem> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
-                    Text(widget.topic.title ?? '',
-                        style: AppTextStyles.bold16
-                            .copyWith(color: AppTheme.primaryColor)),
+                    Row(
+                      children: [
+                        Text(widget.topic.title ?? '',
+                            style: AppTextStyles.bold16
+                                .copyWith(color: AppTheme.primaryColor)),
+                        SizedBox(width: 6,),
+                        if (!widget.topic.isPublic!)
+                          Icon(Icons.lock_outline, size: 18,),
+                      ],
+                    ),
                     SizedBox(height: 5),
                     Text(
                       '${_cards.length} cards',

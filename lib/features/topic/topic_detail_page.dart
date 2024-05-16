@@ -1,4 +1,6 @@
 import 'package:finalproject/common/widgets/topic/card_item.dart';
+import 'package:finalproject/features/topic/create_topic_page.dart';
+import 'package:finalproject/features/topic/edit_topic_page.dart';
 import 'package:finalproject/features/topic/flash_card_page.dart';
 import 'package:finalproject/features/topic/ranking_page.dart';
 import 'package:finalproject/features/topic/speedrun_quiz_page.dart';
@@ -15,6 +17,7 @@ import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/image_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -79,16 +82,6 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         elevation: 0,
         titleSpacing: 0,
         actions: [
-          // IconButton(
-          //   icon: Icon(
-          //     MdiIcons.fromString('dots-horizontal-circle-outline'),
-          //     size: 30,
-          //   ), // Action icon
-          //   onPressed: () {
-          //     _showBottomDialog(context);
-          //   },
-          //   color: Colors.black,
-          // ),
           Container(
             margin: EdgeInsets.only(right: 16),
             child: IconButton(
@@ -103,7 +96,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   color: Colors.amber,
                   size: 23,
                 )),
-          )
+          ),
+          IconButton(
+            icon: Icon(
+              MdiIcons.fromString('dots-horizontal-circle-outline'),
+              size: 30,
+            ), // Action icon
+            onPressed: () {
+              _showBottomDialog(context);
+            },
+            color: Colors.black,
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -276,15 +279,24 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                     _showFolderPickerDialog(context, _foldersOfCurrentUser);
                   },
                 ),
-                ListTile(
-                  leading: Icon(Icons.edit),
-                  title: Text(
-                    'Edit this topic',
-                    style: AppTextStyles.bold16,
+                Visibility(
+                  visible: widget.topic.ownerID == _currentUser.uid,
+                  child: ListTile(
+                    leading: Icon(Icons.edit),
+                    title: Text(
+                      'Edit this topic',
+                      style: AppTextStyles.bold16,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditTopicPage(topic: widget.topic),
+                        ),
+                      );
+                    },
                   ),
-                  onTap: () {
-                    // Handle onTap action
-                  },
                 ),
               ],
             ),
