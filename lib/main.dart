@@ -1,3 +1,4 @@
+import 'package:finalproject/features/auth/change_password_page.dart';
 import 'package:finalproject/features/auth/forgotPasword_page.dart';
 import 'package:finalproject/features/auth/register_page.dart';
 import 'package:finalproject/features/auth/settings_page.dart';
@@ -11,6 +12,7 @@ import 'package:finalproject/common/constants/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/auth/login_page.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/forgot': (context) => const ForgotPage(),
         '/editProfile': (context) => const EditProfile(),
         '/settings': (context) => const SettingPage(),
+        '/changePassword' : (context) => const ChangePasswordPage()
       },
     );
   }

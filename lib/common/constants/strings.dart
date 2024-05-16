@@ -21,4 +21,5 @@ class AppStrings {
   static const String chooseAnUsername = 'Choose an username';
   static const String editProfile = 'Edit Profile';
   static const String defaultAvatarUrl = 'https://firebasestorage.googleapis.com/v0/b/finalprojectflutter-55c38.appspot.com/o/avatars%2Fdefault.jpg?alt=media&token=1ec9abb9-4ec4-4603-a24f-ac58d7d85be5';
+  static const String changePassword = "Change your password 🔑";
 }

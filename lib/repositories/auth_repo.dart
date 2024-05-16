@@ -57,6 +57,23 @@ class AuthRepo {
     return null;
   }
 
+  Future<bool> changePassword(String currentPassword, String newPassword) async {
+    bool success = false;
+    var user = await _auth.currentUser!;
+    final cred = await EmailAuthProvider.credential(email: user.email!, password: currentPassword);
+    await user.reauthenticateWithCredential(cred).then((value) async {
+      await user.updatePassword(newPassword).then((_) {
+        success = true;
+      }).catchError((error) {
+        print(error);
+      });
+    }).catchError((err) {
+      print(err);
+    });
+
+    return success;
+  }
+
   Future signOut() async {
     try {
       return await _auth.signOut();
