@@ -39,26 +39,28 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
-    _userFollowFuture = _userRepo.getUserByID(widget.userID);
+    _initializeData();
 
   }
 
-  Future<UserModel?> _loadUserInfo() async {
-    String uid = widget.userID;
-    setState(() {
-      // _userInfo = userInfo;
+  Future<void> _initializeData() async {
+    try{
+      String uid = widget.userID;
+      _user = await _userRepo.getUserByID(_currentUser.uid);
+      _userFollow = await _userRepo.getUserByID(uid);
       _isLoadingUser = false;
-    });
-    _user = await _userRepo.getUserByID(_currentUser.uid);
-    _userFollow = await _userRepo.getUserByID(uid);
-    if (_user?.following!.contains(uid) ?? false) {
-      setState(() {
-        _following = true;
-      });
+      if (_user?.following!.contains(uid) ?? false) {
+          _following = true;
+      }
+      if (mounted) {
+        setState(() {});
+      }
+
+    }catch(e) {
+      print('Error initializing data: $e');
     }
-     return _userFollow;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -105,47 +107,30 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           width: 150,
                           child: Stack(
                             children: [
-                              FutureBuilder<UserModel?>(
-                                future: _userFollowFuture,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return Center(child: CircularProgressIndicator());
-                                  }
-                                  else if (snapshot.hasData) {
-                                    // print(snapshot.data!.toString());
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: CachedNetworkImage(
-                                        imageUrl: snapshot.data!.avatarUrl ?? "",
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover),
-                                          ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: _userFollow?.avatarUrl ?? '',
+                                  imageBuilder:
+                                      (context, imageProvider) =>
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover),
                                         ),
-                                        placeholder: (context, url) => Center(
-                                            child: LoadingAnimationWidget
-                                                .fourRotatingDots(
-                                                    color:
-                                                        AppTheme.primaryColor,
-                                                    size: 30)),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
                                       ),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child:
-                                          LoadingAnimationWidget.twoRotatingArc(
-                                              color: AppTheme.primaryColor,
-                                              size: 30),
-                                    );
-                                  }
-                                },
-                              ),
+                                  placeholder: (context, url) => Center(
+                                      child: LoadingAnimationWidget
+                                          .fourRotatingDots(
+                                          color:
+                                          AppTheme.primaryColor,
+                                          size: 30)),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              )
+
                             ],
                           )),
                       SizedBox(
