@@ -26,28 +26,38 @@ class ViewProfilePage extends StatefulWidget {
 }
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
-  final _userRepo = UserRepo();
-  final _imageHelper = ImageHelper();
 
   final _currentUser = FirebaseAuth.instance.currentUser!;
-  UserModel? _userInfo;
+  // UserModel? _userInfo;
   bool _isLoadingUser = true;
+  UserRepo _userRepo = UserRepo();
+  UserModel? _user;
+  UserModel? _userFollow;
+  bool _following = false;
 
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
+
   }
 
   Future<String> _loadUserInfo() async {
     String uid = widget.userID;
-    UserModel? userInfo = await UserRepo().getUserByID(uid);
+    // UserModel? userInfo = await UserRepo().getUserByID(uid);
     setState(() {
-      _userInfo = userInfo;
+      // _userInfo = userInfo;
       _isLoadingUser = false;
     });
-
-    return _userInfo?.avatarUrl ?? "";
+    _user = await _userRepo.getUserByID(_currentUser.uid);
+    _userFollow = await _userRepo.getUserByID(uid);
+    if (_user?.following!.contains(uid) ?? false) {
+      setState(() {
+        _following = true;
+      });
+    }
+    return _userFollow?.avatarUrl ?? "";
+    // return _userInfo?.avatarUrl ?? "";
   }
 
   @override
@@ -59,7 +69,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         titleSpacing: 0,
         title: Row(
           children: [
-            Text('${_userInfo?.name}\'s profile', // Title
+            // Text('${_userInfo?.name}\'s profile',
+            Text('${_userFollow?.name}\'s profile',
                 style: AppTextStyles.bold20),
           ],
         ),
@@ -137,11 +148,13 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         height: 10,
                       ),
                       Text(
-                        _userInfo?.name ?? '',
+                        // _userInfo?.name ?? '',
+                        _userFollow?.name ?? '',
                         style: AppTextStyles.bold26,
                       ),
                       Text(
-                        _userInfo?.bio ?? '',
+                        // _userInfo?.bio ?? '',
+                        _userFollow?.bio ?? '',
                         style: AppTextStyles.normal16,
                         textAlign: TextAlign.center,
                       ),
@@ -169,7 +182,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('23', style: AppTextStyles.bold20),
+                              Text(_userFollow?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
                               Text('followers', style: AppTextStyles.normal16)
                             ],
                           ),
@@ -180,8 +193,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('25', style: AppTextStyles.bold20),
-                              Text('achievements',
+                              Text(_userFollow?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                              Text('following',
                                   style: AppTextStyles.normal16)
                             ],
                           ),
@@ -194,8 +207,20 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ? Container(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  //follow
+                                onPressed: () async {
+                                  if (_following) {
+                                    _user?.following?.remove(widget.userID);
+                                    _userFollow?.followers?.remove(_user?.id ?? "");
+                                  }
+                                  else {
+                                    _user?.following?.add(widget.userID);
+                                    _userFollow?.followers?.add(_user?.id ?? "");
+
+                                  }
+                                  _userRepo.following(_user!, _userFollow!);
+                                  setState(() {
+                                    _following = !_following;
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.primaryColor,
@@ -211,7 +236,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      (_following) ?  Icon(
+                                        Icons.people,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ) : Icon(
                                         Icons.add_alert,
                                         size: 20,
                                         color: Colors.white,
@@ -219,6 +248,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                       SizedBox(
                                         width: 10,
                                       ),
+                                      (_following) ? Text('Following',
+                                          style: AppTextStyles.bold16
+                                              .copyWith(color: Colors.white)) :
                                       Text('Follow',
                                           style: AppTextStyles.bold16
                                               .copyWith(color: Colors.white)),

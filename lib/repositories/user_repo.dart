@@ -78,15 +78,6 @@ class UserRepo {
   Future<void> updateUser(UserModel userModel,BuildContext context) async {
     var ref = _db.collection("users");
     var userRef = ref.doc(userModel.id);
-    // id: snapshot.id,
-    // email: data?['email'],
-    // name: data?['name'],
-    // bio: data?['bio'],
-    // exp: data?['exp'],
-    // avatarUrl: data?['avatarUrl'],
-    // birthday: (data?['birthday'] as Timestamp).toDate(),
-    // country: data?['country'],
-    // phone: data?['phone'],
    try {
      await userRef.update({
        "name" : userModel.name,
@@ -104,6 +95,23 @@ class UserRepo {
    } catch (e) {
 
    }
+
+  }
+
+  Future<void> following(UserModel userModel,UserModel userFollow) async {
+    var ref = _db.collection("users");
+    var userRef = ref.doc(userModel.id);
+    try {
+      await userRef.update({
+        "following" : userModel.following
+      });
+      userRef = ref.doc(userFollow.id);
+      await userRef.update({
+        "followers" : userFollow.followers
+      });
+    } catch (e) {
+
+    }
 
   }
 }
