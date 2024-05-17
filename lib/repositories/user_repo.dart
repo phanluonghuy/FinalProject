@@ -114,4 +114,24 @@ class UserRepo {
     }
 
   }
+
+  Future<List<UserModel>> suggestFollowing(UserModel currentUser) async {
+    try {
+      List<String> following = currentUser.following ?? [];
+      following.add(currentUser.id!);
+      QuerySnapshot querySnapshot = await _db.collection("users")
+          .where(FieldPath.documentId, whereNotIn: following)
+          .limit(10)
+          .get();
+
+      List<UserModel> suggestedUsers = querySnapshot.docs.map((doc) {
+        return UserModel.fromFirestore(doc as DocumentSnapshot<Map<String, dynamic>>, null);
+      }).toList();
+      return suggestedUsers;
+    } catch (e) {
+      print('Error suggesting users: $e');
+      throw Exception('Failed to suggest users: $e');
+    }
+  }
+
 }

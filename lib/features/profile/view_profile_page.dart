@@ -34,17 +34,18 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
   UserModel? _user;
   UserModel? _userFollow;
   bool _following = false;
+  Future<UserModel?>? _userFollowFuture;
 
   @override
   void initState() {
     super.initState();
     _loadUserInfo();
+    _userFollowFuture = _userRepo.getUserByID(widget.userID);
 
   }
 
-  Future<String> _loadUserInfo() async {
+  Future<UserModel?> _loadUserInfo() async {
     String uid = widget.userID;
-    // UserModel? userInfo = await UserRepo().getUserByID(uid);
     setState(() {
       // _userInfo = userInfo;
       _isLoadingUser = false;
@@ -56,8 +57,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         _following = true;
       });
     }
-    return _userFollow?.avatarUrl ?? "";
-    // return _userInfo?.avatarUrl ?? "";
+     return _userFollow;
   }
 
   @override
@@ -105,14 +105,18 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           width: 150,
                           child: Stack(
                             children: [
-                              FutureBuilder<String>(
-                                future: _loadUserInfo(),
+                              FutureBuilder<UserModel?>(
+                                future: _userFollowFuture,
                                 builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                                  else if (snapshot.hasData) {
+                                    // print(snapshot.data!.toString());
                                     return ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
                                       child: CachedNetworkImage(
-                                        imageUrl: snapshot.data ?? "",
+                                        imageUrl: snapshot.data!.avatarUrl ?? "",
                                         imageBuilder:
                                             (context, imageProvider) =>
                                                 Container(
@@ -148,7 +152,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         height: 10,
                       ),
                       Text(
-                        // _userInfo?.name ?? '',
                         _userFollow?.name ?? '',
                         style: AppTextStyles.bold26,
                       ),
