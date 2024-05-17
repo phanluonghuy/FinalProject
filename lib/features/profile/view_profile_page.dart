@@ -26,29 +26,41 @@ class ViewProfilePage extends StatefulWidget {
 }
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
-  final _userRepo = UserRepo();
-  final _imageHelper = ImageHelper();
 
   final _currentUser = FirebaseAuth.instance.currentUser!;
-  UserModel? _userInfo;
+  // UserModel? _userInfo;
   bool _isLoadingUser = true;
+  UserRepo _userRepo = UserRepo();
+  UserModel? _user;
+  UserModel? _userFollow;
+  bool _following = false;
+  Future<UserModel?>? _userFollowFuture;
 
   @override
   void initState() {
     super.initState();
-    _loadUserInfo();
+    _initializeData();
+
   }
 
-  Future<String> _loadUserInfo() async {
-    String uid = widget.userID;
-    UserModel? userInfo = await UserRepo().getUserByID(uid);
-    setState(() {
-      _userInfo = userInfo;
+  Future<void> _initializeData() async {
+    try{
+      String uid = widget.userID;
+      _user = await _userRepo.getUserByID(_currentUser.uid);
+      _userFollow = await _userRepo.getUserByID(uid);
       _isLoadingUser = false;
-    });
+      if (_user?.following!.contains(uid) ?? false) {
+          _following = true;
+      }
+      if (mounted) {
+        setState(() {});
+      }
 
-    return _userInfo?.avatarUrl ?? "";
+    }catch(e) {
+      print('Error initializing data: $e');
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +71,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
         titleSpacing: 0,
         title: Row(
           children: [
-            Text('${_userInfo?.name}\'s profile', // Title
+            // Text('${_userInfo?.name}\'s profile',
+            Text('${_userFollow?.name}\'s profile',
                 style: AppTextStyles.bold20),
           ],
         ),
@@ -94,54 +107,42 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           width: 150,
                           child: Stack(
                             children: [
-                              FutureBuilder<String>(
-                                future: _loadUserInfo(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: CachedNetworkImage(
-                                        imageUrl: snapshot.data ?? "",
-                                        imageBuilder:
-                                            (context, imageProvider) =>
-                                                Container(
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: imageProvider,
-                                                fit: BoxFit.cover),
-                                          ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: CachedNetworkImage(
+                                  imageUrl: _userFollow?.avatarUrl ?? '',
+                                  imageBuilder:
+                                      (context, imageProvider) =>
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover),
                                         ),
-                                        placeholder: (context, url) => Center(
-                                            child: LoadingAnimationWidget
-                                                .fourRotatingDots(
-                                                    color:
-                                                        AppTheme.primaryColor,
-                                                    size: 30)),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
                                       ),
-                                    );
-                                  } else {
-                                    return Center(
-                                      child:
-                                          LoadingAnimationWidget.twoRotatingArc(
-                                              color: AppTheme.primaryColor,
-                                              size: 30),
-                                    );
-                                  }
-                                },
-                              ),
+                                  placeholder: (context, url) => Center(
+                                      child: LoadingAnimationWidget
+                                          .fourRotatingDots(
+                                          color:
+                                          AppTheme.primaryColor,
+                                          size: 30)),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error),
+                                ),
+                              )
+
                             ],
                           )),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
-                        _userInfo?.name ?? '',
+                        _userFollow?.name ?? '',
                         style: AppTextStyles.bold26,
                       ),
                       Text(
-                        _userInfo?.bio ?? '',
+                        // _userInfo?.bio ?? '',
+                        _userFollow?.bio ?? '',
                         style: AppTextStyles.normal16,
                         textAlign: TextAlign.center,
                       ),
@@ -169,7 +170,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('23', style: AppTextStyles.bold20),
+                              Text(_userFollow?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
                               Text('followers', style: AppTextStyles.normal16)
                             ],
                           ),
@@ -180,8 +181,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('25', style: AppTextStyles.bold20),
-                              Text('achievements',
+                              Text(_userFollow?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                              Text('following',
                                   style: AppTextStyles.normal16)
                             ],
                           ),
@@ -194,8 +195,20 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           ? Container(
                               width: double.infinity,
                               child: ElevatedButton(
-                                onPressed: () {
-                                  //follow
+                                onPressed: () async {
+                                  if (_following) {
+                                    _user?.following?.remove(widget.userID);
+                                    _userFollow?.followers?.remove(_user?.id ?? "");
+                                  }
+                                  else {
+                                    _user?.following?.add(widget.userID);
+                                    _userFollow?.followers?.add(_user?.id ?? "");
+
+                                  }
+                                  _userRepo.following(_user!, _userFollow!);
+                                  setState(() {
+                                    _following = !_following;
+                                  });
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.primaryColor,
@@ -211,7 +224,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(
+                                      (_following) ?  Icon(
+                                        Icons.people,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ) : Icon(
                                         Icons.add_alert,
                                         size: 20,
                                         color: Colors.white,
@@ -219,6 +236,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                       SizedBox(
                                         width: 10,
                                       ),
+                                      (_following) ? Text('Following',
+                                          style: AppTextStyles.bold16
+                                              .copyWith(color: Colors.white)) :
                                       Text('Follow',
                                           style: AppTextStyles.bold16
                                               .copyWith(color: Colors.white)),

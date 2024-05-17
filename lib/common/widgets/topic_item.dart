@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -99,7 +100,8 @@ class _TopicItemState extends State<TopicItem> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: _user != null
-                                ? Image.network(
+                                ? CachedNetworkImage(
+                                    imageUrl:
                                     _user!.avatarUrl ?? '',
                                     fit: BoxFit.cover,
                                   )

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/profile/view_profile_page.dart';
 import 'package:finalproject/features/topic/create_topic_page.dart';
@@ -157,7 +158,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(100),
                                   child: _user != null
-                                      ? Image.network(
+                                      ? CachedNetworkImage(
+                                    imageUrl:
                                           _user!.avatarUrl ?? '',
                                           fit: BoxFit.cover,
                                         )

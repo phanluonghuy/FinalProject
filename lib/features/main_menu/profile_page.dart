@@ -222,7 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('23', style: AppTextStyles.bold20),
+                              Text(_userInfo?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
                               Text('followers', style: AppTextStyles.normal16)
                             ],
                           ),
@@ -233,8 +233,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Column(
                             children: [
-                              Text('25', style: AppTextStyles.bold20),
-                              Text('achievements',
+                              Text(_userInfo?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                              Text('following',
                                   style: AppTextStyles.normal16)
                             ],
                           ),

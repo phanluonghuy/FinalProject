@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
-final _storageRef = FirebaseStorage.instance.ref();
 
 class UserModel {
   String? id;
@@ -13,15 +10,8 @@ class UserModel {
   DateTime? birthday;
   String? country;
   String? phone;
-  // String? id;
-  // String? email;
-  // String? name;
-  // String? bio;
-  // int? exp;
-  // String? avatarUrl;
-  // DateTime? birthday;
-  // String? country;
-  // String? phone;
+  List<String>? followers;
+  List<String>? following;
 
   UserModel({
     this.id,
@@ -33,6 +23,8 @@ class UserModel {
     this.birthday,
     this.country,
     this.phone,
+    this.followers,
+    this.following
   });
 
   factory UserModel.fromFirestore(
@@ -50,6 +42,9 @@ class UserModel {
       birthday: (data?['birthday'] as Timestamp?)?.toDate(),
       country: data?['country'],
       phone: data?['phone'],
+      // followers: data?['followers'] == null ? null : List<String>.from(data?['followers'].map((x)=>String.fromEnvironment(x)))
+      followers: (data?['followers'] as List?)?.cast<String>() ?? [],  // Type-safe casting for followers
+      following: (data?['following'] as List?)?.cast<String>() ?? [],  // Type-safe casting for following
     );
   }
 
@@ -63,6 +58,13 @@ class UserModel {
       if (birthday != null) 'birthday': birthday,
       if (country != null) 'country': country,
       if (phone != null) 'phone': phone,
+      if (followers != null) 'followers': followers,  // Fixed typo here
+      if (following != null) 'following': following,  // Fixed typo here
     };
+  }
+
+  @override
+  String toString() {
+    return 'UserModel{id: $id, email: $email, name: $name, bio: $bio, exp: $exp, avatarUrl: $avatarUrl, birthday: $birthday, country: $country, phone: $phone, followers: $followers, following: $following}';
   }
 }

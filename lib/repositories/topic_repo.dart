@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
+import 'package:finalproject/models/user_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class TopicRepo {
@@ -203,6 +204,32 @@ class TopicRepo {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
           .collection('topics')
           .where('isPublic', isEqualTo: true)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+
+      final List<TopicModel> topics = querySnapshot.docs
+          .map((doc) => TopicModel.fromFirestore(doc, null))
+          .toList();
+      return topics;
+    } catch (e) {
+      print('Error getting public topics: $e');
+      throw Exception('Failed to get public topics: $e');
+    }
+  }
+
+  Future<List<TopicModel>> getTopicFromYouFollowing(UserModel userModel) async {
+    if (userModel.following?.isEmpty ?? true) {
+      return [];
+    }
+    List<String> following = userModel.following ?? [];
+    try {
+      final QuerySnapshot<Map<String, dynamic>> querySnapshot = await _db
+          .collection('topics')
+          .where('isPublic', isEqualTo: true)
+          .where("ownerID", whereIn: following)
           .get();
 
       if (querySnapshot.docs.isEmpty) {
