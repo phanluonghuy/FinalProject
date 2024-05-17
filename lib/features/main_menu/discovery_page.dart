@@ -29,6 +29,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
     _loadAllTopics();
   }
 
+  Future<void> _refresh() async {
+    _loadAllTopics();
+    _searchKey.text = '';
+  }
+
   Future<void> _loadAllTopics() async {
     setState(() {
       _isLoadingTopics = true;
@@ -121,19 +126,37 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       )
                     : (_filteredTopics.length == 0)
                         ? Center(
-                            child: Text('Nothing matched your search', style: AppTextStyles.bold12.copyWith(color: AppTheme.grey2),),
+                            child: Text(
+                              'Nothing matched your search',
+                              style: AppTextStyles.bold12
+                                  .copyWith(color: AppTheme.grey2),
+                            ),
                           )
-                        : ListView(
-                            // Wrap ListView with Expanded
-                            children: _filteredTopics
-                                .map((topic) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 15),
-                                      child: TopicItem(
-                                        topic: topic,
-                                      ),
-                                    ))
-                                .toList(),
+                        : RefreshIndicator(
+                            onRefresh: () async {
+                              _refresh();
+                            },
+                            displacement: 5,
+                            child: NotificationListener<
+                                OverscrollIndicatorNotification>(
+                              onNotification: (overscroll) {
+                                overscroll
+                                    .disallowIndicator(); // Prevent Overscroll Indication
+                                return true;
+                              },
+                              child: ListView(
+                                // Wrap ListView with Expanded
+                                children: _filteredTopics
+                                    .map((topic) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 15),
+                                          child: TopicItem(
+                                            topic: topic,
+                                          ),
+                                        ))
+                                    .toList(),
+                              ),
+                            ),
                           ),
               )
             ],

@@ -219,4 +219,18 @@ class TopicRepo {
     }
   }
 
+  Future<void> deleteTopicByID(String topicID) async {
+    try {
+      // Reference to the topic document
+      final DocumentReference topicRef = _db.collection('topics').doc(topicID);
+
+      // Delete the topic document
+      await topicRef.delete();
+
+      print('Topic deleted successfully');
+    } catch (e) {
+      print('Error deleting topic $topicID: $e');
+      throw Exception('Failed to delete topic $topicID: $e');
+    }
+  }
 }

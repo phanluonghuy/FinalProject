@@ -3,6 +3,7 @@ import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/double_choice_dialog.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:finalproject/common/widgets/topic_item.dart';
+import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/main_menu/library_page.dart';
 import 'package:finalproject/models/folder_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -72,6 +73,10 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
     });
   }
 
+  Future<void> _refresh() async {
+    _loadFolder();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,53 +105,81 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                 ? Center(
                     child: CircularProgressIndicator(),
                   )
-                : ListView(
-                    children: _topics
-                        .map((topic) => Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Slidable(
-                                endActionPane: ActionPane(
-                                  extentRatio: 0.3,
-                                  motion: ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (BuildContext context) {
-                                        print('1');
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return DoubleChoiceDialog(
-                                                title:
-                                                    'Removing topic from this folder',
-                                                message:
-                                                    'Do you want to remove this topic from the folder?',
-                                                onConfirm: () async {
-                                                  await _folderRepo
-                                                      .updateTopicInFolder(
-                                                          widget.folder.id ??
-                                                              '',
-                                                          topic.id ?? '',
-                                                          false);
-                                                  setState(() {
-                                                    _loadFolder();
-                                                  });
-                                                  Navigator.pop(context);
-                                                },
-                                              );
-                                            });
-                                      },
-                                      icon: Icons.delete_outline,
-                                      foregroundColor: Colors.red,
-                                    ),
-                                  ],
-                                ),
-                                child: TopicItem(
-                                  topic: topic,
-                                ),
-                              ),
-                            ))
-                        .toList(),
-                  ),
+                : (_topics.length == 0)
+                    ? Center(
+                        child: Text(
+                          'This folder is empty',
+                          style: AppTextStyles.bold12
+                              .copyWith(color: AppTheme.grey2),
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          _refresh();
+                        },
+                        displacement: 5,
+                        child: NotificationListener<
+                            OverscrollIndicatorNotification>(
+                          onNotification: (overscroll) {
+                            overscroll
+                                .disallowIndicator(); // Prevent Overscroll Indication
+                            return true;
+                          },
+                          child: ListView(
+                            children: _topics
+                                .map((topic) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+                                      child: Slidable(
+                                        endActionPane: ActionPane(
+                                          extentRatio: 0.3,
+                                          motion: ScrollMotion(),
+                                          children: [
+                                            SlidableAction(
+                                              onPressed:
+                                                  (BuildContext context) {
+                                                print('1');
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return DoubleChoiceDialog(
+                                                        title:
+                                                            'Removing topic from this folder',
+                                                        message:
+                                                            'Do you want to remove this topic from the folder?',
+                                                        onConfirm: () async {
+                                                          await _folderRepo
+                                                              .updateTopicInFolder(
+                                                                  widget.folder
+                                                                          .id ??
+                                                                      '',
+                                                                  topic.id ??
+                                                                      '',
+                                                                  false);
+                                                          setState(() {
+                                                            _loadFolder();
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                      );
+                                                    });
+                                              },
+                                              icon: Icons.delete_outline,
+                                              foregroundColor: Colors.red,
+                                            ),
+                                          ],
+                                        ),
+                                        child: TopicItem(
+                                          topic: topic,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
+                          ),
+                        ),
+                      ),
           ),
         ));
   }
@@ -177,10 +210,10 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.delete_outline),
+                  leading: Icon(Icons.delete_outline, color: Colors.red),
                   title: Text(
                     'Delete this folder',
-                    style: AppTextStyles.bold16,
+                    style: AppTextStyles.bold16.copyWith(color: Colors.red),
                   ),
                   onTap: () {
                     showDialog(
@@ -191,9 +224,14 @@ class _FolderDetailPageState extends State<FolderDetailPage> {
                             message:
                                 'Do you want to permanently delete this folder?',
                             onConfirm: () {
-                              _folderRepo.deleteFolderByID(widget.folder.id ?? '');
-                              Navigator.popUntil(context, ModalRoute.withName('/'));
-
+                              _folderRepo
+                                  .deleteFolderByID(widget.folder.id ?? '');
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ControlPage(index: 1)),
+                                (Route<dynamic> route) => false,
+                              );
                             },
                           );
                         });

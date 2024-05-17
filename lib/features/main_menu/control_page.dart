@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ControlPage extends StatefulWidget {
-  const ControlPage({super.key});
+  final int? index;
+  ControlPage({this.index, super.key});
 
   @override
   State<ControlPage> createState() => _ControlPageState();
@@ -37,6 +38,16 @@ class _ControlPageState extends State<ControlPage> {
         icon: Icon(MdiIcons.fromString('account-outline')),
         label: AppStrings.profile),
   ];
+
+  @override
+  void initState() {
+    if (widget.index != null) {
+      setState(() {
+        _currentIndex = widget.index!;
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

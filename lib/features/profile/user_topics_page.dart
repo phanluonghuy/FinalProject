@@ -41,14 +41,13 @@ class _UserTopicsPageState extends State<UserTopicsPage> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
           titleSpacing: 0,
-          title: Text('All topics', // Title
+          title: Text('All topics',
               style: AppTextStyles.bold20),
         ),
         body: Padding(
@@ -68,7 +67,6 @@ class _UserTopicsPageState extends State<UserTopicsPage> {
                           ),
                         )
                       : ListView(
-                          // Wrap ListView with Expanded
                           children: _topics
                               .map((topic) => Padding(
                                     padding: const EdgeInsets.only(bottom: 15),

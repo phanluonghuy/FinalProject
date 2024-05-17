@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'features/auth/login_page.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -32,19 +31,19 @@ class MyApp extends StatelessWidget {
       title: 'Triolingo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppTheme.primaryColor),
-        scaffoldBackgroundColor: Colors.white, 
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
       home: const Wrapper(),
       routes: {
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
-        '/main': (context) => const ControlPage(),
+        '/main': (context) => ControlPage(),
         '/register': (context) => const RegisterPage(),
         '/forgot': (context) => const ForgotPage(),
         '/editProfile': (context) => const EditProfile(),
         '/settings': (context) => const SettingPage(),
-        '/changePassword' : (context) => const ChangePasswordPage()
+        '/changePassword': (context) => const ChangePasswordPage()
       },
     );
   }

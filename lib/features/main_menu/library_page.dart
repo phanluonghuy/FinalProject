@@ -109,6 +109,12 @@ class _LibraryPageState extends State<LibraryPage> {
     }
   }
 
+  Future<void> _refresh() async {
+    // Call your method to load topics
+    await _loadTopics();
+    await _loadFolders();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -253,17 +259,37 @@ class _LibraryPageState extends State<LibraryPage> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ListView(
-              // Wrap ListView with Expanded
-              children: _topics
-                  .map((topic) => Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: TopicItem(
-                          topic: topic,
-                        ),
-                      ))
-                  .toList(),
-            ),
+          : (_topics.length == 0)
+              ? Center(
+                  child: Text(
+                    'You haven\'t created any topics',
+                    style: AppTextStyles.bold12.copyWith(color: AppTheme.grey2),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    _refresh();
+                  },
+                  displacement: 5,
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll
+                          .disallowIndicator(); // Prevent Overscroll Indication
+                      return true;
+                    },
+                    child: ListView(
+                      // Wrap ListView with Expanded
+                      children: _topics
+                          .map((topic) => Padding(
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: TopicItem(
+                                  topic: topic,
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
     );
   }
 
@@ -274,17 +300,37 @@ class _LibraryPageState extends State<LibraryPage> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ListView(
-              // Wrap ListView with Expanded
-              children: _folders
-                  .map((folder) => Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: FolderItem(
-                          folder: folder,
-                        ),
-                      ))
-                  .toList(),
-            ),
+          : (_folders.length == 0)
+              ? Center(
+                  child: Text(
+                    'You haven\'t created any folders',
+                    style: AppTextStyles.bold12.copyWith(color: AppTheme.grey2),
+                  ),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    _refresh();
+                  },
+                  displacement: 5,
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overscroll) {
+                      overscroll
+                          .disallowIndicator(); // Prevent Overscroll Indication
+                      return true;
+                    },
+                    child: ListView(
+                      // Wrap ListView with Expanded
+                      children: _folders
+                          .map((folder) => Padding(
+                                padding: const EdgeInsets.only(bottom: 15),
+                                child: FolderItem(
+                                  folder: folder,
+                                ),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                ),
     );
   }
 }

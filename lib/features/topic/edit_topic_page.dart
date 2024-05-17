@@ -1,3 +1,4 @@
+import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
@@ -10,6 +11,7 @@ import 'package:finalproject/common/widgets/double_choice_dialog.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class EditTopicPage extends StatefulWidget {
   final TopicModel topic;
@@ -41,7 +43,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
       _privacyValue = widget.topic.isPublic! ? 'public' : 'private';
     });
 
-    List<CardModel> cards = await _topicRepo.getAllCardsForTopic(widget.topic.id ?? '');
+    List<CardModel> cards =
+        await _topicRepo.getAllCardsForTopic(widget.topic.id ?? '');
     setState(() {
       _cards = cards;
     });
@@ -161,7 +164,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
     if (isConfirmed) {
       bool isPublic = true;
       _privacyValue == 'public' ? isPublic = true : isPublic = false;
-      _topicRepo.editTopic(widget.topic.id ?? '', _titleController.text, _descriptionController.text, isPublic, _cards);
+      _topicRepo.editTopic(widget.topic.id ?? '', _titleController.text,
+          _descriptionController.text, isPublic, _cards);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -170,8 +174,29 @@ class _EditTopicPageState extends State<EditTopicPage> {
         ),
       );
 
-      Navigator.popUntil(context, ModalRoute.withName('/'));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => ControlPage(index: 1)),
+        (Route<dynamic> route) => false,
+      );
     }
+  }
+
+  void _deleteTopic() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DoubleChoiceDialog(
+            title: 'Deleting topic!',
+            message: 'Do you want to permanently delete this topic?',
+            onConfirm: () {
+              _topicRepo.deleteTopicByID(widget.topic.id ?? '');
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => ControlPage(index: 1)),
+                (Route<dynamic> route) => false,
+              );
+            },
+          );
+        });
   }
 
   @override
@@ -207,7 +232,7 @@ class _EditTopicPageState extends State<EditTopicPage> {
               size: 30,
             ), // Action icon
             onPressed: () {
-              // Action when search icon is tapped
+              _showChoiceDialog(context);
             },
             color: Colors.black,
           ),
@@ -343,5 +368,75 @@ class _EditTopicPageState extends State<EditTopicPage> {
         ),
       ),
     );
+  }
+
+  void _showChoiceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text('Options', style: AppTextStyles.bold20),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.file_open_outlined),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      'Import .csv/.txt file',
+                      style: AppTextStyles.bold16,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    _deleteTopic();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete_outline,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Delete topic',
+                        style: AppTextStyles.bold16.copyWith(color: Colors.red),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      // Handle the selected value (if any)
+      if (value != null) {
+        print('Selected: $value');
+      }
+    });
   }
 }

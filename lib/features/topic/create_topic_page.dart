@@ -1,3 +1,5 @@
+import 'package:finalproject/features/main_menu/control_page.dart';
+import 'package:finalproject/features/main_menu/library_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
@@ -40,7 +42,9 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
 
     setState(() {
       _cards.add(CardModel(
-          term: _termController.text, definition: _definitionController.text, star: false));
+          term: _termController.text,
+          definition: _definitionController.text,
+          star: false));
       _termController.text = '';
       _definitionController.text = '';
     });
@@ -149,7 +153,10 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
 
       _topicRepo.createTopic(newTopic, _cards);
 
-      Navigator.pop(context);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => ControlPage(index: 1)),
+        (Route<dynamic> route) => false,
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
