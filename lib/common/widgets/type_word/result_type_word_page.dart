@@ -55,123 +55,325 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
           child: Padding(
               padding: EdgeInsets.all(16),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text("Result", style: AppTextStyles.title,),
+              SizedBox(height: 30,),
+              Text("Lession completed!", style: AppTextStyles.bold26.copyWith(color: AppTheme.primaryColor),),
               SizedBox(height: 18,),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: AppTheme.primaryColor
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: Image.asset(
+                    'images/cat_full.png',
+                    height: 150,
+                  )),
+              SizedBox(height: 18,),
+              Stack(children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppTheme.primaryColor, //                   <--- border color
+                      width: 3.0,
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(20))
+                  ),
+                  height: 180,
+                  width: double.maxFinite,
+                  child: Column(
+                    children: [
+                      Expanded(child: SizedBox()),
+                      Expanded(child: Center(child:
+                        Text("👉 ${((_cardCorrect.length*10-_cardInCorrect.length*2) > 0 ? _cardCorrect.length*10-_cardInCorrect.length*5 : 0 ).toString()}",style: AppTextStyles.bold26),))
+                    ],
+                  )
                 ),
-                child: Padding(
-                    padding: EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Score:', style: AppTextStyles.boldWhite20,),
-                        Text('Correct:', style: AppTextStyles.boldWhite20,),
-                        Text('Incorrect:', style: AppTextStyles.boldWhite20,),
-                        Text('Feedback:', style: AppTextStyles.boldWhite20,),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${_cardCorrect.length * 10}', style: AppTextStyles.boldWhite20,),
-                        Text('${_cardCorrect.length}', style: AppTextStyles.boldWhite20,),
-                        Text('${_cardInCorrect.length}', style: AppTextStyles.boldWhite20,),
-                        Text('${_feedback}', style: AppTextStyles.boldWhite20,),
-                      ],
-                    ),
-                  ],
-                ),),
-              ),
-              SizedBox(height: 16,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text('Correct', style: AppTextStyles.boldPrimary20,),
-                  Text('Incorrect', style: AppTextStyles.boldPrimary20,),
-                ],
-              ),
-              SizedBox(height: 12,),
-              Container(
-                alignment: Alignment.topCenter,
-                height: 390,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, idx) => CardTypeWordResultPage(
-                          cardModel: _cardCorrect[idx],
-                          answer: _correctAnswer[idx],
-                        ),
-                        itemCount: _cardCorrect.length,
+                Container(
+                  height: 90,
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                      color: AppTheme.primaryColor,
+                      border: Border.all(
+                        color: AppTheme.primaryColor,
+                        width: 5.0,
                       ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemBuilder: (ctx, idx) => CardTypeWordResultPage(
-                          cardModel: _cardInCorrect[idx],
-                          answer: _inCorrectAnswer[idx],
-                        ),
-                        itemCount: _cardInCorrect.length,
-                      ),
-                    ),
-                  ],
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                  ),
+                  child: Center(child: Text("Score",style: AppTextStyles.boldWhite26,),),
                 ),
-              ),
+              ],),
+              SizedBox(height: 20,),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(color: AppTheme.primaryColor, width: 2),
-                              borderRadius: BorderRadius.circular(20)
-                            )
-                          ).copyWith(
-                            backgroundColor: MaterialStatePropertyAll(Colors.white)
+                    child: Stack(children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.green, //                   <--- border color
+                                width: 3.0,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(20))
                           ),
-                          onPressed: (){
-                            Navigator.pop(context, {'newIndex': 0});
-                      }, child: Text('Restart Test', style: AppTextStyles.bold16,)),
-                    ),
+                          height: 180,
+                          child: Column(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              Expanded(child: Center(child:
+                              Text("✅ ${_cardCorrect.length}",style: AppTextStyles.bold26),))
+                            ],
+                          )
+                      ),
+                      Container(
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          border: Border.all(
+                            color: Colors.green,
+                            width: 5.0,
+                          ),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                        ),
+                        child: Center(child: Text("Correct",style: AppTextStyles.boldWhite18,),),
+                      ),
+                    ],),
                   ),
+                  SizedBox(width: 5,),
+                  Expanded(
+                    child: Stack(children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.red, //                   <--- border color
+                                width: 3.0,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                          ),
+                          height: 180,
+                          child: Column(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              Expanded(child: Center(child:
+                              Text("❌ ${_cardInCorrect.length}",style: AppTextStyles.bold26),))
+                            ],
+                          )
+                      ),
+                      Container(
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          border: Border.all(
+                            color: Colors.red,
+                            width: 5.0,
+                          ),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                        ),
+                        child: Center(child: Text("Incorrect",style: AppTextStyles.boldWhite18,),),
+                      ),
 
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  side: BorderSide(color: AppTheme.primaryColor, width: 2),
-                                  borderRadius: BorderRadius.circular(20)
-                              )
-                          ).copyWith(
-                              backgroundColor: MaterialStatePropertyAll(Colors.white)
-                          ),
-                          onPressed: (){
-                            // Navigator.push(context,
-                            // MaterialPageRoute(builder: (ctx) => TopicDetailPage(topic: widget.topic)),);
-                            Navigator.pop(context, {'newIndex': -1});
-                          }, child: Text('New Test', style: AppTextStyles.bold16,)),
-                    ),
+                    ],),
                   ),
+                  SizedBox(width: 5,),
+                  Expanded(
+                    child: Stack(children: [
+                      Container(
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.orange, //                   <--- border color
+                                width: 3.0,
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(20))
+                          ),
+                          height: 180,
+                          child: Column(
+                            children: [
+                              Expanded(child: SizedBox()),
+                              Expanded(child: Center(child:
+                              Text("${_feedback}",style: AppTextStyles.bold16),))
+                            ],
+                          )
+                      ),
+                      Container(
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 5.0,
+                          ),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),
+                        ),
+                        child: Center(child: Text("Feedback",style: AppTextStyles.boldWhite18,),),
+                      ),
+
+                    ],),
+                  )
                 ],
-              ),
+              )
+              // Container(
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10),
+              //     color: AppTheme.primaryColor
+              //   ),
+              //   child: Padding(
+              //       padding: EdgeInsets.all(16),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text('Score:', style: AppTextStyles.boldWhite20,),
+              //           Text('Correct:', style: AppTextStyles.boldWhite20,),
+              //           Text('Incorrect:', style: AppTextStyles.boldWhite20,),
+              //           Text('Feedback:', style: AppTextStyles.boldWhite20,),
+              //         ],
+              //       ),
+              //       Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text('${_cardCorrect.length * 10}', style: AppTextStyles.boldWhite20,),
+              //           Text('${_cardCorrect.length}', style: AppTextStyles.boldWhite20,),
+              //           Text('${_cardInCorrect.length}', style: AppTextStyles.boldWhite20,),
+              //           Text('${_feedback}', style: AppTextStyles.boldWhite20,),
+              //         ],
+              //       ),
+              //     ],
+              //   ),),
+              // ),
+              // SizedBox(height: 16,),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //   children: [
+              //     Text('Correct', style: AppTextStyles.boldPrimary20,),
+              //     Text('Incorrect', style: AppTextStyles.boldPrimary20,),
+              //   ],
+              // ),
+              // SizedBox(height: 12,),
+              // Container(
+              //   alignment: Alignment.topCenter,
+              //   height: 390,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Expanded(
+              //         child: ListView.builder(
+              //           shrinkWrap: true,
+              //           itemBuilder: (ctx, idx) => CardTypeWordResultPage(
+              //             cardModel: _cardCorrect[idx],
+              //             answer: _correctAnswer[idx],
+              //           ),
+              //           itemCount: _cardCorrect.length,
+              //         ),
+              //       ),
+              //       Expanded(
+              //         child: ListView.builder(
+              //           shrinkWrap: true,
+              //           itemBuilder: (ctx, idx) => CardTypeWordResultPage(
+              //             cardModel: _cardInCorrect[idx],
+              //             answer: _inCorrectAnswer[idx],
+              //           ),
+              //           itemCount: _cardInCorrect.length,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Expanded(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(8.0),
+              //         child: ElevatedButton(
+              //             style: ElevatedButton.styleFrom(
+              //               shape: RoundedRectangleBorder(
+              //                 side: BorderSide(color: AppTheme.primaryColor, width: 2),
+              //                 borderRadius: BorderRadius.circular(20)
+              //               )
+              //             ).copyWith(
+              //               backgroundColor: MaterialStatePropertyAll(Colors.white)
+              //             ),
+              //             onPressed: (){
+              //               Navigator.pop(context, {'newIndex': 0});
+              //         }, child: Text('Restart Test', style: AppTextStyles.bold16,)),
+              //       ),
+              //     ),
+              //
+              //     Expanded(
+              //       child: Padding(
+              //         padding: const EdgeInsets.all(8.0),
+              //         child: ElevatedButton(
+              //             style: ElevatedButton.styleFrom(
+              //                 shape: RoundedRectangleBorder(
+              //                     side: BorderSide(color: AppTheme.primaryColor, width: 2),
+              //                     borderRadius: BorderRadius.circular(20)
+              //                 )
+              //             ).copyWith(
+              //                 backgroundColor: MaterialStatePropertyAll(Colors.white)
+              //             ),
+              //             onPressed: (){
+              //               // Navigator.push(context,
+              //               // MaterialPageRoute(builder: (ctx) => TopicDetailPage(topic: widget.topic)),);
+              //               Navigator.pop(context, {'newIndex': -1});
+              //             }, child: Text('New Test', style: AppTextStyles.bold16,)),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),),
+        ),
+        bottomNavigationBar: Padding(
+          padding: EdgeInsets.only(left: 16,right: 8,bottom: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(right: 8),
+                  child: ElevatedButton(
+                    onPressed: (){
+                      Navigator.pop(context, {'newIndex': 0});
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40), // Rounded corners
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("Restart Test",
+                          style: AppTextStyles.bold16.copyWith(color: AppTheme.primaryColor)),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 8),
+                  child: ElevatedButton(
+                    onPressed: (){
+                      Navigator.pop(context, {'newIndex': -1});
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primaryColor,
+                      elevation: 10,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40), // Rounded corners
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text("New Test",
+                          style: AppTextStyles.bold16.copyWith(color: Colors.white)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

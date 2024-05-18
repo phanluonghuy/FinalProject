@@ -10,6 +10,7 @@ import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 
 
@@ -52,6 +53,28 @@ class _FlashCardPageState extends State<FlashCardPage> {
     });
   }
 
+  Widget _stepProgress(_currentStep) {
+    return StepProgressIndicator(
+      totalSteps: (_cards.length-1 > 0) ? _cards.length-1  : 1 ,
+      currentStep: _currentStep,
+      size: 10,
+      padding: 0,
+      selectedColor: AppTheme.primaryColor,
+      unselectedColor: AppTheme.primaryColor2,
+      roundedEdges: Radius.circular(20),
+      selectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [AppTheme.primaryColor.withOpacity(0.5), AppTheme.primaryColor],
+      ),
+      unselectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.white, Colors.grey.shade200],
+      ),
+    );
+  }
+
 
 
   @override
@@ -67,10 +90,11 @@ class _FlashCardPageState extends State<FlashCardPage> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white, // Đặt màu của mũi tên thành màu trắng
+          color: Colors.black, // Đặt màu của mũi tên thành màu trắng
         ),
-        backgroundColor: AppTheme.primaryColor,
-        title: Text("${index+1}/${_cards.length}", style: AppTextStyles.boldWhite20,),
+        // backgroundColor: AppTheme.primaryColor,
+        // title: Text("${index+1}/${_cards.length}", style: AppTextStyles.bold20,),
+        title: _stepProgress(index),
         actions: [
           IconButton(
               onPressed: (){
@@ -144,7 +168,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
                             index--;
                           }
                         });
-                      }, icon: Icon(Icons.keyboard_return, size: 40,)),
+                      }, icon: Icon(Icons.arrow_back, size: 50,)),
                       IconButton(onPressed: (){
                         _pageController.nextPage(
                           duration: Duration(milliseconds: 500),
@@ -157,7 +181,7 @@ class _FlashCardPageState extends State<FlashCardPage> {
                             index++;
                           }
                         });
-                      }, icon: Icon(Icons.arrow_right_alt, size: 50,))
+                      }, icon: Icon(Icons.arrow_forward, size: 50,))
 
                     ],
                   ),

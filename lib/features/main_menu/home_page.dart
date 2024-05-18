@@ -354,7 +354,7 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
             child: Row(children: [
               Text("Hi, " + userModel.name! + "\nWelcome back!",
                   style: AppTextStyles.boldWhite20),
-              SizedBox(width: MediaQuery.of(context).size.width / 2.5),
+              SizedBox(width: MediaQuery.of(context).size.width / 3.5),
               CircleAvatar(
                 radius: 25,
                 backgroundImage:

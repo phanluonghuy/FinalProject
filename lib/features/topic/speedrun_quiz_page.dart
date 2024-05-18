@@ -13,8 +13,10 @@ import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/widgets.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class SpeedrunQuizPage extends StatefulWidget {
   TopicModel topic;
@@ -43,21 +45,19 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   bool isAll = true;
   String _term = '';
   String _definition = '';
-
   int _initialSeconds = 0;
   int _timeRemaining = 0;
   Timer? _timer;
-
 
   Future<void> _getCards(index) async {
     _answers.clear();
     String topicID = widget.topic.id ?? '';
     List<CardModel> cards = await _topicRepo.getAllCardsForTopic(topicID);
     _cardsStar = cards;
-    if(isAll == false){
+    if (isAll == false) {
       cards = await _topicRepo.getCardsByStar(topicID);
     }
-    if(isShuffle == true){
+    if (isShuffle == true) {
       cards.shuffle();
     }
 
@@ -66,47 +66,46 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
       _term = _cards[index].term!;
       _definition = _cards[index].definition!;
 
-      if(isTerm == false){
+      if (isTerm == false) {
         _term = _cards[index].definition!;
         _definition = _cards[index].term!;
         _answers.add(_cards[index].term!);
-      } else{
+      } else {
         _answers.add(_cards[index].definition!);
       }
     });
-    Future.delayed(Duration(milliseconds: 1500), (){
+    Future.delayed(Duration(milliseconds: 1500), () {
       TextToSpeech().speakEng("What is ${_term} mean");
-
     });
 
     int count = 0;
-    if(isAll == true){
-      for(int i = 0; i < _cards.length; i++){
-        if(count == 3){
+    if (isAll == true) {
+      for (int i = 0; i < _cards.length; i++) {
+        if (count == 3) {
           break;
         }
-        if(_cards[index].term == _cards[i].term){
+        if (_cards[index].term == _cards[i].term) {
           continue;
-        }else{
-          if(isTerm == true){
+        } else {
+          if (isTerm == true) {
             _answers.add(_cards[i].definition!);
-          } else{
+          } else {
             _answers.add(_cards[i].term!);
           }
           count++;
         }
       }
-    } else{
-      for(int i = 0; i < _cardsStar.length; i++){
-        if(count == 3){
+    } else {
+      for (int i = 0; i < _cardsStar.length; i++) {
+        if (count == 3) {
           break;
         }
-        if(_cards[index].term == _cardsStar[i].term){
+        if (_cards[index].term == _cardsStar[i].term) {
           continue;
-        }else{
-          if(isTerm == true){
+        } else {
+          if (isTerm == true) {
             _answers.add(_cardsStar[i].definition!);
-          } else{
+          } else {
             _answers.add(_cardsStar[i].term!);
           }
           count++;
@@ -115,18 +114,58 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
     }
 
     _answers.shuffle();
-
   }
 
-  void addRecord(){
+  void addRecord() {
     String ownerId = widget.topic.ownerID!;
     String topicId = widget.topic.id!;
     int score = _cardCorrect.length * 10;
-    double _percentageCorrect = (_cardCorrect.length * 100 / (_cardCorrect.length + _cardInCorrect.length));
+    double _percentageCorrect = (_cardCorrect.length *
+        100 /
+        (_cardCorrect.length + _cardInCorrect.length));
 
     int expGained = _cardCorrect.length;
     _userRepo.addExpForUser(_currentUser.uid, expGained);
-    _topicRepo.addRecord(new RecordModel(userID: _currentUser.uid, score: score, time: _timeRemaining, percent: _percentageCorrect.toInt()), topicId);
+    _topicRepo.addRecord(
+        new RecordModel(
+            userID: _currentUser.uid,
+            score: score,
+            time: _timeRemaining,
+            percent: _percentageCorrect.toInt()),
+        topicId);
+  }
+  void skipQuestion() {
+    setState(() {
+      // 1. Mark the question as incorrect (skipped)
+      _cardInCorrect.add(_cards[index]);
+      _inCorrectAnswer.add('Skipped');
+
+      // 2. Move to the next question
+      index++;
+
+      // 3. Prepare for the next card
+      _answers.clear(); // Clear answer choices
+
+      // 4. Check if there are more questions
+      if (index < _cards.length) {
+        _getCards(index); // Load the next card
+      } else {
+        // 5. Handle the end of the quiz
+        addRecord(); // Save the quiz results
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (ctx) => ResultTypeWordPage(
+                  topic: widget.topic,
+                  cardCorrect: _cardCorrect,
+                  cardInCorrect: _cardInCorrect,
+                  correctAnswer: _correctAnswer,
+                  inCorrectAnswer: _inCorrectAnswer,
+                )
+            )
+        );
+      }
+    });
   }
 
   @override
@@ -147,97 +186,128 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
     });
   }
 
+  Widget _stepProgress(_currentStep) {
+    return StepProgressIndicator(
+      totalSteps: (_cards.length - 1 > 0) ? _cards.length - 1 : 1,
+      currentStep: _currentStep,
+      size: 10,
+      padding: 0,
+      selectedColor: AppTheme.primaryColor,
+      unselectedColor: AppTheme.primaryColor2,
+      roundedEdges: Radius.circular(20),
+      selectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [AppTheme.primaryColor.withOpacity(0.5), AppTheme.primaryColor],
+      ),
+      unselectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.white, Colors.grey.shade200],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.white,
-          ),
-          backgroundColor: AppTheme.primaryColor,
-          title: Text('${index + 1} / ${_cards.length}', style: AppTextStyles.boldWhite20,),
-          actions: [
-            Container(
-
-                margin: EdgeInsets.only(right: 24),
-                child: Text('${_timeRemaining.toString().padLeft(2, '0')}', style: AppTextStyles.boldWhite16,))
-            // IconButton(onPressed: (){
-            //     showModalBottomSheet(context: context,
-            //         builder: (ctx) => BottomSheetOptionsPage(
-            //             topic: widget.topic,
-            //             isTermMain: isTerm,
-            //             isAllMain: isAll)
-            //     ).then((value){
-            //       if(value['isShuffle'] != null){
-            //         setState(() {
-            //           isShuffle = value['isShuffle'];
-            //           isTerm = value['isTerm'];
-            //           isAll = value['isAll'];
-            //           _getCards(index);
-            //         });
-            //       } else{
-            //         setState(() {
-            //           isShuffle = false;
-            //           isTerm = value['isTerm'];
-            //           isAll = value['isAll'];
-            //           _getCards(index);
-            //         });
-            //       }
-            //     });
-            // }, icon: Icon(Icons.more_vert)),
-          ],
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black,
         ),
-      body: Container(
-        alignment: Alignment.center,
-        child: IntrinsicHeight(
-          child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Container(
-                width: Responsive().isPC(context)? 500: null,
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryColor,
-                  borderRadius: BorderRadius.circular(20)
+        // backgroundColor: AppTheme.primaryColor,
+        // title: Text('${index + 1} / ${_cards.length}', style: AppTextStyles.boldWhite20,),
+        title: _stepProgress(index),
+        actions: [
+          Container(
+              margin: EdgeInsets.only(right: 24),
+              child: Text(
+                '${_timeRemaining.toString().padLeft(2, '0')}',
+                style: AppTextStyles.bold20,
+              ))
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: [
+            Text(
+              "What does this word mean?",
+              style: AppTextStyles.bold20.copyWith(fontSize: 24),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Divider(
+              height: 2,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  backgroundColor: AppTheme.primaryColor,
+                  child: IconButton(
+                      onPressed: () {
+                        TextToSpeech().speakEng('What is ${_term}');
+                      },
+                      icon: Icon(
+                        CupertinoIcons.speaker_2_fill,
+                        color: Colors.white,
+                        size: 20,
+                      )),
                 ),
+                SizedBox(
+                  width: 15,
+                ),
+                Text(
+                  _term,
+                  style: AppTextStyles.bold26,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Container(
+              alignment: Alignment.center,
               child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text('Question:', style:AppTextStyles.boldWhite20),
-                          // SizedBox(width: 16,),
-
-                          // Text('${_term}', style: AppTextStyles.boldWhite18,),
-                        ],
+                padding: EdgeInsets.all(8),
+                child: Container(
+                  width: Responsive().isPC(context) ? 500 : null,
+                  margin: EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                      // color: AppTheme.primaryColor,
+                      // borderRadius: BorderRadius.circular(20)
                       ),
-                      SizedBox(height: 10,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('${index + 1}. ${_term}', style: AppTextStyles.boldWhite16,),
-                          IconButton(onPressed: (){
-                            TextToSpeech().speakEng('What is ${_term}');
-                          }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.white,))
-                        ],
-                      ),
-                      SizedBox(height: 16,),
-                      Container(
-                        height: 230,
-                        child: ListView.builder(
-                            itemBuilder: (ctx, idx)  => SpeedrunItemPage(
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 16,
+                        ),
+                        Container(
+                          height: 250,
+                          child: ListView.builder(
+                            itemBuilder: (ctx, idx) => SpeedrunItemPage(
                               returnData: (data) async {
-                                if(data['index'] > _cards.length - 1){
+                                if (data['index'] > _cards.length - 1) {
                                   addRecord();
-                                  var newIndex = await Navigator.push(context,
-                                    MaterialPageRoute(builder: (ctx) => ResultTypeWordPage(
-                                        topic: widget.topic,
-                                        cardCorrect: _cardCorrect,
-                                        cardInCorrect: _cardInCorrect,
-                                        correctAnswer: _correctAnswer,
-                                        inCorrectAnswer: _inCorrectAnswer,))
-                                  );
-                                  if(newIndex['newIndex'] == 0){
+                                  var newIndex = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (ctx) => ResultTypeWordPage(
+                                                topic: widget.topic,
+                                                cardCorrect: _cardCorrect,
+                                                cardInCorrect: _cardInCorrect,
+                                                correctAnswer: _correctAnswer,
+                                                inCorrectAnswer:
+                                                    _inCorrectAnswer,
+                                              )));
+                                  if (newIndex['newIndex'] == 0) {
                                     setState(() {
                                       index = newIndex['newIndex'];
                                       _cardCorrect.clear();
@@ -247,11 +317,10 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                                       _answers.clear();
                                       _getCards(index);
                                     });
-                                  }else{
+                                  } else {
                                     Navigator.pop(context);
                                   }
-
-                                }else{
+                                } else {
                                   setState(() {
                                     index = data['index'];
                                     _answers.clear();
@@ -263,19 +332,43 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                               index: index,
                               definition: _definition,
                               card: _cards[index],
-                                cardCorrect: _cardCorrect,
-                                cardInCorrect: _cardInCorrect,
-                                correctAnswer: _correctAnswer,
-                                inCorrectAnswer: _inCorrectAnswer,
-                                timeRemainning: _timeRemaining,
+                              cardCorrect: _cardCorrect,
+                              cardInCorrect: _cardInCorrect,
+                              correctAnswer: _correctAnswer,
+                              inCorrectAnswer: _inCorrectAnswer,
+                              timeRemainning: _timeRemaining,
                             ),
                             itemCount: _answers.length,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                ),
               ),
-          ),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16),
+        child: Container(
+          width: double.infinity,
+          margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: ElevatedButton(
+            onPressed: skipQuestion,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryColor,
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40), // Rounded corners
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text("Skip",
+                  style: AppTextStyles.bold16.copyWith(color: Colors.white)),
+            ),
           ),
         ),
       ),

@@ -8,8 +8,10 @@ import 'package:finalproject/repositories/topic_repo.dart';
 import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
 import 'package:finalproject/reuseable/constants/ToastMessage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 class TypeWordPage extends StatefulWidget {
   TopicModel topic;
@@ -266,16 +268,39 @@ class _TypeWordPageState extends State<TypeWordPage> {
     }
   }
 
+  Widget _stepProgress(_currentStep) {
+    return StepProgressIndicator(
+      totalSteps: (_cards.length-1 > 0) ? _cards.length-1  : 1 ,
+      currentStep: _currentStep,
+      size: 10,
+      padding: 0,
+      selectedColor: AppTheme.primaryColor,
+      unselectedColor: AppTheme.primaryColor2,
+      roundedEdges: Radius.circular(20),
+      selectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [AppTheme.primaryColor.withOpacity(0.5), AppTheme.primaryColor],
+      ),
+      unselectedGradientColor: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Colors.white, Colors.grey.shade200],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return
       Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
-          color: Colors.white,
+          color: Colors.black,
         ),
-        backgroundColor: AppTheme.primaryColor,
-        title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: AppTextStyles.boldWhite20,),
+        // backgroundColor: AppTheme.primaryColor,
+        // title: Text("${index + 1 >= _cards.length? _cards.length: index + 1} / ${_cards.length}", style: AppTextStyles.boldWhite20,),
+        title: _stepProgress(index),
         actions: [
           IconButton(
               onPressed: () {
@@ -322,8 +347,8 @@ class _TypeWordPageState extends State<TypeWordPage> {
                     margin: EdgeInsets.only(top: 20),
                     decoration: BoxDecoration(
                       // color: AppTheme.primaryColor,
-                      border: Border.all(color: AppTheme.grey2, width: 2),
-                      borderRadius: BorderRadius.circular(10)
+                      border: Border.all(color: AppTheme.primaryColor, width: 3),
+                      borderRadius: BorderRadius.circular(30)
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -349,7 +374,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
                             Container(
                               child: IconButton(onPressed: (){
                                 TextToSpeech().speakEng("What is ${question} mean");
-                              }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.black,)),
+                              }, icon: Icon(CupertinoIcons.speaker_2, color: Colors.black,)),
                             ),
 
                               // SizedBox(width: 16,),
@@ -381,28 +406,29 @@ class _TypeWordPageState extends State<TypeWordPage> {
                   SizedBox(height: 24,),
                   Container(
                     width: double.infinity,
-                    color: Colors.white,
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: BorderSide(color: AppTheme.grey2, width: 2, style: BorderStyle.solid)
-                          ),
-
-                        ).copyWith(
-                          backgroundColor: MaterialStatePropertyAll(Colors.white),
+                      onPressed: () => {
+                                setState(() {
+                                  handleSubmit();
+                                })
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        elevation: 10,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(40), // Rounded corners
                         ),
-                        onPressed: () {
-                          setState(() {
-                            handleSubmit();
-                          });
-                      }, child: Text("Next", style: TextStyle(
-                          fontFamily: 'Lato',
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black
-                        ),)),
-                  )
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text("Next",
+                            style: AppTextStyles.bold16
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
