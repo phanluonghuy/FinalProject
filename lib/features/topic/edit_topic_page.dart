@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:finalproject/common/utils/file_helper.dart';
 import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/topic_model.dart';
@@ -10,8 +13,10 @@ import 'package:finalproject/features/topic/card_editing.dart';
 import 'package:finalproject/common/widgets/double_choice_dialog.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:file_picker/file_picker.dart';
 
 class EditTopicPage extends StatefulWidget {
   final TopicModel topic;
@@ -63,8 +68,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
 
     setState(() {
       _cards.add(CardModel(
-          term: _termController.text,
-          definition: _definitionController.text,
+          term: _termController.text.trim(),
+          definition: _definitionController.text.trim(),
           star: false));
       _termController.text = '';
       _definitionController.text = '';
@@ -97,8 +102,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
                 _cards.insert(
                     index + 1,
                     CardModel(
-                        term: _termController.text,
-                        definition: _definitionController.text));
+                        term: _termController.text.trim(),
+                        definition: _definitionController.text.trim()));
                 _cards.removeAt(index);
                 _termController.text = '';
                 _definitionController.text = '';
@@ -197,6 +202,34 @@ class _EditTopicPageState extends State<EditTopicPage> {
             },
           );
         });
+  }
+
+  Future<void> pickTxtFile() async {
+    String? filePath = await FileHelper().pickFilePath();
+    String content = await FileHelper().readFileContent(filePath ?? '');
+
+    List<String> lines = content.split('\n');
+    for (var line in lines) {
+      List<String> data = line.split(',');
+      if (data.length != 2) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SingleChoiceDialog(
+                title: 'Invalid format',
+                message: 'Your .txt file is not having the correct format!',
+              );
+            });
+        return;
+      }
+      String term = data[0].trim();
+      String definition = data[1].trim();
+      setState(() {
+        _cards.add(CardModel(term: term, definition: definition, star: false));
+      });
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Your cards have been added!')));
   }
 
   @override
@@ -392,17 +425,35 @@ class _EditTopicPageState extends State<EditTopicPage> {
                 SizedBox(
                   height: 30,
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.file_open_outlined),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Import .csv/.txt file',
-                      style: AppTextStyles.bold16,
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DoubleChoiceDialog(
+                            title: 'File format',
+                            message:
+                                'Each line in your .txt file is a card and must follow this format: <term>,<definition>',
+                            onConfirm: () async {
+                              pickTxtFile();
+                              Navigator.pop(context);
+                            },
+                          );
+                        });
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.file_open_outlined),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Import .csv/.txt file',
+                        style: AppTextStyles.bold16,
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 30,

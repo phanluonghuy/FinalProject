@@ -1,3 +1,4 @@
+import 'package:finalproject/common/utils/file_helper.dart';
 import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/main_menu/library_page.dart';
 import 'package:finalproject/models/card_model.dart';
@@ -167,6 +168,34 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
     }
   }
 
+  Future<void> pickTxtFile() async {
+    String? filePath = await FileHelper().pickFilePath();
+    String content = await FileHelper().readFileContent(filePath ?? '');
+
+    List<String> lines = content.split('\n');
+    for (var line in lines) {
+      List<String> data = line.split(',');
+      if (data.length != 2) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SingleChoiceDialog(
+                title: 'Invalid format',
+                message: 'Your .txt file is not having the correct format!',
+              );
+            });
+        return;
+      }
+      String term = data[0].trim();
+      String definition = data[1].trim();
+      setState(() {
+        _cards.add(CardModel(term: term, definition: definition, star: false));
+      });
+    }
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Your cards have been added!')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,7 +229,7 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
               size: 30,
             ), // Action icon
             onPressed: () {
-              // Action when search icon is tapped
+              _showChoiceDialog(context);
             },
             color: Colors.black,
           ),
@@ -336,5 +365,70 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
         ),
       ),
     );
+  }
+
+  void _showChoiceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          content: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text('Options', style: AppTextStyles.bold20),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    Navigator.pop(context);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DoubleChoiceDialog(
+                            title: 'File format',
+                            message:
+                                'Each line in your .txt file is a card and must follow this format: <term>,<definition>',
+                            onConfirm: () async {
+                              pickTxtFile();
+                              Navigator.pop(context);
+                            },
+                          );
+                        });
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.file_open_outlined),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(
+                        'Import .csv/.txt file',
+                        style: AppTextStyles.bold16,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ).then((value) {
+      // Handle the selected value (if any)
+      if (value != null) {
+        print('Selected: $value');
+      }
+    });
   }
 }

@@ -85,7 +85,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
         titleSpacing: 0,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 16),
+            margin: EdgeInsets.only(right: 10),
             child: IconButton(
                 onPressed: () {
                   Navigator.push(
@@ -244,8 +244,8 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Word list', style: AppTextStyles.bold20),
-                  Text('${_cards.length} words', style: AppTextStyles.bold16)
+                  Text('Card list', style: AppTextStyles.bold20),
+                  Text('${_cards.length} cards', style: AppTextStyles.bold16)
                 ],
               ),
               SizedBox(
