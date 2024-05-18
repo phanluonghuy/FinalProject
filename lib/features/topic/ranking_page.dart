@@ -45,14 +45,23 @@ class _RankingPageState extends State<RankingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.white,
+        backgroundColor: Colors.white,
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            Container(
+              child: Image.asset('images/cat_face.png'),
+              height: 60,
+            ),
+            Text('Leaderboard', // Title
+                style: AppTextStyles.bold20),
+          ],
         ),
-        backgroundColor: AppTheme.primaryColor,
-        title: Text("Leaderboard", style: AppTextStyles.boldWhite26,),
+        actions: [
+        ],
       ),
       body: _records.length == 0 ? Center(child: CircularProgressIndicator()): SingleChildScrollView(
-        child: Padding(padding: EdgeInsets.all(16),
+        child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: ListView.builder(
           shrinkWrap: true,
           itemBuilder: (ctx, idx) => RankingItemPage(

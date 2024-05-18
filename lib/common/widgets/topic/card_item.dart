@@ -81,8 +81,8 @@ class _CardItemPageState extends State<CardItemPage> {
                       IconButton(
                           onPressed: ()async{
                             await TextToSpeech().speakEng("${widget.card.term}");
-                            await Future.delayed(Duration(milliseconds: 800));
-                            await TextToSpeech().speakVie("${widget.card.definition}");
+                            // await Future.delayed(Duration(milliseconds: 800));
+                            // await TextToSpeech().speakEng("${widget.card.definition}");
                           }, icon: Icon(Icons.keyboard_voice_outlined,)),
 
                       IconButton(

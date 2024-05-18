@@ -163,8 +163,7 @@ class _HomePageState extends State<HomePage> {
                                           strutStyle:
                                               StrutStyle(fontSize: 12.0),
                                           text: TextSpan(
-                                              style: TextStyle(
-                                                  color: Colors.black),
+                                              style: AppTextStyles.normal14.copyWith(color: Colors.black),
                                               text: _suggestFollowing
                                                       .elementAt(index)
                                                       ?.bio ??

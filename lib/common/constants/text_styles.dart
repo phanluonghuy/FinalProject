@@ -105,6 +105,12 @@ class AppTextStyles {
     fontWeight: FontWeight.normal,
   );
 
+  static const TextStyle normal14 = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+  );
+
   static const TextStyle normal12 = TextStyle(
     fontFamily: 'Lato',
     fontSize: 12,

@@ -98,29 +98,56 @@ class TopicRepo {
   }
 
   Future<List<RecordModel>> getAllRecord(String topicId) async {
-    try {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot =
-          await _db.collection('topics/$topicId/record').get();
+  try {
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await _db.collection('topics/$topicId/record').get();
 
-      final List<RecordModel> records = querySnapshot.docs
-          .map((doc) => RecordModel.fromFirestore(doc))
-          .toList();
+    final List<RecordModel> records = querySnapshot.docs
+        .map((doc) => RecordModel.fromFirestore(doc))
+        .toList();
 
-      records.sort((a, b) {
-        int scoreComparison = b.score != null && a.score != null
-            ? b.score!.compareTo(a.score!)
-            : 0;
+    records.sort((a, b) {
+      // Compare scores first
+      if (a.score != null && b.score != null) {
+        int scoreComparison = b.score!.compareTo(a.score!);
         if (scoreComparison != 0) {
           return scoreComparison;
         }
-        return b.time?.compareTo != null ? (a.time!.toInt()) : 0;
-      });
+      } else if (a.score != null) {
+        return -1; // a's score is not null, b's score is null
+      } else if (b.score != null) {
+        return 1; // b's score is not null, a's score is null
+      }
 
-      return records;
-    } catch (e) {
-      throw Exception('Error: $e');
+      // If scores are equal or both are null, compare times
+      if (a.time != null && b.time != null) {
+        return a.time!.compareTo(b.time!);
+      } else if (a.time != null) {
+        return -1; // a's time is not null, b's time is null
+      } else if (b.time != null) {
+        return 1; // b's time is not null, a's time is null
+      }
+
+      return 0; // Both scores and times are null or equal
+    });
+
+    Map<String, RecordModel> highestRecords = {};
+
+    for (var record in records) {
+      if (record.userID == null) continue;
+
+      if (!highestRecords.containsKey(record.userID!) ||
+          (record.score != null &&
+              (highestRecords[record.userID!]?.score ?? 0) < record.score!)) {
+        highestRecords[record.userID!] = record;
+      }
     }
+
+    return highestRecords.values.toList();
+  } catch (e) {
+    throw Exception('Error: $e');
   }
+}
 
   Future<List<CardModel>> getCardsByStar(String topicId) async {
     try {

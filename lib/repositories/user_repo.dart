@@ -134,4 +134,20 @@ class UserRepo {
     }
   }
 
+  Future<void> addExpForUser(String userID, int exp) async {
+    var ref = _db.collection("users").doc(userID);
+    try {
+      DocumentSnapshot<Map<String, dynamic>> userDoc = await ref.get();
+      if (userDoc.exists) {
+        int currentExp = userDoc.data()?['exp'] ?? 0;
+        int newExp = currentExp + exp;
+        await ref.update({"exp": newExp});
+      } else {
+        print('User not found');
+      }
+    } catch (e) {
+      print('Error adding experience: $e');
+    }
+  }
+
 }

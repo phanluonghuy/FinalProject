@@ -9,8 +9,10 @@ import 'package:finalproject/models/card_model.dart';
 import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
+import 'package:finalproject/repositories/user_repo.dart';
 import 'package:finalproject/reuseable/constants/Responsive.dart';
 import 'package:finalproject/reuseable/constants/TextToSpeech.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
@@ -24,9 +26,12 @@ class SpeedrunQuizPage extends StatefulWidget {
 
 class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   TopicRepo _topicRepo = TopicRepo();
+  UserRepo _userRepo = UserRepo();
+
   List<CardModel> _cards = [];
   List<CardModel> _cardsStar = [];
   List<String> _answers = [];
+  final _currentUser = FirebaseAuth.instance.currentUser!;
 
   List<CardModel> _cardCorrect = [];
   List<CardModel> _cardInCorrect = [];
@@ -119,7 +124,9 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
     int score = _cardCorrect.length * 10;
     double _percentageCorrect = (_cardCorrect.length * 100 / (_cardCorrect.length + _cardInCorrect.length));
 
-    _topicRepo.addRecord(new RecordModel(userID: ownerId, score: score, time: _timeRemaining, percent: _percentageCorrect.toInt()), topicId);
+    int expGained = _cardCorrect.length;
+    _userRepo.addExpForUser(_currentUser.uid, expGained);
+    _topicRepo.addRecord(new RecordModel(userID: _currentUser.uid, score: score, time: _timeRemaining, percent: _percentageCorrect.toInt()), topicId);
   }
 
   @override
@@ -133,17 +140,6 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
   }
 
   void startTimer() {
-    // _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-    //   if (_timeRemaining! <= 0) {
-    //     t.cancel();
-    //     print('Countdown complete!');
-    //   } else {
-    //     setState(() {
-    //       _timeRemaining--;
-    //     });
-    //   }
-    // });
-
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       setState(() {
         _timeRemaining++;
@@ -153,9 +149,6 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    int minutes = _timeRemaining ~/ 60;
-    int seconds = _timeRemaining % 60;
-
     return Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -167,7 +160,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
             Container(
 
                 margin: EdgeInsets.only(right: 24),
-                child: Text('$minutes:${seconds.toString().padLeft(2, '0')}', style: AppTextStyles.boldWhite16,))
+                child: Text('${_timeRemaining.toString().padLeft(2, '0')}', style: AppTextStyles.boldWhite16,))
             // IconButton(onPressed: (){
             //     showModalBottomSheet(context: context,
             //         builder: (ctx) => BottomSheetOptionsPage(
@@ -222,9 +215,9 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('${index + 1}. What is "${_term}" mean ?', style: AppTextStyles.boldWhite16,),
+                          Text('${index + 1}. ${_term}', style: AppTextStyles.boldWhite16,),
                           IconButton(onPressed: (){
-                            TextToSpeech().speakEng('What is "${_term}" mean');
+                            TextToSpeech().speakEng('What is ${_term}');
                           }, icon: Icon(Icons.keyboard_voice_outlined, color: Colors.white,))
                         ],
                       ),
