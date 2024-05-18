@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:finalproject/common/utils/file_helper.dart';
+import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:finalproject/common/widgets/topic/card_item.dart';
 import 'package:finalproject/features/profile/view_profile_page.dart';
 import 'package:finalproject/features/topic/create_topic_page.dart';
@@ -21,6 +23,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class TopicDetailPage extends StatefulWidget {
@@ -73,6 +76,32 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     setState(() {
       _cards = cards;
     });
+  }
+
+  Future<void> saveTxtFile() async {
+    StringBuffer contentBuffer = StringBuffer();
+    for (var card in _cards) {
+      contentBuffer.write('${card.term}, ${card.definition}\n');
+    }
+
+    String formattedDate = DateFormat('yyMMddHHmmss').format(DateTime.now());
+
+    String content = contentBuffer.toString();
+    String fileName = '$formattedDate';
+
+    try {
+      await FileHelper().saveFileToDownloads(fileName, content);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SingleChoiceDialog(
+              title: 'Downloading file',
+              message: 'Your file is being downloaded!',
+            );
+          });
+    } catch (e) {
+      print('Error saving file: $e');
+    }
   }
 
   @override
@@ -159,8 +188,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                   borderRadius: BorderRadius.circular(100),
                                   child: _user != null
                                       ? CachedNetworkImage(
-                                    imageUrl:
-                                          _user!.avatarUrl ?? '',
+                                          imageUrl: _user!.avatarUrl ?? '',
                                           fit: BoxFit.cover,
                                         )
                                       : SizedBox.shrink(),
@@ -299,6 +327,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   ),
                   onTap: () {
                     _showFolderPickerDialog(context, _foldersOfCurrentUser);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.file_download_outlined),
+                  title: Text(
+                    'Save as .txt file',
+                    style: AppTextStyles.bold16,
+                  ),
+                  onTap: () async {
+                    Navigator.pop(context);
+                    saveTxtFile();
                   },
                 ),
                 Visibility(

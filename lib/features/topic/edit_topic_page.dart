@@ -444,7 +444,7 @@ class _EditTopicPageState extends State<EditTopicPage> {
                   },
                   child: Row(
                     children: [
-                      Icon(Icons.file_open_outlined),
+                      Icon(Icons.file_upload_outlined),
                       SizedBox(
                         width: 10,
                       ),

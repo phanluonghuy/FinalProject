@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class FileHelper {
   Future<String> readFileContent(String path) async {
@@ -39,6 +40,25 @@ class FileHelper {
       // Handle any errors
       print('Error picking file: $e');
       return null;
+    }
+  }
+
+  Future<void> saveFileToDownloads(String fileName, String content) async {
+    try {
+      final downloadsDirectory = await getDownloadsDirectory();
+
+      if (downloadsDirectory != null) {
+        final filePath = '${downloadsDirectory.path}/$fileName.txt';
+        final file = File(filePath);
+
+        await file.writeAsString(content);
+        print('File saved to downloads folder: $filePath');
+      } else {
+        print('Unable to access downloads directory.');
+      }
+    } catch (e) {
+      print('Error saving file: $e');
+      // Handle error (e.g., show error message to user)
     }
   }
 }
