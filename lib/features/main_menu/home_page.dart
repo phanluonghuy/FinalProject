@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/widgets/topic_item.dart';
+import 'package:finalproject/features/main_menu/control_page.dart';
 import 'package:finalproject/features/profile/view_profile_page.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 10, bottom: 10, right: 10),
+                      padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(30),
                           child: Image.asset(
@@ -81,83 +82,23 @@ class _HomePageState extends State<HomePage> {
                           )),
                     ),
                   ),
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20, bottom: 10),
-                      child: Text(
-                        "Hot topics",
-                        style: AppTextStyles.bold20,
-                      ),
-                    ),
-                  ),
                   SliverToBoxAdapter(
-                    child: SizedBox(
-                      height: 150,
-                      child: ListView.builder(
-                        addAutomaticKeepAlives: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: (_topics.length < 5) ? _topics.length : 5,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            width: 200,
-                            padding: const EdgeInsets.only(top: 10, left: 10),
-                            child: TopicItem(topic: _topics.elementAt(index)),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(left: 20, bottom: 10, top: 10),
-                      child: Text(
-                        "Topics from your following",
-                        style: AppTextStyles.bold20,
-                      ),
-                    ),
-                  ),
-                  (_topicsFollowing.isNotEmpty)
-                      ? SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: 150,
-                            child: ListView.builder(
-                              addAutomaticKeepAlives: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: (_topicsFollowing.length < 5)
-                                  ? _topicsFollowing.length
-                                  : 5,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Container(
-                                  width: 200,
-                                  padding:
-                                      const EdgeInsets.only(top: 10, left: 10),
-                                  child: TopicItem(
-                                      topic: _topicsFollowing.elementAt(index)),
-                                );
-                              },
-                            ),
+                      padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            "People may you know",
+                            style: AppTextStyles.bold20,
                           ),
-                        )
-                      : const SliverToBoxAdapter(
-                          child: SizedBox(
-                            height: 110,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(
-                                  "SORRY !!! No topics from your following 😭 \n You can find more friends",
-                                  style: AppTextStyles.bold20,
-                                textAlign: TextAlign.center,
-                                ),
-                            ),
+                          SizedBox(
+                            width: 8,
                           ),
-
-                        ),
-                  const SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 20, bottom: 10, top: 10),
-                      child: Text(
-                        "People may you know",
-                        style: AppTextStyles.bold20,
+                          Image.asset(
+                            'images/group.png',
+                            width: 30,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -173,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                         itemBuilder: (BuildContext context, int index) {
                           return Container(
                             width: 280,
-                            padding: const EdgeInsets.only(top: 10, left: 10),
+                            padding:
+                                const EdgeInsets.only(left: 20, bottom: 10),
                             child: Container(
                               decoration: BoxDecoration(
                                 border:
@@ -194,10 +136,11 @@ class _HomePageState extends State<HomePage> {
                                   );
                                 },
                                 child: ListTile(
-                                  title: Text(_suggestFollowing
-                                          .elementAt(index)
-                                          ?.name ??
-                                      ""),
+                                  title: Text(
+                                    _suggestFollowing.elementAt(index)?.name ??
+                                        "",
+                                    style: AppTextStyles.bold16,
+                                  ),
                                   leading: Container(
                                     height: 40, // Specify the desired height
                                     width: 40,
@@ -239,6 +182,105 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Trending Topics",
+                            style: AppTextStyles.bold20,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Image.asset(
+                            'images/fire.png',
+                            width: 25,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: List.generate(
+                        (_topics.length < 5) ? _topics.length : 5,
+                        (index) {
+                          return Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            child: TopicItem(topic: _topics.elementAt(index)),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 20, bottom: 10, top: 10),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Your Following",
+                            style: AppTextStyles.bold20,
+                          ),
+                          SizedBox(
+                            width: 6,
+                          ),
+                          Image.asset(
+                            'images/hearts.png',
+                            width: 25,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  (_topicsFollowing.isNotEmpty)
+                      ? SliverToBoxAdapter(
+                          child: SizedBox(
+                              child: Column(
+                            children: List.generate(
+                              (_topicsFollowing.length < 5)
+                                  ? _topicsFollowing.length
+                                  : 5,
+                              (index) {
+                                return Container(
+                                  width: double.infinity,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 10),
+                                  child: TopicItem(
+                                      topic: _topicsFollowing.elementAt(index)),
+                                );
+                              },
+                            ).toList(),
+                          )),
+                        )
+                      : SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 110,
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Text(
+                                "There\'s no topics from your following 😭 \n Let\'s find more friends!",
+                                style: AppTextStyles.bold12
+                                    .copyWith(color: AppTheme.grey2),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
                 ],
               );
             } else {
@@ -269,16 +311,35 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
         ),
         Positioned(
           top: topPadding + offset,
-          child: const SearchBar(
-            hintText: 'Start topic search',
-            hintStyle: MaterialStatePropertyAll(AppTextStyles.normal16),
-            leading: Icon(
-              Icons.search,
-              color: Colors.grey,
+          child: TextFormField(
+            readOnly: true,
+            onTap: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => ControlPage(index: 2)),
+                (Route<dynamic> route) => false,
+              );
+            },
+            cursorColor: AppTheme.grey2,
+            cursorWidth: 1,
+            style: AppTextStyles.normal16.copyWith(color: Colors.black),
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.search),
+              prefixIconColor: AppTheme.grey2,
+              hintStyle: AppTextStyles.normal16.copyWith(color: AppTheme.grey2),
+              hintText: 'Search for topics, users,...',
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+              filled: true,
+              fillColor: AppTheme.grey5,
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                borderSide: BorderSide.none, // No border color
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16.0),
+                borderSide: BorderSide.none, // No border color
+              ),
             ),
-            padding: MaterialStatePropertyAll(EdgeInsets.only(left: 20)),
-            shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)))),
           ),
           left: 16,
           right: 16,
@@ -292,9 +353,9 @@ class SliverSearchAppBar extends SliverPersistentHeaderDelegate {
                 const Duration(milliseconds: 200), // Adjust animation speed
             curve: Curves.easeInOut, // Adjust animation curve
             child: Row(children: [
-              Text("Hi, " + userModel.name! + "\nLet's find new topics",
+              Text("Hi, " + userModel.name! + "\nWelcome back!",
                   style: AppTextStyles.boldWhite20),
-              SizedBox(width: MediaQuery.of(context).size.width / 4),
+              SizedBox(width: MediaQuery.of(context).size.width / 2.5),
               CircleAvatar(
                 radius: 25,
                 backgroundImage:
@@ -334,7 +395,7 @@ class BackgroundWave extends StatelessWidget {
             height: height,
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-              colors: [AppTheme.primaryColor, Color(0xFFF6EFE9)],
+              colors: [AppTheme.primaryColor, AppTheme.primaryColor],
             )),
           )),
     );
