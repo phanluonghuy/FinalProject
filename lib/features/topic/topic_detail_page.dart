@@ -85,8 +85,10 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Future<void> saveTxtFile() async {
-    final csvData = _cards.map((card) => '${card.term},${card.definition}').join('\n');
-    var path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
+    final csvData =
+        _cards.map((card) => '${card.term},${card.definition}').join('\n');
+    var path = await ExternalPath.getExternalStoragePublicDirectory(
+        ExternalPath.DIRECTORY_DOWNLOADS);
     String formattedDate = DateFormat('yyMMddHHmmss').format(DateTime.now());
     final filePath = '$path/${widget.topic.title}_$formattedDate.csv';
     await File(filePath).writeAsString(csvData);
@@ -321,7 +323,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                   ),
                   onTap: () {
                     _showFolderPickerDialog(context, _foldersOfCurrentUser);
-                  },
+                  }, //may ao d chay dc :Ds
                 ),
                 ListTile(
                   leading: Icon(Icons.file_download_outlined),

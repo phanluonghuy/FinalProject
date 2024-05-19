@@ -24,7 +24,9 @@ class _SettingPageState extends State<SettingPage> {
             children: [
               ListTile(
                   title: Text("Personal Info", style: AppTextStyles.bold20),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/editProfile');
+                  },
                   leading: Container(
                       padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
@@ -34,42 +36,42 @@ class _SettingPageState extends State<SettingPage> {
                           color: Colors.amber)),
                   trailing: Icon(CupertinoIcons.right_chevron)),
               SizedBox(height: 20),
-              ListTile(
-                  title: Text("Notification", style: AppTextStyles.bold20),
-                  onTap: () {},
-                  leading: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.backgroundIcon),
-                      child: Icon(Icons.notifications_rounded,
-                          color: Colors.redAccent)),
-                  trailing: Icon(CupertinoIcons.right_chevron)),
-              SizedBox(height: 20),
-              ListTile(
-                  title: Text("Gerenal", style: AppTextStyles.bold20),
-                  onTap: () {},
-                  leading: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.backgroundIcon),
-                      child: Icon(CupertinoIcons.rectangle_on_rectangle,
-                          color: Colors.deepPurple)),
-                  trailing: Icon(CupertinoIcons.right_chevron)),
-              SizedBox(height: 20),
-              ListTile(
-                  title: Text("Accessibility", style: AppTextStyles.bold20),
-                  onTap: () {},
-                  leading: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.backgroundIcon),
-                      child: Icon(CupertinoIcons.compass_fill,
-                          color: Colors.amber)),
-                  trailing: Icon(CupertinoIcons.right_chevron)),
-              SizedBox(height: 20),
+              // ListTile(
+              //     title: Text("Notification", style: AppTextStyles.bold20),
+              //     onTap: () {},
+              //     leading: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: AppTheme.backgroundIcon),
+              //         child: Icon(Icons.notifications_rounded,
+              //             color: Colors.redAccent)),
+              //     trailing: Icon(CupertinoIcons.right_chevron)),
+              // SizedBox(height: 20),
+              // ListTile(
+              //     title: Text("Gerenal", style: AppTextStyles.bold20),
+              //     onTap: () {},
+              //     leading: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: AppTheme.backgroundIcon),
+              //         child: Icon(CupertinoIcons.rectangle_on_rectangle,
+              //             color: Colors.deepPurple)),
+              //     trailing: Icon(CupertinoIcons.right_chevron)),
+              // SizedBox(height: 20),
+              // ListTile(
+              //     title: Text("Accessibility", style: AppTextStyles.bold20),
+              //     onTap: () {},
+              //     leading: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: AppTheme.backgroundIcon),
+              //         child: Icon(CupertinoIcons.compass_fill,
+              //             color: Colors.amber)),
+              //     trailing: Icon(CupertinoIcons.right_chevron)),
+              // SizedBox(height: 20),
               ListTile(
                   title: Text("Change Password", style: AppTextStyles.bold20),
                   onTap: () {
@@ -84,30 +86,30 @@ class _SettingPageState extends State<SettingPage> {
                           color: Colors.green)),
                   trailing: Icon(CupertinoIcons.right_chevron)),
               SizedBox(height: 20),
-              ListTile(
-                  title: Text("Find Friends", style: AppTextStyles.bold20),
-                  onTap: () {},
-                  leading: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.backgroundIcon),
-                      child: Icon(CupertinoIcons.person_2_fill,
-                          color: Colors.amber)),
-                  trailing: Icon(CupertinoIcons.right_chevron)),
-              SizedBox(height: 20),
-              ListTile(
-                  title: Text("Help Center", style: AppTextStyles.bold20),
-                  onTap: () {},
-                  leading: Container(
-                      padding: EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.backgroundIcon),
-                      child: Icon(Icons.help_center,
-                          color: Colors.green)),
-                  trailing: Icon(CupertinoIcons.right_chevron)),
-              SizedBox(height: 20),
+              // ListTile(
+              //     title: Text("Find Friends", style: AppTextStyles.bold20),
+              //     onTap: () {},
+              //     leading: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: AppTheme.backgroundIcon),
+              //         child: Icon(CupertinoIcons.person_2_fill,
+              //             color: Colors.amber)),
+              //     trailing: Icon(CupertinoIcons.right_chevron)),
+              // SizedBox(height: 20),
+              // ListTile(
+              //     title: Text("Help Center", style: AppTextStyles.bold20),
+              //     onTap: () {},
+              //     leading: Container(
+              //         padding: EdgeInsets.all(12),
+              //         decoration: BoxDecoration(
+              //             shape: BoxShape.circle,
+              //             color: AppTheme.backgroundIcon),
+              //         child: Icon(Icons.help_center,
+              //             color: Colors.green)),
+              //     trailing: Icon(CupertinoIcons.right_chevron)),
+              // SizedBox(height: 20),
               ListTile(
                   title: Text("About", style: AppTextStyles.bold20),
                   onTap: () {},

@@ -75,7 +75,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
       }
     });
     Future.delayed(Duration(milliseconds: 1500), () {
-      TextToSpeech().speakEng("What is ${_term} mean");
+      //TextToSpeech().speakEng("What is ${_term} mean");
     });
 
     int count = 0;
@@ -232,7 +232,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
         child: ListView(
           children: [
             Text(
-              "What does this word mean?",
+              "Choose your answer",
               style: AppTextStyles.bold20.copyWith(fontSize: 24),
             ),
             SizedBox(
@@ -251,7 +251,7 @@ class _SpeedrunQuizPageState extends State<SpeedrunQuizPage> {
                   backgroundColor: AppTheme.primaryColor,
                   child: IconButton(
                       onPressed: () {
-                        TextToSpeech().speakEng('What is ${_term}');
+                        TextToSpeech().speakEng(_term);
                       },
                       icon: Icon(
                         CupertinoIcons.speaker_2_fill,

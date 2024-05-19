@@ -344,7 +344,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Text("Restart Test",
+                      child: Text("Restart",
                           style: AppTextStyles.bold16.copyWith(color: AppTheme.primaryColor)),
                     ),
                   ),
@@ -366,7 +366,7 @@ class _ResultTypeWordPageState extends State<ResultTypeWordPage> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Text("New Test",
+                      child: Text("Confirm",
                           style: AppTextStyles.bold16.copyWith(color: Colors.white)),
                     ),
                   ),

@@ -39,6 +39,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
       _isLoadingTopics = true;
     });
     List<TopicModel> topics = await _topicRepo.getAllPublicTopics();
+    topics.sort((a, b) => b.date!.compareTo(a.date!));
     setState(() {
       _topics = topics;
       _filteredTopics = topics; // Initialize with all topics

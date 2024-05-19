@@ -405,6 +405,8 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
         title: Text("Personal Info", style: AppTextStyles.bold20),
       ),
       body: Padding(

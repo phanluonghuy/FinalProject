@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/common/widgets/flash_card/bottom_sheet_options.dart';
@@ -23,7 +24,9 @@ class TypeWordPage extends StatefulWidget {
 }
 
 class _TypeWordPageState extends State<TypeWordPage> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
   TopicRepo _topicRepo = TopicRepo();
+
   int index = 0;
   bool isTerm = true;
   bool isAll = true;
@@ -70,6 +73,12 @@ class _TypeWordPageState extends State<TypeWordPage> {
     });
   }
 
+  Future<void> _playSound(bool isCorrect) async {
+    String audioPath = 'audio/correct.wav';
+    isCorrect ? audioPath = 'audio/correct.wav' : audioPath = 'audio/wrong.mp3';
+    await _audioPlayer.play(AssetSource(audioPath));
+  }
+
   void handleSubmit() async {
     if(_textEditingController.text.isEmpty){
       ToastMessage().showToastFailed("Please enter definition !!");
@@ -82,7 +91,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _correctAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastSuccess("Correct answer !!");
-        TextToSpeech().speakEng("Excellent job");
+        _playSound(true);
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -117,7 +126,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _correctAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastSuccess("Correct answer !!");
-          TextToSpeech().speakEng("Excellent job");
+          _playSound(true);
           index = index + 1;
           question = _cards[index].term ?? "";
           // _getCards();
@@ -131,7 +140,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _correctAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastSuccess("Correct answer !!");
-        TextToSpeech().speakEng("Excellent job");
+        _playSound(true);
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -166,7 +175,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _correctAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastSuccess("Correct answer !!");
-          TextToSpeech().speakEng("Excellent job");
+          _playSound(true);
           index = index + 1;
           question = _cards[index].definition ?? "";
           // _getCards();
@@ -180,7 +189,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _inCorrectAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastFailed("Incorrect answer !!");
-        TextToSpeech().speakEng("Don't worry, try again");
+        _playSound(false);
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -213,7 +222,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _inCorrectAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastFailed("Incorrect answer !!");
-          TextToSpeech().speakEng("Don't worry, try again");
+          _playSound(false);
           index = index + 1;
           question = _cards[index].term ?? "";
           // _getCards();
@@ -227,7 +236,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
         _inCorrectAnswer.add(_textEditingController.text);
         _textEditingController.clear();
         ToastMessage().showToastFailed("Incorrect answer !!");
-        TextToSpeech().speakEng("Don't worry, try again");
+        _playSound(false);
         var newIndex = await Navigator.push(
           context,
           MaterialPageRoute(
@@ -260,7 +269,7 @@ class _TypeWordPageState extends State<TypeWordPage> {
           _inCorrectAnswer.add(_textEditingController.text);
           _textEditingController.clear();
           ToastMessage().showToastFailed("Incorrect answer !!");
-          TextToSpeech().speakEng("Don't worry, try again");
+          _playSound(false);
           index = index + 1;
           question = _cards[index].definition ?? "";
         });

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:finalproject/common/widgets/Toast_widget.dart';
+import 'package:finalproject/features/profile/user_topics_page.dart';
 import 'package:finalproject/models/image_helper.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -12,6 +13,7 @@ import 'package:finalproject/common/constants/strings.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/widgets/image_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/features/auth/login_page.dart';
@@ -325,9 +327,20 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: 20,
                       ),
-                      ImageItem(
-                          imageLocation: 'images/topics.png',
-                          title: 'View all topics'),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserTopicsPage(
+                                  userID: _currentUser.uid), // Pass the user object to ViewProfilePage
+                            ),
+                          );
+                        },
+                        child: ImageItem(
+                            imageLocation: 'images/topics.png',
+                            title: 'View all topics'),
+                      ),
                       SizedBox(
                         height: 10,
                       ),

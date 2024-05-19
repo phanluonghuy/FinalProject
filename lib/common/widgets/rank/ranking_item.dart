@@ -74,7 +74,12 @@ class _RankingItemPageState extends State<RankingItemPage> {
                     height: 40,
                   ),
                 if(index > 2)
-                  SizedBox(width: 40, child: Text('${index+1}', style: AppTextStyles.bold26,))
+                  Row(
+                    children: [
+                      SizedBox(width: 12),
+                      SizedBox(width: 28, child: Text('${index+1}', style: AppTextStyles.bold26.copyWith(fontSize: 22),)),
+                    ],
+                  )
               ],
             ),
             SizedBox(width: 20,),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:finalproject/models/card_model.dart';
+import 'package:finalproject/models/record_model.dart';
 import 'package:finalproject/models/topic_model.dart';
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/repositories/topic_repo.dart';
@@ -20,8 +21,9 @@ class TopicItem extends StatefulWidget {
 class _TopicItemState extends State<TopicItem> {
   final _topicRepo = TopicRepo();
   final _userRepo = UserRepo();
-  
+
   UserModel? _user;
+  int? _recordCount;
   List<CardModel> _cards = [];
 
   @override
@@ -29,6 +31,14 @@ class _TopicItemState extends State<TopicItem> {
     super.initState();
     _loadUser();
     _getCards();
+    _loadRecords();
+  }
+
+  Future<void> _loadRecords() async {
+    List<RecordModel> records = await _topicRepo.getAllRecord(widget.topic.id ?? '');
+    setState(() {
+      _recordCount = records.length; // If user is null, assign null to _user
+    });
   }
 
   Future<void> _loadUser() async {
@@ -58,8 +68,9 @@ class _TopicItemState extends State<TopicItem> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      TopicDetailPage(topic: widget.topic), // Replace TopicDetailPage() with your actual widget instance
+                  builder: (context) => TopicDetailPage(
+                      topic: widget
+                          .topic), // Replace TopicDetailPage() with your actual widget instance
                 ),
               );
             }, // Call onClick when tapped
@@ -81,9 +92,24 @@ class _TopicItemState extends State<TopicItem> {
                         Text(widget.topic.title ?? '',
                             style: AppTextStyles.bold16
                                 .copyWith(color: AppTheme.primaryColor)),
-                        SizedBox(width: 6,),
+                        SizedBox(
+                          width: 6,
+                        ),
                         if (!widget.topic.isPublic!)
-                          Icon(Icons.lock_outline, size: 18,),
+                          Icon(
+                            Icons.lock_outline,
+                            size: 18,
+                          ),
+                        Spacer(),
+                        Icon(
+                          Icons.electric_bolt,
+                          color: AppTheme.floatingButton,
+                        ),
+                        Text(
+                          '${_recordCount}',
+                          style: AppTextStyles.bold16
+                              .copyWith(color: Colors.black, fontSize: 14),
+                        ),
                       ],
                     ),
                     SizedBox(height: 5),
@@ -101,8 +127,7 @@ class _TopicItemState extends State<TopicItem> {
                             borderRadius: BorderRadius.circular(100),
                             child: _user != null
                                 ? CachedNetworkImage(
-                                    imageUrl:
-                                    _user!.avatarUrl ?? '',
+                                    imageUrl: _user!.avatarUrl ?? '',
                                     fit: BoxFit.cover,
                                   )
                                 : SizedBox.shrink(),
