@@ -53,7 +53,7 @@ class _ProfilePageState extends State<ProfilePage> {
     {
       String rank = '5';
       switch (exp) {
-        case < 10 :
+        case < 10:
           rank = '1';
           break;
         case < 50:
@@ -68,8 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
         default:
           rank = '5';
       }
-      return Image.asset('images/rank_$rank.png',
-      height: 35);
+      return Image.asset('images/rank_$rank.png', height: 50);
     }
   }
 
@@ -150,8 +149,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                     );
                                   } else {
                                     return Center(
-                                      child: LoadingAnimationWidget
-                                          .twoRotatingArc(
+                                      child:
+                                          LoadingAnimationWidget.twoRotatingArc(
                                               color: AppTheme.primaryColor,
                                               size: 30),
                                     );
@@ -209,6 +208,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                               ),
+                              Positioned(
+                                top: 1,
+                                left: 1,
+                                child: _getBadge(_userInfo?.exp ?? 0)
+                              ),
                             ],
                           )),
                       SizedBox(
@@ -234,30 +238,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Expanded(
-                            child: Row(
-                              children: [
-                                SizedBox(width: 15,),
-                                _getBadge(_userInfo?.exp ?? 0),
-                                SizedBox(width: 10,),
-                                Column(
-                                  children: [
-                                    Text( _userInfo?.exp.toString() ?? '0', style: AppTextStyles.bold20),
-                                    Text('exp',
-                                        style: AppTextStyles.normal16)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 40,
-                            width: 1,
-                            color: AppTheme.grey4,
-                          ),
-                          Expanded(
                             child: Column(
                               children: [
-                                Text(_userInfo?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                                Text(
+                                    _userInfo?.followers?.length.toString() ??
+                                        "0",
+                                    style: AppTextStyles.bold20),
                                 Text('followers', style: AppTextStyles.normal16)
                               ],
                             ),
@@ -270,8 +256,25 @@ class _ProfilePageState extends State<ProfilePage> {
                           Expanded(
                             child: Column(
                               children: [
-                                Text(_userInfo?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
-                                Text('following',
+                                Text(
+                                    _userInfo?.following?.length.toString() ??
+                                        "0",
+                                    style: AppTextStyles.bold20),
+                                Text('following', style: AppTextStyles.normal16)
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 40,
+                            width: 1,
+                            color: AppTheme.grey4,
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(_userInfo?.exp.toString() ?? '0',
+                                    style: AppTextStyles.bold20),
+                                Text('lifetime XP',
                                     style: AppTextStyles.normal16)
                               ],
                             ),

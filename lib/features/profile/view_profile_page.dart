@@ -63,7 +63,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
           rank = '5';
       }
       return Image.asset('images/rank_$rank.png',
-          height: 35);
+          height: 50);
     }
   }
 
@@ -153,10 +153,16 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                                   errorWidget: (context, url, error) =>
                                       Icon(Icons.error),
                                 ),
-                              )
+                              ),
+                              Positioned(
+                                  top: 1,
+                                  left: 1,
+                                  child: _getBadge(_userFollow?.exp ?? 0)
+                              ),
 
                             ],
-                          )),
+                          ),
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -181,30 +187,12 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Expanded(
-                            child: Row(
-                              children: [
-                                SizedBox(width: 15,),
-                                _getBadge(_userFollow?.exp ?? 0),
-                                SizedBox(width: 10,),
-                                Column(
-                                  children: [
-                                    Text( _userFollow?.exp.toString() ?? '0', style: AppTextStyles.bold20),
-                                    Text('exp',
-                                        style: AppTextStyles.normal16)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 40,
-                            width: 1,
-                            color: AppTheme.grey4,
-                          ),
-                          Expanded(
                             child: Column(
                               children: [
-                                Text(_userFollow?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                                Text(
+                                    _userFollow?.followers?.length.toString() ??
+                                        "0",
+                                    style: AppTextStyles.bold20),
                                 Text('followers', style: AppTextStyles.normal16)
                               ],
                             ),
@@ -217,8 +205,25 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           Expanded(
                             child: Column(
                               children: [
-                                Text(_userFollow?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
-                                Text('following',
+                                Text(
+                                    _userFollow?.following?.length.toString() ??
+                                        "0",
+                                    style: AppTextStyles.bold20),
+                                Text('following', style: AppTextStyles.normal16)
+                              ],
+                            ),
+                          ),
+                          Container(
+                            height: 40,
+                            width: 1,
+                            color: AppTheme.grey4,
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(_userFollow?.exp.toString() ?? '0',
+                                    style: AppTextStyles.bold20),
+                                Text('lifetime XP',
                                     style: AppTextStyles.normal16)
                               ],
                             ),
