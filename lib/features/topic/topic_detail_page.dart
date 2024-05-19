@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:external_path/external_path.dart';
 import 'package:finalproject/common/utils/file_helper.dart';
 import 'package:finalproject/common/widgets/single_choice_dialog.dart';
 import 'package:finalproject/common/widgets/topic/card_item.dart';
@@ -25,6 +28,9 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:toasty_box/toast_enums.dart';
+import 'package:toasty_box/toast_service.dart';
 
 class TopicDetailPage extends StatefulWidget {
   final TopicModel topic;
@@ -79,29 +85,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   Future<void> saveTxtFile() async {
-    StringBuffer contentBuffer = StringBuffer();
-    for (var card in _cards) {
-      contentBuffer.write('${card.term}, ${card.definition}\n');
-    }
-
+    final csvData = _cards.map((card) => '${card.term},${card.definition}').join('\n');
+    var path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_DOWNLOADS);
     String formattedDate = DateFormat('yyMMddHHmmss').format(DateTime.now());
-
-    String content = contentBuffer.toString();
-    String fileName = '$formattedDate';
-
-    try {
-      await FileHelper().saveFileToDownloads(fileName, content);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SingleChoiceDialog(
-              title: 'Downloading file',
-              message: 'Your file is being downloaded!',
-            );
-          });
-    } catch (e) {
-      print('Error saving file: $e');
-    }
+    final filePath = '$path/${widget.topic.title}_$formattedDate.csv';
+    await File(filePath).writeAsString(csvData);
+    ToastService.showSuccessToast(
+      context,
+      length: ToastLength.short,
+      expandedHeight: 100,
+      message: "Save file successful 👋!",
+    );
   }
 
   @override
@@ -332,7 +326,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                 ListTile(
                   leading: Icon(Icons.file_download_outlined),
                   title: Text(
-                    'Save as .txt file',
+                    'Save as .csv file',
                     style: AppTextStyles.bold16,
                   ),
                   onTap: () async {

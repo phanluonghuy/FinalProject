@@ -43,6 +43,30 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
 
   }
 
+  Widget _getBadge(int exp) {
+    {
+      String rank = '5';
+      switch (exp) {
+        case < 10 :
+          rank = '1';
+          break;
+        case < 50:
+          rank = '2';
+          break;
+        case < 100:
+          rank = '3';
+          break;
+        case < 200:
+          rank = '4';
+          break;
+        default:
+          rank = '5';
+      }
+      return Image.asset('images/rank_$rank.png',
+          height: 35);
+    }
+  }
+
   Future<void> _initializeData() async {
     try{
       String uid = widget.userID;
@@ -156,35 +180,48 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Column(
-                            children: [
-                              Text('12', style: AppTextStyles.bold20),
-                              Text('active streaks',
-                                  style: AppTextStyles.normal16)
-                            ],
+                          Expanded(
+                            child: Row(
+                              children: [
+                                SizedBox(width: 15,),
+                                _getBadge(_userFollow?.exp ?? 0),
+                                SizedBox(width: 10,),
+                                Column(
+                                  children: [
+                                    Text( _userFollow?.exp.toString() ?? '0', style: AppTextStyles.bold20),
+                                    Text('exp',
+                                        style: AppTextStyles.normal16)
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           Container(
                             height: 40,
                             width: 1,
                             color: AppTheme.grey4,
                           ),
-                          Column(
-                            children: [
-                              Text(_userFollow?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
-                              Text('followers', style: AppTextStyles.normal16)
-                            ],
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(_userFollow?.followers?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                                Text('followers', style: AppTextStyles.normal16)
+                              ],
+                            ),
                           ),
                           Container(
                             height: 40,
                             width: 1,
                             color: AppTheme.grey4,
                           ),
-                          Column(
-                            children: [
-                              Text(_userFollow?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
-                              Text('following',
-                                  style: AppTextStyles.normal16)
-                            ],
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Text(_userFollow?.following?.length.toString() ?? "0", style: AppTextStyles.bold20),
+                                Text('following',
+                                    style: AppTextStyles.normal16)
+                              ],
+                            ),
                           ),
                         ],
                       ),
