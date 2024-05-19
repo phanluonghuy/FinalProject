@@ -39,8 +39,8 @@ class _ForgotPageState extends State<ForgotPage> {
   }
 
   void sendVerifyLink() async {
-    // await FirebaseAuth.instance
-    //     .sendPasswordResetEmail(email: _emailController.text);
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: _emailController.text);
   }
   void sendOTP() async {
     if (_formKey.currentState!.validate()) {
