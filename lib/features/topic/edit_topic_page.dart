@@ -103,7 +103,8 @@ class _EditTopicPageState extends State<EditTopicPage> {
                     index + 1,
                     CardModel(
                         term: _termController.text.trim(),
-                        definition: _definitionController.text.trim()));
+                        definition: _definitionController.text.trim(),
+                        star: false));
                 _cards.removeAt(index);
                 _termController.text = '';
                 _definitionController.text = '';
