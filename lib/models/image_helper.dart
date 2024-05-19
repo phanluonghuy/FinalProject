@@ -16,7 +16,7 @@ class ImageHelper {
     int imageQuality = 100,
   }) async {
     final file = await _imagePicker.pickImage(
-        source: source, imageQuality: imageQuality);
+        source: source, requestFullMetadata: false, imageQuality: imageQuality);
     if (file != null) return file;
     return null;
   }
