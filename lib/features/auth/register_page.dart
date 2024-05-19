@@ -217,7 +217,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     }
 
                   },
-                  child: Text("Countinue",
+                  child: Text("Continue",
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
@@ -328,7 +328,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           minimumSize: Size.fromHeight(50),
                           backgroundColor: AppTheme.primaryColor),
                       onPressed: validateAndContinue,
-                      child: Text("Countinue",
+                      child: Text("Continue",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
@@ -445,7 +445,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           minimumSize: Size.fromHeight(50),
                           backgroundColor: AppTheme.primaryColor),
                       onPressed: validateAndContinue,
-                      child: Text("Countinue",
+                      child: Text("Continue",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
@@ -515,7 +515,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           minimumSize: Size.fromHeight(50),
                           backgroundColor: AppTheme.primaryColor),
                       onPressed: validateAndContinue,
-                      child: Text("Countinue",
+                      child: Text("Continue",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
@@ -588,7 +588,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           _register(context);
                         }
                       },
-                      child: Text("Countinue",
+                      child: Text("Continue",
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold)),
