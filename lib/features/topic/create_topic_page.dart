@@ -78,7 +78,8 @@ class _CreateTopicPageState extends State<CreateTopicPage> {
                     index + 1,
                     CardModel(
                         term: _termController.text,
-                        definition: _definitionController.text));
+                        definition: _definitionController.text,
+                        star: false));
                 _cards.removeAt(index);
                 _termController.text = '';
                 _definitionController.text = '';
