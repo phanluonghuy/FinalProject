@@ -1,5 +1,5 @@
 class AppStrings {
-  static const String appName = 'CattyCards';
+  static const String appName = 'Triolingo';
   static const String hiThere = 'Hi there! I\'m Catty!';
   static const String welcomeDescription =
       'Learn vocabulary, quiz,... anywhere with flashcards. Fast, free and forever.';
