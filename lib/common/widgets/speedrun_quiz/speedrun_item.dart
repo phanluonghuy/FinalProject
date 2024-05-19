@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:finalproject/common/constants/text_styles.dart';
 import 'package:finalproject/common/constants/theme.dart';
 import 'package:finalproject/models/card_model.dart';
@@ -32,6 +33,8 @@ class SpeedrunItemPage extends StatefulWidget {
 }
 
 class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
+  final AudioPlayer _audioPlayer = AudioPlayer();
+
   List<CardModel> cardCorrect = [];
   List<CardModel> cardInCorrect = [];
   List<String> correctAnswer = [];
@@ -53,13 +56,19 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
     widget.returnData({'index': widget.index + 1});
   }
 
+  Future<void> _playSound(bool isCorrect) async {
+    String audioPath = 'audio/correct.wav';
+    isCorrect ? audioPath = 'audio/correct.wav' : audioPath = 'audio/wrong.mp3';
+    await _audioPlayer.play(AssetSource(audioPath));
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child:  GestureDetector(
-          onTap: (){
-
+          onTap: () {
             setState(() {
               isChoice = true;
               if(widget.answers == widget.definition) {
@@ -68,11 +77,9 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
             });
 
             int count = 0;
-
             // Future.delayed(Duration(seconds: 1), (){
               if(isCorrect){
-                TextToSpeech().speakEng("Excellent job");
-                // ToastMessage().showToastSuccess("Correct answer !!");
+                _playSound(true);
                 ToastService.showSuccessToast(
                   context,
                   length: ToastLength.short,
@@ -83,7 +90,7 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
                 cardCorrect.add(widget.card);
                 correctAnswer.add(widget.definition);
               }else{
-                TextToSpeech().speakEng("Don't worry, try again");
+                _playSound(false);
                 // ToastMessage().showToastFailed("Incorrect answer !!");
                 ToastService.showErrorToast(
                   context,
@@ -96,7 +103,7 @@ class _SpeedrunItemPageState extends State<SpeedrunItemPage> {
                 inCorrectAnswer.add(widget.answers);
               }
             // });
-            Future.delayed(Duration(milliseconds: 1500), () {
+            Future.delayed(Duration(milliseconds: 500), () {
               onDataReturned(count);
             });
 

@@ -20,13 +20,27 @@ class _RankingPageState extends State<RankingPage> {
   TopicRepo _topicRepo = TopicRepo();
   List<RecordModel> _records = [];
   List<CardModel> _cards = [];
+  bool _isLoading = true;
 
   Future<void> _getRecords() async {
     String topicID = widget.topic.id ?? '';
-    List<RecordModel> record = await _topicRepo.getAllRecord(topicID);
+    List<RecordModel> records = await _topicRepo.getAllRecord(topicID);
+
+    Map<String, RecordModel> highestRecords = {};
+
+    for (var record in records) {
+      if (record.userID == null) continue;
+
+      if (!highestRecords.containsKey(record.userID!) ||
+          (record.score != null &&
+              (highestRecords[record.userID!]?.score ?? 0) < record.score!)) {
+        highestRecords[record.userID!] = record;
+      }
+    }
 
     setState(() {
-      _records = record;
+      _records = highestRecords.values.toList();
+      _isLoading = false;
     });
 
   }
@@ -60,7 +74,7 @@ class _RankingPageState extends State<RankingPage> {
         actions: [
         ],
       ),
-      body: _records.length == 0 ? Center(child: CircularProgressIndicator()): SingleChildScrollView(
+      body: _isLoading ? Center(child: CircularProgressIndicator()): SingleChildScrollView(
         child: Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: ListView.builder(
           shrinkWrap: true,
